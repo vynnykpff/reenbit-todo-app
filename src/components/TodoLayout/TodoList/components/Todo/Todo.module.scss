@@ -1,0 +1,20 @@
+.todoContainer {
+  padding: 16px;
+  background-color: var(--background-primary-500);
+  border-radius: 8px;
+  border: 1px solid var(--background-primary-400);
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.06);
+  margin-bottom: 12px;
+  transition: .2s all;
+
+  &:hover {
+    transition: .2s all;
+    background-color: var(--background-primary-400);
+    border: 1px solid var(--background-primary-500);
+  }
+
+  .todoTitle {
+    color: var(--text-secondary-100);
+    font-size: 14px;
+  }
+}
