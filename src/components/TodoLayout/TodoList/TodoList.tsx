@@ -20,7 +20,7 @@ export const TodoList: FC = () => {
         </p>
       </div>
 
-      <div className={styles.todoListContainer}>
+      <ul className={styles.todoListContainer}>
         {todos.length ? (
           todos.map(todo => <Todo {...todo} />)
         ) : (
@@ -32,7 +32,7 @@ export const TodoList: FC = () => {
             </div>
           </div>
         )}
-      </div>
+      </ul>
     </section>
   );
 };

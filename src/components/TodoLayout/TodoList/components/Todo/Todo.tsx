@@ -8,19 +8,19 @@ export const Todo: FC<TodoProps> = ({ title, createdDate, expirationDate }) => {
   const [isShowInfo, setIsShowInfo] = useState(false);
 
   return (
-    <div className={styles.todoContainer}>
+    <li className={styles.todoContainer}>
       <div>
         <p className={styles.todoTitle}>{title}</p>
         {isShowInfo && (
-          <div className={styles.todoDateContainer}>
-            <p className={styles.todoDateContent}>{createdDate}</p>
+          <ul className={styles.todoDateContainer}>
+            <li className={styles.todoDateContent}>{createdDate}</li>
             <BsDashLg className={styles.todoDateContent} />
-            <p className={styles.todoDateContent}> {expirationDate}</p>
-          </div>
+            <li className={styles.todoDateContent}> {expirationDate}</li>
+          </ul>
         )}
       </div>
 
       <AiOutlineInfoCircle className={styles.todoInfoIcon} onClick={() => setIsShowInfo(prev => !prev)} />
-    </div>
+    </li>
   );
 };

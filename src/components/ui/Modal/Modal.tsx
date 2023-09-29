@@ -1,7 +1,8 @@
-import styles from "./Modal.module.scss";
 import cn from "classnames";
 import { Dispatch, FC, HTMLAttributes, ReactNode, SetStateAction, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { IoCloseOutline } from "react-icons/io5";
+import styles from "./Modal.module.scss";
 
 type ModalProps = {
   modalActive: boolean;
@@ -29,22 +30,11 @@ export const Modal: FC<ModalProps> = ({ modalActive, setModalActive, children, t
   }
 
   return createPortal(
-    <div onClick={handleClick} className={`${styles.modalOverlay}  ${modalActive ? cn(styles.modal, styles.active) : styles.modal}`}>
-      <div {...props} onClick={e => e.stopPropagation()} className={cn(styles.modalWrapper, className)}>
+    <div onClick={handleClick} className={cn(styles.modalOverlay, modalActive ? styles.modal && styles.active : styles.modal)}>
+      <div {...props} onClick={e => e.stopPropagation()} className={cn(styles.modalContainer, className)}>
         <div className={styles.modalHeader}>
           <p className={styles.modalTitle}>{title}</p>
-          <div onClick={handleClick} className={styles.closeWrapper}>
-            <svg
-              className={styles.closeIcon}
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </div>
+          <IoCloseOutline className={styles.closeIcon} />
         </div>
         {children}
       </div>

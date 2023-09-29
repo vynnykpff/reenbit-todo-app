@@ -1,33 +1,43 @@
 import { Button } from "@/components/ui/Button/Button.tsx";
 import { Input } from "@/components/ui/Input/Input.tsx";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
-import { addTodo } from "@/store/actions/todoActionCreators.ts";
+import { useAppSelector } from "@/hooks/useAppSelector.ts";
+import { useModalState } from "@/hooks/useModalState.ts";
+import { addTodo, setTodoTitle } from "@/store/actions/todoActionCreators.ts";
 import { checkOnValidField } from "@/utils/checkOnValidField.ts";
 import { getCurrentDate } from "@/utils/getCurrentDate.ts";
 import { getExpirationDate } from "@/utils/getExpirationDate.ts";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { BsPlusLg } from "react-icons/bs";
 import styles from "./CreateTodo.module.scss";
 
 export const CreateTodo: FC = () => {
   const dispatch = useAppDispatch();
-  const [todo, setTodo] = useState("");
+  const [todoValue, setTodoValue] = useState("");
+  const { title } = useAppSelector(state => state.todoReducer);
+
+  const setModalActive = useModalState("createTodoModal")[1];
+
+  useEffect(() => {
+    dispatch(setTodoTitle({ title: todoValue }));
+  }, [todoValue]);
 
   const handleCreateTodo = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.code === "Enter") {
+    if (e.code === "Enter" && e.currentTarget.value.length) {
       dispatch(
         addTodo({
           createdDate: getCurrentDate(),
           expirationDate: getExpirationDate(getCurrentDate()),
-          title: todo,
+          title: todoValue,
           isCompleted: false,
         }),
       );
+      setTodoValue("");
     }
   };
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    checkOnValidField(setTodo, e.target.value);
+    checkOnValidField(setTodoValue, e.target.value);
   };
 
   return (
@@ -35,11 +45,11 @@ export const CreateTodo: FC = () => {
       <Input
         onKeyDown={handleCreateTodo}
         onChange={handleChangeInput}
-        value={todo}
+        value={title}
         className={styles.createTodoInput}
         placeholder="Enter new todo"
       />
-      <Button className={styles.createTodoButton}>
+      <Button onClick={() => setModalActive(true)} className={styles.createTodoButton}>
         <span className={styles.createTodoButtonTitle}>
           <span>Create</span>
           <BsPlusLg />

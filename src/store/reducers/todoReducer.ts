@@ -3,10 +3,12 @@ import { Todo, TodoActionTypes } from "@/common/types/Todo.ts";
 
 type TodoState = {
   todos: Todo[];
+  title: string;
 };
 
 const initialState: TodoState = {
   todos: [],
+  title: "",
 };
 
 export const todoReducer = (state = initialState, action: TodoActionTypes) => {
@@ -14,7 +16,12 @@ export const todoReducer = (state = initialState, action: TodoActionTypes) => {
     case TodoConstants.ADD_TODO:
       return {
         ...state,
-        todos: [...state.todos, action.payload],
+        todos: [action.payload, ...state.todos],
+      };
+    case TodoConstants.SET_TODO_TITLE:
+      return {
+        ...state,
+        ...action.payload,
       };
     default:
       return state;

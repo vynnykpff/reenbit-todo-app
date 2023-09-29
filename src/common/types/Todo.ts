@@ -12,4 +12,13 @@ type AddTodoAction = {
   payload: Todo;
 };
 
-export type TodoActionTypes = AddTodoAction;
+export type TodoTitle = {
+  title: string;
+};
+
+type setTodoTitleAction = {
+  type: typeof TodoConstants.SET_TODO_TITLE;
+  payload: TodoTitle;
+};
+
+export type TodoActionTypes = AddTodoAction | setTodoTitleAction;
