@@ -80,7 +80,7 @@ export const CreateTodoModal: FC = () => {
       <form onSubmit={e => e.preventDefault()} className={styles.modalForm}>
         <Formik
           initialValues={{
-            title: "",
+            title,
             expirationDate: "",
           }}
           validationSchema={TodoScheme}

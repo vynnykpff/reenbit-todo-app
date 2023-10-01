@@ -1,76 +1,65 @@
-import React, { FC, useEffect, useState } from "react";
-import { BsPlusLg } from "react-icons/bs";
+import { NotificationType } from "@/common/constants/NotificationConstants.ts";
 
 import { Button } from "@/components/ui/Button/Button.tsx";
 import { Input } from "@/components/ui/Input/Input.tsx";
-import ModalNotification, { NotificationType } from "@/components/ui/ModalNotification.tsx";
 
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
 import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
+import { setNotification } from "@/store/actions/notificationActionCreators.ts";
 import { addTodo, setTodoTitle } from "@/store/actions/todoActionCreators.ts";
 
 import { checkOnValidField } from "@/utils/checkOnValidField.ts";
 import { getExpirationDate } from "@/utils/getExpirationDate.ts";
 
 import { format } from "date-fns";
+import { ChangeEvent, FC, KeyboardEvent } from "react";
+import { BsPlusLg } from "react-icons/bs";
 
 import styles from "./CreateTodo.module.scss";
 
-export const CreateTodo: FC = () => {
-  const [todoValue, setTodoValue] = useState("");
+const MAX_TITLE_LENGTH = 120;
 
-  const { title } = useAppSelector(state => state.todoReducer);
+export const CreateTodo: FC = () => {
+  const { title: todoValue } = useAppSelector(state => state.todoReducer);
   const dispatch = useAppDispatch();
+
+  const setTitleStoreValue = (value: string) => {
+    dispatch(setTodoTitle({ title: value }));
+  };
 
   const setModalActive = useModalState("createTodoModal")[1];
 
-  const [isShowNotification, setIsShowNotification] = useState(false);
-  const [titleNotification, setTitleNotification] = useState("");
-  const [typeNotification, setTypeNotification] = useState<NotificationType>("error");
-  const [notificationTimeout, setNotificationTimeout] = useState(false);
+  const handleCreateTodo = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.code !== "Enter") {
+      return;
+    }
 
-  useEffect((): void => {
-    dispatch(setTodoTitle({ title: todoValue }));
-  }, [todoValue]);
-
-  const handleCreateTodo = (e: React.KeyboardEvent<HTMLInputElement>): void => {
-    if (e.code === "Enter" && e.currentTarget.value.trim().length <= 120) {
-      if (!e.currentTarget.value.trim().length) {
-        setIsShowNotification(true);
-        setNotificationTimeout(true);
-        setTypeNotification("error");
-        setTimeout(() => {
-          setNotificationTimeout(false);
-          setIsShowNotification(false);
-        }, 2000);
-        return setTitleNotification("You can't to create empty todo");
-      }
-      dispatch(
-        addTodo({
-          createdDate: format(new Date(), "dd.MM.yyyy HH:mm"),
-          expirationDate: getExpirationDate(format(new Date(), "dd.MM.yyyy HH:mm")),
-          title: todoValue || title,
-          isCompleted: false,
+    if (todoValue.trim().length >= MAX_TITLE_LENGTH) {
+      return dispatch(
+        setNotification({
+          title: "The maximum length of the title mustn't exceed 120 characters",
+          type: NotificationType.ERROR,
         }),
       );
-      return setTodoValue("");
     }
+
+    if (!todoValue.trim().length) {
+      return dispatch(setNotification({ title: "You can't to create empty todo", type: NotificationType.ERROR }));
+    }
+    dispatch(
+      addTodo({
+        createdDate: format(new Date(), "dd.MM.yyyy HH:mm"),
+        expirationDate: getExpirationDate(format(new Date(), "dd.MM.yyyy HH:mm")),
+        title: todoValue,
+        isCompleted: false,
+      }),
+    );
+    return setTitleStoreValue("");
   };
 
-  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value.length <= 120) {
-      setTodoValue(checkOnValidField(e.target.value));
-    } else {
-      setIsShowNotification(true);
-      setNotificationTimeout(true);
-      setTimeout(() => {
-        setNotificationTimeout(false);
-        setIsShowNotification(false);
-      }, 2000);
-      setTypeNotification("error");
-      return setTitleNotification("The maximum length of the title mustn't exceed 120 characters");
-    }
+  const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
+    setTitleStoreValue(checkOnValidField(e.target.value));
   };
 
   return (
@@ -78,8 +67,7 @@ export const CreateTodo: FC = () => {
       <Input
         onKeyDown={handleCreateTodo}
         onChange={handleChangeInput}
-        disabled={notificationTimeout}
-        value={title}
+        value={todoValue}
         className={styles.createTodoInput}
         placeholder="Enter new todo"
       />
@@ -89,7 +77,6 @@ export const CreateTodo: FC = () => {
           <BsPlusLg />
         </span>
       </Button>
-      {isShowNotification && <ModalNotification title={titleNotification} typeNotification={typeNotification} />}
     </div>
   );
 };

@@ -1,6 +1,5 @@
+import logoImage from "#/icons/logo.svg";
 import { FC } from "react";
-
-import logoImage from "!/favicon.svg";
 
 import styles from "./Header.module.scss";
 

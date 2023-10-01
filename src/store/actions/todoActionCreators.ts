@@ -8,7 +8,7 @@ export const addTodo = (todo: Todo): TodoActionTypes => ({
   },
 });
 
-export const setTodoTitle = (title: TodoTitle): TodoActionTypes => ({
+export const setTodoTitle = (data: TodoTitle): TodoActionTypes => ({
   type: TodoConstants.SET_TODO_TITLE,
-  payload: title,
+  payload: data,
 });

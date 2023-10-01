@@ -13,7 +13,7 @@ export const TodoList: FC = () => {
   const { todos } = useAppSelector(state => state.todoReducer);
 
   return (
-    <section>
+    <section className={styles.todoListSection}>
       <div className={styles.todoListHeader}>
         <p className={styles.todoListTitle}>
           Tasks created

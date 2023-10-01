@@ -1,9 +1,17 @@
+@import "@/styles/MediaQueries";
+
 .createTodoContainer {
   margin-top: -25px;
   margin-bottom: 70px;
   display: flex;
   align-items: center;
-  column-gap: 8px;
+  gap: 8px;
+
+  @media (max-width: $MOBILE) {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 25px;
+  }
 
   .createTodoInput {
     width: 90%;
@@ -17,11 +25,16 @@
       transition: .3s all;
       background-color: var(--background-primary-400);
     }
+
+    @media (max-width: $MOBILE) {
+      width: 100%;
+    }
   }
 
   .createTodoButton {
     width: 15%;
     height: 50px;
+    padding: 0 50px;
     background-color: var(--text-primary-600);
     color: var(--text-secondary-100);
     font-weight: 700;
@@ -32,12 +45,17 @@
       background-color: var(--text-primary-500);
     }
 
+    @media (max-width: $MOBILE) {
+      width: 100%;
+    }
+
     .createTodoButtonTitle {
       display: flex;
       align-items: center;
       column-gap: 8px;
       font-size: 18px;
     }
+
     .createTodoButtonTitle > span {
       font-size: 16px;
     }

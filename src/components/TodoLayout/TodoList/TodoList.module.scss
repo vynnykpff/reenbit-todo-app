@@ -1,52 +1,57 @@
-.todoListHeader {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 25px;
+.todoListSection {
+  margin-bottom: 30px;
 
-  .todoListTitle {
-    font-size: 14px;
-    font-weight: 700;
+  .todoListHeader {
     display: flex;
-    align-items: center;
-    column-gap: 8px;
+    justify-content: space-between;
+    gap: 25px;
+    margin-bottom: 25px;
 
-    &:first-child {
-      color: var(--text-primary-500);
-    }
+    .todoListTitle {
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      column-gap: 8px;
 
-    &:last-child {
-      color: var(--text-accent-500);
-    }
+      &:first-child {
+        color: var(--text-primary-500);
+      }
 
-    .todoListCounter {
-      color: var(--text-secondary-200);
-      background-color: var(--background-primary-400);
-      padding: 4px 8px;
-      border-radius: 50%;
+      &:last-child {
+        color: var(--text-accent-500);
+      }
+
+      .todoListCounter {
+        color: var(--text-secondary-200);
+        background-color: var(--background-primary-400);
+        padding: 4px 8px;
+        border-radius: 50%;
+      }
     }
   }
-}
 
-.todoListContainer {
-  .todoListNoDataBlock {
-    box-shadow: rgba(149, 157, 165, 0.2) 0 0 8px;
-    border-radius: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 250px;
-    text-align: center;
-    color: var(--background-primary-300);
-    font-size: 40px;
-    font-weight: 400;
+  .todoListContainer {
+    .todoListNoDataBlock {
+      box-shadow: rgba(149, 157, 165, 0.2) 0 0 8px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 250px;
+      text-align: center;
+      color: var(--background-primary-300);
+      font-size: 40px;
+      font-weight: 400;
 
-    .todoListText {
-      font-size: 16px;
-      line-height: 140%;
+      .todoListText {
+        font-size: 16px;
+        line-height: 140%;
 
-      &:nth-child(2) {
-        font-weight: 700;
-        margin-top: 10px;
+        &:nth-child(2) {
+          font-weight: 700;
+          margin-top: 10px;
+        }
       }
     }
   }

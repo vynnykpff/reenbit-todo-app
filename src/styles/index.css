@@ -29,6 +29,7 @@
 body {
 	font-family: 'Inter', sans-serif;
 	background-color: var(--background-primary-600);
+	min-width: 250px;
 }
 
 a {
