@@ -1,7 +1,12 @@
-import { Todo } from "@/components/TodoLayout/TodoList/components/Todo/Todo.tsx";
-import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { FC } from "react";
 import { PiClipboardText } from "react-icons/pi";
+
+import { Todo } from "@/components/TodoLayout/TodoList/components/Todo/Todo.tsx";
+
+import { useAppSelector } from "@/hooks/useAppSelector.ts";
+
+import { v4 as uuidv4 } from "uuid";
+
 import styles from "./TodoList.module.scss";
 
 export const TodoList: FC = () => {
@@ -22,7 +27,7 @@ export const TodoList: FC = () => {
 
       <ul className={styles.todoListContainer}>
         {todos.length ? (
-          todos.map(todo => <Todo {...todo} />)
+          todos.map(todo => <Todo key={uuidv4()} {...todo} />)
         ) : (
           <div className={styles.todoListNoDataBlock}>
             <div>

@@ -15,7 +15,7 @@ type ModalProps = {
 const modalsElement = document.querySelector("#modals");
 
 export const Modal: FC<ModalProps> = ({ modalActive, setModalActive, children, title, onHide, className, ...props }) => {
-  const handleClick = () => {
+  const handleHideModalClick = () => {
     setModalActive(false);
   };
 
@@ -30,11 +30,11 @@ export const Modal: FC<ModalProps> = ({ modalActive, setModalActive, children, t
   }
 
   return createPortal(
-    <div onClick={handleClick} className={cn(styles.modalOverlay, modalActive ? styles.modal && styles.active : styles.modal)}>
+    <div onClick={handleHideModalClick} className={cn(styles.modalOverlay, modalActive ? styles.modal && styles.active : styles.modal)}>
       <div {...props} onClick={e => e.stopPropagation()} className={cn(styles.modalContainer, className)}>
         <div className={styles.modalHeader}>
           <p className={styles.modalTitle}>{title}</p>
-          <IoCloseOutline className={styles.closeIcon} />
+          <IoCloseOutline onClick={handleHideModalClick} className={styles.closeIcon} />
         </div>
         {children}
       </div>

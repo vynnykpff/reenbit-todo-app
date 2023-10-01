@@ -1,5 +1,7 @@
-import styles from "./Input.module.scss";
+import cn from "classnames";
 import { FC, HTMLAttributes } from "react";
+
+import styles from "./Input.module.scss";
 
 type AdditionalInputProps = {
   value?: string;
@@ -11,6 +13,6 @@ type InputProps = HTMLAttributes<HTMLInputElement> & AdditionalInputProps;
 
 export const Input: FC<InputProps> = ({ placeholder, className, value = "", disabled = false, type = "text", ...props }) => {
   return (
-    <input {...props} type={type} value={value} disabled={disabled} className={`${styles.input} ${className}`} placeholder={placeholder} />
+    <input {...props} type={type} value={value} disabled={disabled} className={cn(styles.input, className)} placeholder={placeholder} />
   );
 };

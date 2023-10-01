@@ -1,18 +1,14 @@
 .modalForm {
-  display: flex;
-  flex-direction: column;
   width: 450px;
 
   .modalFieldsWrapper {
-    display: flex;
     padding: 30px 20px 0;
-    flex-direction: column;
-    justify-content: center;
 
     .modalLabel {
       font-weight: 500;
       color: var(--text-secondary-100);
       margin-bottom: 8px;
+      position: relative;
     }
 
     .modalField {
@@ -23,6 +19,7 @@
       padding: 16px;
       background-color: var(--background-primary-500);
       border: 1px solid var(--background-primary-700);
+      color: var(--text-secondary-100);
       transition: .3s all;
 
       &:hover {
@@ -31,9 +28,23 @@
       }
     }
 
+    .modalFieldError {
+      transition: .3s all;
+      border: 1px solid var(--text-danger);
+    }
+
     .disabledModalField {
       color: var(--background-primary-300);
       cursor: not-allowed;
+    }
+
+    .modalError {
+      position: absolute;
+      transition: .3s all;
+      top: 85px;
+      left: 0;
+      font-size: 12px;
+      color: var(--text-danger);
     }
   }
 
@@ -48,28 +59,6 @@
       font-weight: 500;
       border-radius: 3px;
       padding: 8px 15px;
-    }
-
-    .cancelButton {
-      background-color: var(--text-secondary-100);
-      color: var(--background-primary-600);
-      transition: .3s all;
-
-      &:hover {
-        transition: .3s all;
-        opacity: 0.7;
-      }
-    }
-
-    .agreeButton {
-      background-color: var(--text-primary-600);
-      color: var(--text-secondary-100);
-      transition: .3s all;
-
-      &:hover {
-        background-color: var(--text-primary-500);
-        transition: .3s all;
-      }
     }
   }
 }

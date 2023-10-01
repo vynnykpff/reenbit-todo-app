@@ -1,0 +1,32 @@
+.modalFieldsWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+
+  .disabledModalField {
+    cursor: not-allowed;
+  }
+}
+
+.cancelButton {
+  background-color: var(--text-secondary-100);
+  color: var(--background-primary-600);
+  transition: .3s all;
+
+  &:hover {
+    transition: .3s all;
+    opacity: 0.7;
+  }
+}
+
+.agreeButton {
+  background-color: var(--text-primary-600);
+  color: var(--text-secondary-100);
+  transition: .3s all;
+
+  &:hover {
+    background-color: var(--text-primary-500);
+    transition: .3s all;
+  }
+}

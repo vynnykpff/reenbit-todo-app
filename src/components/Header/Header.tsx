@@ -1,6 +1,8 @@
-import styles from "./Header.module.scss";
 import { FC } from "react";
-import logoImage from "#/icons/logo.svg";
+
+import logoImage from "!/favicon.svg";
+
+import styles from "./Header.module.scss";
 
 export const Header: FC = () => {
   return (

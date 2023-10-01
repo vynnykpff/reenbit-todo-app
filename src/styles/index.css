@@ -22,6 +22,8 @@
 	--background-primary-500: #262626;
 	--background-primary-400: #333333;
 	--background-primary-300: #808080;
+
+	--text-danger: #de2020;
 }
 
 body {

@@ -1,7 +1,9 @@
-import { Todo as TodoProps } from "@/common/types/Todo.ts";
 import { FC, useState } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { BsDashLg } from "react-icons/bs";
+
+import { Todo as TodoProps } from "@/common/types/Todo.ts";
+
 import styles from "./Todo.module.scss";
 
 export const Todo: FC<TodoProps> = ({ title, createdDate, expirationDate }) => {
