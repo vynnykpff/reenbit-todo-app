@@ -1,15 +1,10 @@
-import { FC } from "react";
-import { PiClipboardText } from "react-icons/pi";
-
 import { Todo } from "@/components/TodoLayout/TodoList/components/Todo/Todo.tsx";
-
 import { useAppSelector } from "@/hooks/useAppSelector.ts";
-
+import { PiClipboardText } from "react-icons/pi";
 import { v4 as uuidv4 } from "uuid";
-
 import styles from "./TodoList.module.scss";
 
-export const TodoList: FC = () => {
+export const TodoList = () => {
   const { todos } = useAppSelector(state => state.todoReducer);
 
   return (

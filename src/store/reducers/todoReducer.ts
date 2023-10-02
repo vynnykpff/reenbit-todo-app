@@ -3,12 +3,12 @@ import { Todo, TodoActionTypes } from "@/common/types/Todo.ts";
 
 type TodoState = {
   todos: Todo[];
-  title: string;
+  todoTitle: string;
 };
 
 const initialState: TodoState = {
   todos: [],
-  title: "",
+  todoTitle: "",
 };
 
 export const todoReducer = (state = initialState, action: TodoActionTypes) => {

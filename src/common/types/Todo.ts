@@ -1,7 +1,7 @@
 import { TodoConstants } from "@/common/constants/TodoConstants.ts";
 
 export type Todo = {
-  title: string;
+  todoTitle: string;
   createdDate: string;
   expirationDate: string;
   isCompleted: boolean;
@@ -13,7 +13,7 @@ type AddTodoAction = {
 };
 
 export type TodoTitle = {
-  title: string;
+  todoTitle: string;
 };
 
 type setTodoTitleAction = {

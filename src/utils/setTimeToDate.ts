@@ -1,6 +1,8 @@
 export const setMinutesToDate = (date: Date, minutes: number): Date => {
   const newDate = new Date(date);
-  newDate.setTime(newDate.getTime() + minutes * 60 * 1000);
+  const millisecondsInMinute = 60 * 1000;
+  const minutesToAdd = minutes * millisecondsInMinute;
+  newDate.setTime(newDate.getTime() + minutesToAdd);
   return newDate;
 };
 
@@ -13,11 +15,13 @@ export const setMaxTimeToDate = (date: Date): Date => {
 
 export const setMinTimeToDate = (date: Date | null): Date => {
   const currentDate = new Date();
+  const setAdditionalTime = 5;
+  const resetAdditionalTime = -5;
 
-  if (date && setMinutesToDate(date, -5) > new Date()) {
+  if (date && setMinutesToDate(date, resetAdditionalTime) > new Date()) {
     currentDate.setHours(0, 0, 0, 0);
     return new Date(currentDate);
   }
 
-  return setMinutesToDate(currentDate, 5);
+  return setMinutesToDate(currentDate, setAdditionalTime);
 };

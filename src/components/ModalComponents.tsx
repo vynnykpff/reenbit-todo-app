@@ -1,15 +1,13 @@
 import { FC } from "react";
-
 import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { ModalState } from "@/store/reducers/modalReducer.ts";
-
 import { CreateTodoModal } from "@/components/TodoLayout/CreateTodoModal/CreateTodoModal.tsx";
 
 export const components: Record<keyof ModalState, FC<any>> = {
   createTodoModal: CreateTodoModal,
 };
 
-export const ModalComponents: FC = () => {
+export const ModalComponents = () => {
   const modalState = useAppSelector(state => state.modalReducer);
 
   return (

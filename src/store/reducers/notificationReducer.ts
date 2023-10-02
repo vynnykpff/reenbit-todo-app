@@ -7,9 +7,11 @@ export type NotificationState = {
   type: NotificationType;
 };
 
+const DEFAULT_NOTIFICATION_DELAY = 2000;
+
 const initialState: NotificationState = {
   title: "",
-  delay: 2000,
+  delay: DEFAULT_NOTIFICATION_DELAY,
   type: NotificationType.INFO,
 };
 

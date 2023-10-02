@@ -18,6 +18,10 @@
       color: var(--text-secondary-100);
       margin-bottom: 8px;
       position: relative;
+
+      .requiredSymbol {
+        color: var(--text-danger);
+      }
     }
 
     .modalField {

@@ -13,8 +13,7 @@ export const Loader = () => {
         justifyContent: "center",
         alignItems: "center",
       }}
-      wrapperClass=""
-      visible={true}
+      visible
     />
   );
 };
