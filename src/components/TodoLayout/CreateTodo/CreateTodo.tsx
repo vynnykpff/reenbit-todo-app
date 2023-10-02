@@ -11,6 +11,7 @@ import { checkOnValidField } from "@/utils/checkOnValidField.ts";
 import { getNextDate } from "@/utils/getNextDate.ts";
 import { ChangeEvent, KeyboardEvent } from "react";
 import { BsPlusLg } from "react-icons/bs";
+import { v4 as uuidv4 } from "uuid";
 import styles from "./CreateTodo.module.scss";
 
 const MAX_TITLE_LENGTH = 120;
@@ -20,7 +21,7 @@ export const CreateTodo = () => {
   const dispatch = useAppDispatch();
 
   const setTitleStoreValue = (value: string) => {
-    dispatch(setTodoTitle({ todoTitle: value }));
+    dispatch(setTodoTitle(value));
   };
 
   const setModalActive = useModalState("createTodoModal")[1];
@@ -39,6 +40,7 @@ export const CreateTodo = () => {
         expirationDate: getNextDate(TodoDateFormat),
         todoTitle,
         isCompleted: false,
+        todoId: uuidv4(),
       }),
     );
     return setTitleStoreValue("");

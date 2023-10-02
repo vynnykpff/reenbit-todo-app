@@ -5,6 +5,7 @@ export type Todo = {
   createdDate: string;
   expirationDate: string;
   isCompleted: boolean;
+  todoId: string;
 };
 
 type AddTodoAction = {
@@ -12,13 +13,18 @@ type AddTodoAction = {
   payload: Todo;
 };
 
-export type TodoTitle = {
-  todoTitle: string;
-};
-
 type setTodoTitleAction = {
   type: typeof TodoConstants.SET_TODO_TITLE;
-  payload: TodoTitle;
+  payload: {
+    todoTitle: Todo["todoTitle"];
+  };
 };
 
-export type TodoActionTypes = AddTodoAction | setTodoTitleAction;
+type setTodoCompletedAction = {
+  type: typeof TodoConstants.SET_COMPLETED_TODO;
+  payload: {
+    todoId: Todo["todoId"];
+  };
+};
+
+export type TodoActionTypes = AddTodoAction | setTodoTitleAction | setTodoCompletedAction;

@@ -23,6 +23,15 @@ export const todoReducer = (state = initialState, action: TodoActionTypes) => {
         ...state,
         ...action.payload,
       };
+    case TodoConstants.SET_COMPLETED_TODO:
+      const clonedTodos = structuredClone(state.todos);
+      const candidate = clonedTodos.findIndex(o => o.todoId === action.payload.todoId);
+      if (candidate < 0) {
+        return state;
+      }
+      clonedTodos[candidate].isCompleted = !clonedTodos[candidate].isCompleted;
+
+      return { ...state, todos: clonedTodos };
     default:
       return state;
   }
