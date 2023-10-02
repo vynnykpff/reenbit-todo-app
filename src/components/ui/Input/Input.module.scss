@@ -1,0 +1,11 @@
+.input {
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  color: var(--text-secondary-100);
+  cursor: pointer;
+
+  &::placeholder {
+    color: var(--background-primary-300);
+  }
+}

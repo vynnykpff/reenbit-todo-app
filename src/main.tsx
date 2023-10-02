@@ -1,12 +1,23 @@
-import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
+import { ModalComponents } from "@/components/ModalComponents.tsx";
+import { Loader } from "@/components/ui/Loader/Loader.tsx";
+import Notification from "@/components/ui/Notification.tsx";
+import { persistor, store } from "@/store/store.ts";
+
 import "@/styles/index.css";
+import { createRoot } from "react-dom/client";
+
 import { Provider } from "react-redux";
-import { store } from "@/store/store.ts";
+import { PersistGate } from "redux-persist/integration/react";
+
+import App from "./App.tsx";
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-ReactDOM.createRoot(document.getElementById("root")!).render(
+createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
-    <App />
+    <Notification />
+    <ModalComponents />
+    <PersistGate loading={<Loader />} persistor={persistor}>
+      <App />
+    </PersistGate>
   </Provider>,
 );

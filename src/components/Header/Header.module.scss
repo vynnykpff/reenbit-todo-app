@@ -1,0 +1,24 @@
+.headerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 12px;
+  height: 200px;
+  background-color: var(--background-primary-700);
+
+  .headerTitle {
+
+    .headerContent {
+      font-size: 40px;
+      font-weight: 900;
+
+      &:first-child {
+        color: var(--text-primary-500);
+      }
+
+      &:last-child {
+        color: var(--text-accent-600);
+      }
+    }
+  }
+}

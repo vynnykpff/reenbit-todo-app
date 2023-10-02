@@ -1,6 +1,6 @@
 # **Reenbit Todo App**
 
-## [**<u>Link to website</u>**](https://youtu.be/tCn5hzxJi2o)
+## [**<u>Link to website</u>**](https://vynnykpff.github.io/reenbit-todo-app/)
 
 #### It is an application where you can create, update, sort, and perform many other task operations.
 
