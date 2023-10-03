@@ -13,12 +13,20 @@ export const Todo: FC<TodoProps> = ({ todoTitle, createdDate, expirationDate, to
   const [isShowInfo, setIsShowInfo] = useState(false);
   const dispatch = useAppDispatch();
 
+  const handleChangeStatusTodo = () => {
+    dispatch(updateStatusTodo(todoId));
+  };
+
+  const handleClickDeleteTodo = () => {
+    dispatch(deleteTodo(todoId));
+  };
+
   return (
     <li className={styles.todoContainer}>
       <div>
         <div className={styles.todoContent}>
           <label className={styles.todoCheck}>
-            <Input className={styles.todoInput} type="checkbox" checked={isCompleted} onChange={() => dispatch(updateStatusTodo(todoId))} />
+            <Input className={styles.todoInput} type="checkbox" checked={isCompleted} onChange={handleChangeStatusTodo} />
             <span className={styles.todoCheckbox}></span>
           </label>
           <p className={cn(styles.todoTitle, isCompleted && styles.todoCompleted)}>{todoTitle}</p>
@@ -31,7 +39,7 @@ export const Todo: FC<TodoProps> = ({ todoTitle, createdDate, expirationDate, to
           </ul>
         )}
       </div>
-      <BiTrash className={cn(styles.todoIcon, styles.trashIcon)} onClick={() => dispatch(deleteTodo(todoId))} />
+      <BiTrash className={cn(styles.todoIcon, styles.trashIcon)} onClick={handleClickDeleteTodo} />
       <AiOutlineInfoCircle className={cn(styles.todoIcon, styles.infoIcon)} onClick={() => setIsShowInfo(prev => !prev)} />
     </li>
   );
