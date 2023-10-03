@@ -2,6 +2,7 @@ import { format } from "date-fns";
 
 export enum TodoConstants {
   ADD_TODO = "ADD_TODO",
+  DELETE_TODO = "DELETE_TODO",
   SET_TODO_TITLE = "SET_TODO_TITLE",
   SET_COMPLETED_TODO = "SET_COMPLETED_TODO",
 }

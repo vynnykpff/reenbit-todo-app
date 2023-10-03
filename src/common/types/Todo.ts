@@ -27,4 +27,11 @@ type setTodoCompletedAction = {
   };
 };
 
-export type TodoActionTypes = AddTodoAction | setTodoTitleAction | setTodoCompletedAction;
+type deleteTodoAction = {
+  type: typeof TodoConstants.DELETE_TODO;
+  payload: {
+    todoId: Todo["todoId"];
+  };
+};
+
+export type TodoActionTypes = AddTodoAction | setTodoTitleAction | setTodoCompletedAction | deleteTodoAction;
