@@ -32,6 +32,14 @@ export const todoReducer = (state = initialState, action: TodoActionTypes) => {
       clonedTodos[candidate].isCompleted = !clonedTodos[candidate].isCompleted;
 
       return { ...state, todos: clonedTodos };
+
+    case TodoConstants.DELETE_TODO:
+      const filteredTodos = state.todos.filter(todo => todo.todoId !== action.payload.todoId);
+
+      return {
+        ...state,
+        todos: filteredTodos,
+      };
     default:
       return state;
   }

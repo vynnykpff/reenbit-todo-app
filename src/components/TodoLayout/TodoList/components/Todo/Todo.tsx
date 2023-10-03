@@ -1,10 +1,11 @@
 import { Todo as TodoProps } from "@/common/types/Todo.ts";
 import { Input } from "@/components/ui/Input/Input.tsx";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
-import { updateStatusTodo } from "@/store/actions/todoActionCreators.ts";
+import { deleteTodo, updateStatusTodo } from "@/store/actions/todoActionCreators.ts";
 import cn from "classnames";
 import { FC, useState } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
+import { BiTrash } from "react-icons/bi";
 import { BsDashLg } from "react-icons/bs";
 import styles from "./Todo.module.scss";
 
@@ -14,6 +15,10 @@ export const Todo: FC<TodoProps> = ({ todoTitle, createdDate, expirationDate, to
 
   const handleChangeStatusTodo = () => {
     dispatch(updateStatusTodo(todoId));
+  };
+
+  const handleClickDeleteTodo = () => {
+    dispatch(deleteTodo(todoId));
   };
 
   return (
@@ -34,8 +39,8 @@ export const Todo: FC<TodoProps> = ({ todoTitle, createdDate, expirationDate, to
           </ul>
         )}
       </div>
-
-      <AiOutlineInfoCircle className={styles.todoInfoIcon} onClick={() => setIsShowInfo(prev => !prev)} />
+      <BiTrash className={cn(styles.todoIcon, styles.trashIcon)} onClick={handleClickDeleteTodo} />
+      <AiOutlineInfoCircle className={cn(styles.todoIcon, styles.infoIcon)} onClick={() => setIsShowInfo(prev => !prev)} />
     </li>
   );
 };
