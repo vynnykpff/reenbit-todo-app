@@ -4,11 +4,13 @@ import { Todo, TodoActionTypes } from "@/common/types/Todo.ts";
 type TodoState = {
   todos: Todo[];
   todoTitle: string;
+  todo: Todo[];
 };
 
 const initialState: TodoState = {
   todos: [],
   todoTitle: "",
+  todo: [],
 };
 
 export const todoReducer = (state = initialState, action: TodoActionTypes) => {
@@ -23,7 +25,7 @@ export const todoReducer = (state = initialState, action: TodoActionTypes) => {
         ...state,
         ...action.payload,
       };
-    case TodoConstants.SET_COMPLETED_TODO:
+    case TodoConstants.SET_COMPLETED_TODO: {
       const clonedTodos = structuredClone(state.todos);
       const candidate = clonedTodos.findIndex(o => o.todoId === action.payload.todoId);
       if (candidate < 0) {
@@ -32,14 +34,39 @@ export const todoReducer = (state = initialState, action: TodoActionTypes) => {
       clonedTodos[candidate].isCompleted = !clonedTodos[candidate].isCompleted;
 
       return { ...state, todos: clonedTodos };
+    }
 
-    case TodoConstants.DELETE_TODO:
+    case TodoConstants.DELETE_TODO: {
       const filteredTodos = state.todos.filter(todo => todo.todoId !== action.payload.todoId);
 
       return {
         ...state,
         todos: filteredTodos,
       };
+    }
+    case TodoConstants.EDIT_TODO: {
+      const clonedTodos = structuredClone(state.todos);
+      const candidate = clonedTodos.findIndex(o => o.todoId === action.payload.todoId);
+
+      if (candidate < 0) {
+        return state;
+      }
+
+      clonedTodos[candidate].todoTitle = action.payload.todoTitle;
+      clonedTodos[candidate].createdDate = action.payload.createdDate;
+      clonedTodos[candidate].expirationDate = action.payload.expirationDate;
+
+      return {
+        ...state,
+        todos: clonedTodos,
+      };
+    }
+    case TodoConstants.SET_CURRENT_TODO: {
+      return {
+        ...state,
+        todo: [action.payload],
+      };
+    }
     default:
       return state;
   }

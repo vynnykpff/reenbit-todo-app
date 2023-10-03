@@ -1,16 +1,19 @@
 import { Todo as TodoProps } from "@/common/types/Todo.ts";
 import { Input } from "@/components/ui/Input/Input.tsx";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
-import { deleteTodo, updateStatusTodo } from "@/store/actions/todoActionCreators.ts";
+import { useModalState } from "@/hooks/useModalState.ts";
+import { deleteTodo, setCurrentTodo, updateStatusTodo } from "@/store/actions/todoActionCreators.ts";
 import cn from "classnames";
 import { FC, useState } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { BiTrash } from "react-icons/bi";
 import { BsDashLg } from "react-icons/bs";
+import { HiOutlinePencilAlt } from "react-icons/hi";
 import styles from "./Todo.module.scss";
 
 export const Todo: FC<TodoProps> = ({ todoTitle, createdDate, expirationDate, todoId, isCompleted }) => {
   const [isShowInfo, setIsShowInfo] = useState(false);
+  const setModalActive = useModalState("editTodoModal")[1];
   const dispatch = useAppDispatch();
 
   const handleChangeStatusTodo = () => {
@@ -19,6 +22,11 @@ export const Todo: FC<TodoProps> = ({ todoTitle, createdDate, expirationDate, to
 
   const handleClickDeleteTodo = () => {
     dispatch(deleteTodo(todoId));
+  };
+
+  const handleClickEditTodo = () => {
+    setModalActive(true);
+    dispatch(setCurrentTodo({ todoId, todoTitle, expirationDate, createdDate, isCompleted }));
   };
 
   return (
@@ -39,6 +47,7 @@ export const Todo: FC<TodoProps> = ({ todoTitle, createdDate, expirationDate, to
           </ul>
         )}
       </div>
+      <HiOutlinePencilAlt className={cn(styles.todoIcon, styles.editIcon)} onClick={handleClickEditTodo} />
       <BiTrash className={cn(styles.todoIcon, styles.trashIcon)} onClick={handleClickDeleteTodo} />
       <AiOutlineInfoCircle className={cn(styles.todoIcon, styles.infoIcon)} onClick={() => setIsShowInfo(prev => !prev)} />
     </li>
