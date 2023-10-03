@@ -1,16 +1,31 @@
+import { Todo as TodoProps } from "@/common/types/Todo.ts";
+import { Input } from "@/components/ui/Input/Input.tsx";
+import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
+import { updateStatusTodo } from "@/store/actions/todoActionCreators.ts";
+import cn from "classnames";
 import { FC, useState } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { BsDashLg } from "react-icons/bs";
-import { Todo as TodoProps } from "@/common/types/Todo.ts";
 import styles from "./Todo.module.scss";
 
-export const Todo: FC<TodoProps> = ({ todoTitle, createdDate, expirationDate }) => {
+export const Todo: FC<TodoProps> = ({ todoTitle, createdDate, expirationDate, todoId, isCompleted }) => {
   const [isShowInfo, setIsShowInfo] = useState(false);
+  const dispatch = useAppDispatch();
+
+  const handleChangeStatusTodo = () => {
+    dispatch(updateStatusTodo(todoId));
+  };
 
   return (
     <li className={styles.todoContainer}>
       <div>
-        <p className={styles.todoTitle}>{todoTitle}</p>
+        <div className={styles.todoContent}>
+          <label className={styles.todoCheck}>
+            <Input className={styles.todoInput} type="checkbox" checked={isCompleted} onChange={handleChangeStatusTodo} />
+            <span className={styles.todoCheckbox}></span>
+          </label>
+          <p className={cn(styles.todoTitle, isCompleted && styles.todoCompleted)}>{todoTitle}</p>
+        </div>
         {isShowInfo && (
           <ul className={styles.todoDateContainer}>
             <li className={styles.todoDateContent}>{createdDate}</li>

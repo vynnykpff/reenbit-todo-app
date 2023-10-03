@@ -15,6 +15,7 @@ import cn from "classnames";
 import { Formik } from "formik";
 import { FormEvent, useState } from "react";
 import DatePicker from "react-datepicker";
+import { v4 as uuidv4 } from "uuid";
 import "react-datepicker/dist/react-datepicker.css";
 import styles from "./CreateTodoModal.module.scss";
 
@@ -31,7 +32,7 @@ export const CreateTodoModal = () => {
 
   const closeModal = (): void => {
     setModalActive(false);
-    dispatch(setTodoTitle({ todoTitle: "" }));
+    dispatch(setTodoTitle(""));
   };
 
   const handleChangeTodoTitle = (
@@ -40,7 +41,7 @@ export const CreateTodoModal = () => {
   ): void => {
     const newValue = checkOnValidField(e.currentTarget.value);
     setFieldValue(TodoValidateFields.TODO_TITLE, newValue);
-    dispatch(setTodoTitle({ todoTitle: newValue }));
+    dispatch(setTodoTitle(newValue));
   };
 
   const handleDateChange = (date: Date | null, setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void): void => {
@@ -65,9 +66,10 @@ export const CreateTodoModal = () => {
           expirationDate: getExpirationDate(expirationDate),
           todoTitle,
           isCompleted: false,
+          todoId: uuidv4(),
         }),
       );
-      dispatch(setTodoTitle({ todoTitle: "" }));
+      dispatch(setTodoTitle(""));
     }
   };
 
