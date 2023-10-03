@@ -21,6 +21,7 @@
     .todoCheck {
       display: flex;
       align-items: center;
+      cursor: pointer;
       .todoInput {
         position: relative;
         appearance: none;
