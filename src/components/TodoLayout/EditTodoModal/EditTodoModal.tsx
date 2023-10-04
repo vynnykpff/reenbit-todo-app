@@ -7,68 +7,50 @@ import { Modal } from "@/components/ui/Modal/Modal.tsx";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
 import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
-import { addTodo, setTodoTitle } from "@/store/actions/todoActionCreators.ts";
+import { editTodo } from "@/store/actions/todoActionCreators.ts";
 import modalStyles from "@/styles/ModalCommom.module.scss";
+import { getExpirationDateFormat } from "@/utils/getExpirationDateFormat.ts";
 import { handleChangeTodoTitle } from "@/utils/handleChangeTodoTitle.ts";
 import { handleDateChange } from "@/utils/handleDateChange.ts";
 import { setExpirationDateFormat } from "@/utils/setExpirationDateFormat.ts";
 import { setMaxTimeToDate, setMinTimeToDate } from "@/utils/setTimeToDate.ts";
 import cn from "classnames";
 import { Formik } from "formik";
-import { FormEvent, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { v4 as uuidv4 } from "uuid";
-import styles from "./CreateTodoModal.module.scss";
+import styles from "./EditTodoModal.module.scss";
 
-export const CreateTodoModal = () => {
-  const [modalActive, setModalActive] = useModalState("createTodoModal");
+type FormData = {
+  todoTitle: string;
+  expirationDate: Date | null;
+};
 
+export const EditTodoModal = () => {
+  const [modalActive, setModalActive] = useModalState("editTodoModal");
+  const { todo } = useAppSelector(state => state.todoReducer);
+  const dispatch = useAppDispatch();
   const [expirationDate, setExpirationDate] = useState<Date | null>(null);
 
-  const { todoTitle } = useAppSelector(state => state.todoReducer);
-  const dispatch = useAppDispatch();
-
-  const handleCloseModal = () => {
+  const handleSubmit = (data: FormData) => {
     setModalActive(false);
-    dispatch(setTodoTitle(""));
-  };
+    const { todoTitle, expirationDate } = data;
+    const { todoId, createdDate } = todo;
 
-  const setChangedTodoTitle = (
-    e: FormEvent<HTMLInputElement>,
-    setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void,
-    field: string,
-  ) => {
-    const newTodoValue = handleChangeTodoTitle(e, setFieldValue, field);
-    dispatch(setTodoTitle(newTodoValue));
-  };
+    const formattedExpirationDate = expirationDate !== null ? setExpirationDateFormat(expirationDate) : "";
 
-  const handleSubmit = () => {
-    setModalActive(false);
-    if (expirationDate) {
-      dispatch(
-        addTodo({
-          createdDate: setExpirationDateFormat(new Date()),
-          expirationDate: setExpirationDateFormat(expirationDate),
-          todoTitle,
-          isCompleted: false,
-          todoId: uuidv4(),
-        }),
-      );
-      dispatch(setTodoTitle(""));
-    }
+    dispatch(editTodo({ todoTitle, expirationDate: formattedExpirationDate, createdDate, todoId }));
   };
 
   return (
-    <Modal className={styles.modalContainer} setModalActive={setModalActive} modalActive={modalActive} title="Create Todo">
+    <Modal className={styles.modalContainer} setModalActive={setModalActive} modalActive={modalActive} title="Edit Todo">
       <form onSubmit={e => e.preventDefault()} className={styles.modalForm}>
         <Formik
           initialValues={{
-            todoTitle,
-            expirationDate: "",
+            todoTitle: todo.todoTitle,
+            expirationDate: todo.expirationDate ? new Date(todo.expirationDate) : null,
           }}
           validationSchema={TodoScheme}
-          onSubmit={handleSubmit}
+          onSubmit={(data: FormData) => handleSubmit(data)}
         >
           {({ handleSubmit, values, errors, setFieldValue }) => (
             <>
@@ -80,7 +62,7 @@ export const CreateTodoModal = () => {
                 <Input
                   className={cn(styles.modalField, errors.todoTitle ? styles.modalFieldError : styles.modalField)}
                   placeholder="Enter new todo"
-                  onChange={e => setChangedTodoTitle(e, setFieldValue, TodoValidateFields.TODO_TITLE)}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => handleChangeTodoTitle(e, setFieldValue, TodoValidateFields.TODO_TITLE)}
                   value={values.todoTitle}
                   id={TodoValidateFields.TODO_TITLE}
                 />
@@ -90,7 +72,7 @@ export const CreateTodoModal = () => {
                 </label>
                 <Input
                   className={cn(styles.modalField, styles.disabledModalField, modalStyles.disabledModalField)}
-                  value={setExpirationDateFormat(new Date())}
+                  value={todo.createdDate}
                   disabled
                   id={TodoValidateFields.CREATED_DATE}
                 />
@@ -101,8 +83,8 @@ export const CreateTodoModal = () => {
                 </label>
                 <DatePicker
                   className={cn(styles.modalField, errors.expirationDate ? styles.modalFieldError : styles.modalField)}
-                  selected={expirationDate}
                   onChange={date => handleDateChange(date, setFieldValue, setExpirationDate)}
+                  selected={expirationDate ?? getExpirationDateFormat(todo.expirationDate)}
                   showTimeSelect
                   todayButton="Today"
                   timeFormat="HH:mm"
@@ -111,14 +93,14 @@ export const CreateTodoModal = () => {
                   id={TodoValidateFields.EXPIRATION_DATE}
                   placeholderText="Select expiration date"
                   minDate={new Date()}
-                  minTime={setMinTimeToDate(expirationDate)}
+                  minTime={setMinTimeToDate(expirationDate ?? getExpirationDateFormat(todo.expirationDate))}
                   maxTime={setMaxTimeToDate(new Date())}
                 />
               </div>
 
               <div className={styles.footerModal}>
                 <Button
-                  onClick={handleCloseModal}
+                  onClick={() => setModalActive(false)}
                   type={ButtonType.BUTTON}
                   className={cn(modalStyles.cancelButton, styles.createTodoModalButton)}
                 >

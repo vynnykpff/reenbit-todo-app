@@ -1,3 +1,4 @@
+import { EditTodoModal } from "@/components/TodoLayout/EditTodoModal/EditTodoModal.tsx";
 import { FC } from "react";
 import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { ModalState } from "@/store/reducers/modalReducer.ts";
@@ -5,6 +6,7 @@ import { CreateTodoModal } from "@/components/TodoLayout/CreateTodoModal/CreateT
 
 export const components: Record<keyof ModalState, FC<any>> = {
   createTodoModal: CreateTodoModal,
+  editTodoModal: EditTodoModal,
 };
 
 export const ModalComponents = () => {

@@ -1,6 +1,6 @@
 .todoContainer {
   position: relative;
-  padding: 16px 80px 16px 16px;
+  padding: 16px 150px 16px 16px;
   background-color: var(--background-primary-500);
   border-radius: 8px;
   border: 1px solid var(--background-primary-400);
@@ -81,7 +81,6 @@
     color: var(--text-primary-600);
 
     &:hover {
-      transition: .2s all;
       color: var(--text-primary-500);
     }
   }
@@ -91,8 +90,20 @@
     color: var(--background-primary-300);
 
     &:hover {
-      transition: .2s all;
       opacity: 0.7;
     }
   }
+
+  .editIcon {
+    right: 80px;
+    color: var(--background-primary-300);
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+}
+
+.todoCompletedContainer {
+  padding: 16px 120px 16px 16px;
 }

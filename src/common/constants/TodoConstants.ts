@@ -1,8 +1,8 @@
-import { format } from "date-fns";
-
 export enum TodoConstants {
   ADD_TODO = "ADD_TODO",
+  SET_CURRENT_TODO = "SET_CURRENT_TODO",
   DELETE_TODO = "DELETE_TODO",
+  EDIT_TODO = "EDIT_TODO",
   SET_TODO_TITLE = "SET_TODO_TITLE",
   SET_COMPLETED_TODO = "SET_COMPLETED_TODO",
 }
@@ -19,4 +19,7 @@ export const enum TodoErrorMessages {
   REQUIRED_FIELD = "Required field",
 }
 
-export const TodoDateFormat = format(new Date(), "dd.MM.yyyy HH:mm");
+export const enum TodoTimeConstants {
+  ADDITION_TODO_TIME = 5,
+  TIME_INTERVAL = 1,
+}

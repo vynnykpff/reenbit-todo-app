@@ -1,5 +1,6 @@
 import { NotificationType } from "@/common/constants/NotificationConstants.ts";
-import { TodoDateFormat, TodoErrorMessages } from "@/common/constants/TodoConstants.ts";
+import { TodoErrorMessages } from "@/common/constants/TodoConstants.ts";
+import { ButtonType } from "@/common/constants/UIConstants.ts";
 import { Button } from "@/components/ui/Button/Button.tsx";
 import { Input } from "@/components/ui/Input/Input.tsx";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
@@ -9,6 +10,7 @@ import { setNotification } from "@/store/actions/notificationActionCreators.ts";
 import { addTodo, setTodoTitle } from "@/store/actions/todoActionCreators.ts";
 import { checkOnValidField } from "@/utils/checkOnValidField.ts";
 import { getNextDate } from "@/utils/getNextDate.ts";
+import { setExpirationDateFormat } from "@/utils/setExpirationDateFormat.ts";
 import { ChangeEvent, KeyboardEvent } from "react";
 import { BsPlusLg } from "react-icons/bs";
 import { v4 as uuidv4 } from "uuid";
@@ -36,8 +38,8 @@ export const CreateTodo = () => {
     }
     dispatch(
       addTodo({
-        createdDate: TodoDateFormat,
-        expirationDate: getNextDate(TodoDateFormat),
+        createdDate: setExpirationDateFormat(new Date()),
+        expirationDate: getNextDate(setExpirationDateFormat(new Date())),
         todoTitle,
         isCompleted: false,
         todoId: uuidv4(),
@@ -63,7 +65,7 @@ export const CreateTodo = () => {
         className={styles.createTodoInput}
         placeholder="Enter new todo"
       />
-      <Button onClick={() => setModalActive(true)} className={styles.createTodoButton}>
+      <Button onClick={() => setModalActive(true)} type={ButtonType.BUTTON} className={styles.createTodoButton}>
         <span className={styles.createTodoButtonTitle}>
           <span>Create</span>
           <BsPlusLg />

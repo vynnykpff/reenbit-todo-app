@@ -8,10 +8,15 @@ export type ComponentsState<P extends object = object> = {
 
 export type ModalState = {
   createTodoModal: ComponentsState;
+  editTodoModal: ComponentsState;
 };
 
 const initialState: ModalState = {
   createTodoModal: {
+    visible: false,
+    props: {},
+  },
+  editTodoModal: {
     visible: false,
     props: {},
   },

@@ -13,25 +13,48 @@ type AddTodoAction = {
   payload: Todo;
 };
 
-type setTodoTitleAction = {
+type SetTodoTitleAction = {
   type: typeof TodoConstants.SET_TODO_TITLE;
   payload: {
     todoTitle: Todo["todoTitle"];
   };
 };
 
-type setTodoCompletedAction = {
+type SetTodoCompletedAction = {
   type: typeof TodoConstants.SET_COMPLETED_TODO;
   payload: {
     todoId: Todo["todoId"];
   };
 };
 
-type deleteTodoAction = {
+type DeleteTodoAction = {
   type: typeof TodoConstants.DELETE_TODO;
   payload: {
     todoId: Todo["todoId"];
   };
 };
 
-export type TodoActionTypes = AddTodoAction | setTodoTitleAction | setTodoCompletedAction | deleteTodoAction;
+export type EditTodo = {
+  todoTitle: Todo["todoTitle"];
+  createdDate: Todo["createdDate"];
+  expirationDate: Todo["expirationDate"];
+  todoId: Todo["todoId"];
+};
+
+type EditTodoAction = {
+  type: typeof TodoConstants.EDIT_TODO;
+  payload: EditTodo;
+};
+
+type SetCurrentTodoAction = {
+  type: typeof TodoConstants.SET_CURRENT_TODO;
+  payload: Todo;
+};
+
+export type TodoActionTypes =
+  | AddTodoAction
+  | SetTodoTitleAction
+  | SetTodoCompletedAction
+  | DeleteTodoAction
+  | EditTodoAction
+  | SetCurrentTodoAction;

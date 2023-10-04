@@ -1,5 +1,5 @@
 import { TodoConstants } from "@/common/constants/TodoConstants.ts";
-import { Todo, TodoActionTypes } from "@/common/types/Todo.ts";
+import { EditTodo, Todo, TodoActionTypes } from "@/common/types/Todo.ts";
 
 export const addTodo = (todo: Todo): TodoActionTypes => ({
   type: TodoConstants.ADD_TODO,
@@ -26,5 +26,19 @@ export const deleteTodo = (todoId: Todo["todoId"]): TodoActionTypes => ({
   type: TodoConstants.DELETE_TODO,
   payload: {
     todoId,
+  },
+});
+
+export const editTodo = (todo: EditTodo): TodoActionTypes => ({
+  type: TodoConstants.EDIT_TODO,
+  payload: {
+    ...todo,
+  },
+});
+
+export const setCurrentTodo = (todo: Todo): TodoActionTypes => ({
+  type: TodoConstants.SET_CURRENT_TODO,
+  payload: {
+    ...todo,
   },
 });
