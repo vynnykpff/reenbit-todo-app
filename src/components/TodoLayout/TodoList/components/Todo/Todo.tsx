@@ -30,7 +30,7 @@ export const Todo: FC<TodoProps> = ({ todoTitle, createdDate, expirationDate, to
   };
 
   return (
-    <li className={styles.todoContainer}>
+    <li className={cn(styles.todoContainer, isCompleted && styles.todoCompletedContainer)}>
       <div>
         <div className={styles.todoContent}>
           <label className={styles.todoCheck}>
@@ -47,7 +47,8 @@ export const Todo: FC<TodoProps> = ({ todoTitle, createdDate, expirationDate, to
           </ul>
         )}
       </div>
-      <HiOutlinePencilAlt className={cn(styles.todoIcon, styles.editIcon)} onClick={handleClickEditTodo} />
+      {!isCompleted && <HiOutlinePencilAlt className={cn(styles.todoIcon, styles.editIcon)} onClick={handleClickEditTodo} />}
+
       <BiTrash className={cn(styles.todoIcon, styles.trashIcon)} onClick={handleClickDeleteTodo} />
       <AiOutlineInfoCircle className={cn(styles.todoIcon, styles.infoIcon)} onClick={() => setIsShowInfo(prev => !prev)} />
     </li>

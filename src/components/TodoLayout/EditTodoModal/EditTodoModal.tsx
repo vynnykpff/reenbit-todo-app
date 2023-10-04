@@ -1,4 +1,4 @@
-import { TodoDateFormat, TodoTimeConstants, TodoValidateFields } from "@/common/constants/TodoConstants.ts";
+import { TodoTimeConstants, TodoValidateFields } from "@/common/constants/TodoConstants.ts";
 import { TodoScheme } from "@/common/schemes/TodoScheme.ts";
 import { Button } from "@/components/ui/Button/Button.tsx";
 import { Input } from "@/components/ui/Input/Input.tsx";
@@ -75,7 +75,7 @@ export const EditTodoModal = () => {
                 </label>
                 <Input
                   className={cn(styles.modalField, styles.disabledModalField, modalStyles.disabledModalField)}
-                  value={TodoDateFormat}
+                  value={todo[0].createdDate}
                   disabled
                   id={TodoValidateFields.CREATED_DATE}
                 />
