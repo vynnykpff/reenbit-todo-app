@@ -1,4 +1,5 @@
 import { TodoTimeConstants, TodoValidateFields } from "@/common/constants/TodoConstants.ts";
+import { ButtonType } from "@/common/constants/UIConstants.ts";
 import { TodoScheme } from "@/common/schemes/TodoScheme.ts";
 import { Button } from "@/components/ui/Button/Button.tsx";
 import { Input } from "@/components/ui/Input/Input.tsx";
@@ -30,14 +31,10 @@ export const EditTodoModal = () => {
   const dispatch = useAppDispatch();
   const [expirationDate, setExpirationDate] = useState<Date | null>(null);
 
-  const handleCloseModal = () => {
-    setModalActive(false);
-  };
-
   const handleSubmit = (data: FormData) => {
     setModalActive(false);
     const { todoTitle, expirationDate } = data;
-    const { todoId, createdDate } = todo[0];
+    const { todoId, createdDate } = todo;
 
     const formattedExpirationDate = expirationDate !== null ? setExpirationDateFormat(expirationDate) : "";
 
@@ -49,8 +46,8 @@ export const EditTodoModal = () => {
       <form onSubmit={e => e.preventDefault()} className={styles.modalForm}>
         <Formik
           initialValues={{
-            todoTitle: todo[0].todoTitle,
-            expirationDate: todo[0].expirationDate ? new Date(todo[0].expirationDate) : null,
+            todoTitle: todo.todoTitle,
+            expirationDate: todo.expirationDate ? new Date(todo.expirationDate) : null,
           }}
           validationSchema={TodoScheme}
           onSubmit={(data: FormData) => handleSubmit(data)}
@@ -75,7 +72,7 @@ export const EditTodoModal = () => {
                 </label>
                 <Input
                   className={cn(styles.modalField, styles.disabledModalField, modalStyles.disabledModalField)}
-                  value={todo[0].createdDate}
+                  value={todo.createdDate}
                   disabled
                   id={TodoValidateFields.CREATED_DATE}
                 />
@@ -87,7 +84,7 @@ export const EditTodoModal = () => {
                 <DatePicker
                   className={cn(styles.modalField, errors.expirationDate ? styles.modalFieldError : styles.modalField)}
                   onChange={date => handleDateChange(date, setFieldValue, setExpirationDate)}
-                  selected={expirationDate ?? getExpirationDateFormat(todo[0].expirationDate)}
+                  selected={expirationDate ?? getExpirationDateFormat(todo.expirationDate)}
                   showTimeSelect
                   todayButton="Today"
                   timeFormat="HH:mm"
@@ -96,16 +93,24 @@ export const EditTodoModal = () => {
                   id={TodoValidateFields.EXPIRATION_DATE}
                   placeholderText="Select expiration date"
                   minDate={new Date()}
-                  minTime={setMinTimeToDate(expirationDate ?? getExpirationDateFormat(todo[0].expirationDate))}
+                  minTime={setMinTimeToDate(expirationDate ?? getExpirationDateFormat(todo.expirationDate))}
                   maxTime={setMaxTimeToDate(new Date())}
                 />
               </div>
 
               <div className={styles.footerModal}>
-                <Button onClick={handleCloseModal} type="button" className={cn(modalStyles.cancelButton, styles.createTodoModalButton)}>
+                <Button
+                  onClick={() => setModalActive(false)}
+                  type={ButtonType.BUTTON}
+                  className={cn(modalStyles.cancelButton, styles.createTodoModalButton)}
+                >
                   Cancel
                 </Button>
-                <Button onClick={() => handleSubmit()} type="button" className={cn(modalStyles.agreeButton, styles.createTodoModalButton)}>
+                <Button
+                  onClick={() => handleSubmit()}
+                  type={ButtonType.BUTTON}
+                  className={cn(modalStyles.agreeButton, styles.createTodoModalButton)}
+                >
                   Save
                 </Button>
               </div>

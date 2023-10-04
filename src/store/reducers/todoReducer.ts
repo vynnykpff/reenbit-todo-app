@@ -4,13 +4,13 @@ import { Todo, TodoActionTypes } from "@/common/types/Todo.ts";
 type TodoState = {
   todos: Todo[];
   todoTitle: string;
-  todo: Todo[];
+  todo: Todo;
 };
 
 const initialState: TodoState = {
   todos: [],
   todoTitle: "",
-  todo: [],
+  todo: { todoId: "", todoTitle: "", createdDate: "", isCompleted: false, expirationDate: "" },
 };
 
 export const todoReducer = (state = initialState, action: TodoActionTypes) => {
@@ -26,16 +26,12 @@ export const todoReducer = (state = initialState, action: TodoActionTypes) => {
         ...action.payload,
       };
     case TodoConstants.SET_COMPLETED_TODO: {
-      const clonedTodos = structuredClone(state.todos);
-      const candidate = clonedTodos.findIndex(o => o.todoId === action.payload.todoId);
-      if (candidate < 0) {
-        return state;
-      }
-      clonedTodos[candidate].isCompleted = !clonedTodos[candidate].isCompleted;
-
-      return { ...state, todos: clonedTodos };
+      const { todoId } = action.payload;
+      return {
+        ...state,
+        todos: state.todos.map(todo => (todo.todoId === todoId ? { ...todo, isCompleted: !todo.isCompleted } : todo)),
+      };
     }
-
     case TodoConstants.DELETE_TODO: {
       const filteredTodos = state.todos.filter(todo => todo.todoId !== action.payload.todoId);
 
@@ -45,26 +41,16 @@ export const todoReducer = (state = initialState, action: TodoActionTypes) => {
       };
     }
     case TodoConstants.EDIT_TODO: {
-      const clonedTodos = structuredClone(state.todos);
-      const candidate = clonedTodos.findIndex(o => o.todoId === action.payload.todoId);
-
-      if (candidate < 0) {
-        return state;
-      }
-
-      clonedTodos[candidate].todoTitle = action.payload.todoTitle;
-      clonedTodos[candidate].createdDate = action.payload.createdDate;
-      clonedTodos[candidate].expirationDate = action.payload.expirationDate;
-
+      const { todoId, todoTitle, createdDate, expirationDate } = action.payload;
       return {
         ...state,
-        todos: clonedTodos,
+        todos: state.todos.map(todo => (todo.todoId === todoId ? { ...todo, todoTitle, createdDate, expirationDate } : todo)),
       };
     }
     case TodoConstants.SET_CURRENT_TODO: {
       return {
         ...state,
-        todo: [action.payload],
+        todo: action.payload,
       };
     }
     default:

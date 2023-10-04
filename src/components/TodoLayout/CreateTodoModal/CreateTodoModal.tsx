@@ -1,4 +1,5 @@
-import { TodoDateFormat, TodoTimeConstants, TodoValidateFields } from "@/common/constants/TodoConstants.ts";
+import { TodoTimeConstants, TodoValidateFields } from "@/common/constants/TodoConstants.ts";
+import { ButtonType } from "@/common/constants/UIConstants.ts";
 import { TodoScheme } from "@/common/schemes/TodoScheme.ts";
 import { Button } from "@/components/ui/Button/Button.tsx";
 import { Input } from "@/components/ui/Input/Input.tsx";
@@ -47,7 +48,7 @@ export const CreateTodoModal = () => {
     if (expirationDate) {
       dispatch(
         addTodo({
-          createdDate: TodoDateFormat,
+          createdDate: setExpirationDateFormat(new Date()),
           expirationDate: setExpirationDateFormat(expirationDate),
           todoTitle,
           isCompleted: false,
@@ -89,7 +90,7 @@ export const CreateTodoModal = () => {
                 </label>
                 <Input
                   className={cn(styles.modalField, styles.disabledModalField, modalStyles.disabledModalField)}
-                  value={TodoDateFormat}
+                  value={setExpirationDateFormat(new Date())}
                   disabled
                   id={TodoValidateFields.CREATED_DATE}
                 />
@@ -116,10 +117,18 @@ export const CreateTodoModal = () => {
               </div>
 
               <div className={styles.footerModal}>
-                <Button onClick={handleCloseModal} type="button" className={cn(modalStyles.cancelButton, styles.createTodoModalButton)}>
+                <Button
+                  onClick={handleCloseModal}
+                  type={ButtonType.BUTTON}
+                  className={cn(modalStyles.cancelButton, styles.createTodoModalButton)}
+                >
                   Cancel
                 </Button>
-                <Button onClick={() => handleSubmit()} type="button" className={cn(modalStyles.agreeButton, styles.createTodoModalButton)}>
+                <Button
+                  onClick={() => handleSubmit()}
+                  type={ButtonType.BUTTON}
+                  className={cn(modalStyles.agreeButton, styles.createTodoModalButton)}
+                >
                   Save
                 </Button>
               </div>

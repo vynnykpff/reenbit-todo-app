@@ -1,5 +1,3 @@
-import { format } from "date-fns";
-
 export enum TodoConstants {
   ADD_TODO = "ADD_TODO",
   SET_CURRENT_TODO = "SET_CURRENT_TODO",
@@ -25,5 +23,3 @@ export const enum TodoTimeConstants {
   ADDITION_TODO_TIME = 5,
   TIME_INTERVAL = 1,
 }
-
-export const TodoDateFormat = format(new Date(), "dd.MM.yyyy HH:mm");

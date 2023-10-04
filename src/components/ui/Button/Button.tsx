@@ -1,11 +1,10 @@
+import { ButtonType } from "@/common/constants/UIConstants.ts";
 import { FC, HTMLAttributes } from "react";
-
 import cn from "classnames";
-
 import styles from "./Button.module.scss";
 
 type AdditionalButtonProps = {
-  type?: "button" | "submit";
+  type?: ButtonType.BUTTON | ButtonType.SUBMIT;
 };
 
 type ButtonProps = HTMLAttributes<HTMLButtonElement> & AdditionalButtonProps;
