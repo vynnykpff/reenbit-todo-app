@@ -1,4 +1,5 @@
 import { Todo } from "@/components/TodoLayout/TodoList/components/Todo/Todo.tsx";
+import { Button } from "@/components/ui/Button/Button.tsx";
 import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useEffect, useState } from "react";
 import { PiClipboardText } from "react-icons/pi";
@@ -16,16 +17,24 @@ export const TodoList = () => {
   return (
     <section className={styles.todoListSection}>
       <div className={styles.todoListHeader}>
-        <p className={styles.todoListTitle}>
-          Tasks created
-          <span className={styles.todoListCounter}>{todos.length}</span>
-        </p>
-        <p className={styles.todoListTitle}>
-          Completed
-          <span className={styles.todoListCounter}>
-            {completedTodo} of {todos.length}
-          </span>
-        </p>
+        <div className={styles.todoListHeaderWrapper}>
+          <p className={styles.todoListTitle}>
+            Tasks created
+            <span className={styles.todoListCounter}>{todos.length}</span>
+          </p>
+          <p className={styles.todoListTitle}>
+            Completed
+            <span className={styles.todoListCounter}>
+              {completedTodo} of {todos.length}
+            </span>
+          </p>
+        </div>
+        <div className={styles.todoFiltrationContainer}>
+          <Button className={styles.todoFiltrationButton}>All</Button>
+          <Button className={styles.todoFiltrationButton}>Active</Button>
+          <Button className={styles.todoFiltrationButton}>Completed</Button>
+          <Button className={styles.todoFiltrationButton}>Clear completed</Button>
+        </div>
       </div>
 
       <ul className={styles.todoListContainer}>
