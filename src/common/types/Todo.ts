@@ -51,10 +51,23 @@ type SetCurrentTodoAction = {
   payload: Todo;
 };
 
+type SetFiltrationValueAction = {
+  type: typeof TodoConstants.SET_FILTRATION_VALUE;
+  payload: {
+    filter: string;
+  };
+};
+
+type DeleteCompletedTodoAction = {
+  type: typeof TodoConstants.DELETE_COMPLETED_TODOS;
+};
+
 export type TodoActionTypes =
   | AddTodoAction
   | SetTodoTitleAction
   | SetTodoCompletedAction
   | DeleteTodoAction
   | EditTodoAction
-  | SetCurrentTodoAction;
+  | SetCurrentTodoAction
+  | SetFiltrationValueAction
+  | DeleteCompletedTodoAction;

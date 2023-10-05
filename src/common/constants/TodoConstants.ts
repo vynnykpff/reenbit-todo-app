@@ -1,6 +1,8 @@
 export enum TodoConstants {
   ADD_TODO = "ADD_TODO",
   SET_CURRENT_TODO = "SET_CURRENT_TODO",
+  SET_FILTRATION_VALUE = "SET_FILTRATION_VALUE",
+  DELETE_COMPLETED_TODOS = "DELETE_COMPLETED_TODOS",
   DELETE_TODO = "DELETE_TODO",
   EDIT_TODO = "EDIT_TODO",
   SET_TODO_TITLE = "SET_TODO_TITLE",
@@ -23,3 +25,11 @@ export const enum TodoTimeConstants {
   ADDITION_TODO_TIME = 5,
   TIME_INTERVAL = 1,
 }
+
+export const CurrentTodoFilter = {
+  ALL: "All",
+  ACTIVE: "Active",
+  COMPLETED: "Completed",
+};
+
+export const CurrentTodoFilterArray = Object.values(CurrentTodoFilter);

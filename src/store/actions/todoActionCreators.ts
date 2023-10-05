@@ -42,3 +42,14 @@ export const setCurrentTodo = (todo: Todo): TodoActionTypes => ({
     ...todo,
   },
 });
+
+export const setFiltrationValue = (filter: string): TodoActionTypes => ({
+  type: TodoConstants.SET_FILTRATION_VALUE,
+  payload: {
+    filter,
+  },
+});
+
+export const deleteCompletedTodos = (): TodoActionTypes => ({
+  type: TodoConstants.DELETE_COMPLETED_TODOS,
+});
