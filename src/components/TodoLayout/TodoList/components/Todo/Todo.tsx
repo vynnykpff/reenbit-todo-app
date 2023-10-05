@@ -32,7 +32,7 @@ export const Todo: FC<TodoProps> = ({ todoTitle, createdDate, expirationDate, to
   };
 
   return (
-    <li className={cn(styles.todoContainer, isCompleted && styles.todoCompletedContainer)}>
+    <li className={styles.todoContainer}>
       <div>
         <div className={styles.todoContent}>
           <label className={styles.todoCheck}>
