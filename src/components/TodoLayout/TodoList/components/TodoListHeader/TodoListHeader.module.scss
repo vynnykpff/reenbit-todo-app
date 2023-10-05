@@ -13,9 +13,10 @@
     @media (max-width: $TABLET) {
       display: flex;
       justify-content: space-between;
+      align-items: center;
     }
 
-    @media (max-width: $MOBILE) {
+    @media (max-width: $MAX_MOBILE) {
       flex-direction: column;
       align-items: center;
     }
@@ -40,9 +41,6 @@
         color: var(--text-primary-500);
       }
 
-      &:last-child {
-        color: var(--text-accent-500);
-      }
 
       .todoListCounter {
         color: var(--text-secondary-200);
@@ -50,6 +48,17 @@
         padding: 4px 8px;
         border-radius: 50%;
       }
+    }
+
+    .clearCompletedTodosButton {
+      @media (max-width: $MAX_MOBILE) {
+        margin-bottom: 40px;
+      }
+    }
+
+    .completedTodosTitle {
+      color: var(--text-accent-500);
+      margin-bottom: 20px;
     }
   }
 }
