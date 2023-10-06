@@ -1,0 +1,64 @@
+@import "@/styles/MediaQueries";
+
+.todoListHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 25px;
+
+  @media (max-width: $TABLET) {
+    flex-direction: column;
+  }
+
+  .todoListHeaderWrapper {
+    @media (max-width: $TABLET) {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    @media (max-width: $MAX_MOBILE) {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .todoListTitle {
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      column-gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+
+      @media (max-width: $TABLET) {
+        margin-bottom: 20px;
+      }
+
+      @media (max-width: $MOBILE) {
+        margin-bottom: 12px;
+      }
+
+      &:first-child {
+        color: var(--text-primary-500);
+      }
+
+
+      .todoListCounter {
+        color: var(--text-secondary-200);
+        background-color: var(--background-primary-400);
+        padding: 4px 8px;
+        border-radius: 50%;
+      }
+    }
+
+    .clearCompletedTodosButton {
+      @media (max-width: $MAX_MOBILE) {
+        margin-bottom: 40px;
+      }
+    }
+
+    .completedTodosTitle {
+      color: var(--text-accent-500);
+      margin-bottom: 20px;
+    }
+  }
+}

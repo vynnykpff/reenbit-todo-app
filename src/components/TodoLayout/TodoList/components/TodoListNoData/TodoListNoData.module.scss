@@ -1,0 +1,29 @@
+@import "@/styles/MediaQueries";
+
+.todoListNoDataContainer {
+  box-shadow: rgba(149, 157, 165, 0.2) 0 0 8px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 250px;
+  text-align: center;
+  color: var(--background-primary-300);
+  font-size: 40px;
+  font-weight: 400;
+  padding: 16px;
+
+  .todoListText {
+    font-size: 16px;
+    line-height: 140%;
+
+    &:nth-child(2) {
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    @media (max-width: $MAX_MOBILE) {
+      font-size: 14px;
+    }
+  }
+}

@@ -1,0 +1,43 @@
+@import "@/styles/MediaQueries";
+
+.filteredTodoContainer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 15px;
+
+  @media (max-width: $TABLET) {
+    justify-content: center;
+    gap: 20px;
+  }
+}
+
+.filteredTodoButton {
+  background-color: var(--text-primary-600);
+  color: var(--text-secondary-100);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 5px 15px;
+  transition: .2s all;
+
+
+  &:disabled {
+    color: var(--text-secondary-100);
+    background-color: var(--background-primary-400);
+    cursor: auto;
+
+    &:hover {
+      color: var(--text-secondary-200);
+      background-color: var(--background-primary-300);
+    }
+  }
+
+  @media (max-width: $MAX_MOBILE) {
+    width: 100%;
+  }
+
+  &:hover {
+    transition: .2s all;
+    background-color: var(--text-primary-500);
+  }
+}

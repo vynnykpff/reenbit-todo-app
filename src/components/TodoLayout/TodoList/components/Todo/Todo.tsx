@@ -25,12 +25,14 @@ export const Todo: FC<TodoProps> = ({ todoTitle, createdDate, expirationDate, to
   };
 
   const handleClickEditTodo = () => {
-    setModalActive(true);
-    dispatch(setCurrentTodo({ todoId, todoTitle, expirationDate, createdDate, isCompleted }));
+    if (!isCompleted) {
+      setModalActive(true);
+      dispatch(setCurrentTodo({ todoId, todoTitle, expirationDate, createdDate, isCompleted }));
+    }
   };
 
   return (
-    <li className={cn(styles.todoContainer, isCompleted && styles.todoCompletedContainer)}>
+    <li className={styles.todoContainer}>
       <div>
         <div className={styles.todoContent}>
           <label className={styles.todoCheck}>
@@ -47,8 +49,10 @@ export const Todo: FC<TodoProps> = ({ todoTitle, createdDate, expirationDate, to
           </ul>
         )}
       </div>
-      {!isCompleted && <HiOutlinePencilAlt className={cn(styles.todoIcon, styles.editIcon)} onClick={handleClickEditTodo} />}
-
+      <HiOutlinePencilAlt
+        className={cn(styles.todoIcon, styles.editIcon, isCompleted && styles.disabledEditIcon)}
+        onClick={handleClickEditTodo}
+      />
       <BiTrash className={cn(styles.todoIcon, styles.trashIcon)} onClick={handleClickDeleteTodo} />
       <AiOutlineInfoCircle className={cn(styles.todoIcon, styles.infoIcon)} onClick={() => setIsShowInfo(prev => !prev)} />
     </li>
