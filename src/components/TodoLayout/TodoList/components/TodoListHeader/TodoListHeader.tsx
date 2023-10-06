@@ -1,10 +1,10 @@
 import { NotificationType } from "@/common/constants/NotificationConstants.ts";
-import { TodoErrorMessages } from "@/common/constants/TodoConstants.ts";
+import { CurrentTodoFilter, TodoErrorMessages } from "@/common/constants/TodoConstants.ts";
 import { FilteredTodo } from "@/components/TodoLayout/TodoList/components/FilteredTodo/FilteredTodo.tsx";
 import { Button } from "@/components/ui/Button/Button.tsx";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
 import { setNotification } from "@/store/actions/notificationActionCreators.ts";
-import { deleteCompletedTodos } from "@/store/actions/todoActionCreators.ts";
+import { deleteCompletedTodos, setFiltrationValue } from "@/store/actions/todoActionCreators.ts";
 import cn from "classnames";
 import styles from "./TodoListHeader.module.scss";
 import { useAppSelector } from "@/hooks/useAppSelector.ts";
@@ -24,6 +24,7 @@ export const TodoListHeader = () => {
   const handleDeleteCompletedTodos = () => {
     dispatch(setNotification({ title: TodoErrorMessages.CLEAR_COMPLETED, type: NotificationType.SUCCESS }));
     dispatch(deleteCompletedTodos());
+    dispatch(setFiltrationValue(CurrentTodoFilter.ALL));
   };
 
   return (
