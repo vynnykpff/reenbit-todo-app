@@ -53,3 +53,8 @@ export const setFiltrationValue = (filter: string): TodoActionTypes => ({
 export const deleteCompletedTodos = (): TodoActionTypes => ({
   type: TodoConstants.DELETE_COMPLETED_TODOS,
 });
+
+export const setSearchValue = (todo: Todo["todoTitle"]): TodoActionTypes => ({
+  type: TodoConstants.SEARCH_VALUE,
+  payload: todo,
+});

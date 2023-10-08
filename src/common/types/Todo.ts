@@ -62,6 +62,16 @@ type DeleteCompletedTodoAction = {
   type: typeof TodoConstants.DELETE_COMPLETED_TODOS;
 };
 
+type SearchTodosAction = {
+  type: typeof TodoConstants.SEARCH_TODO;
+  payload: Todo[];
+};
+
+type SetSearchValueAction = {
+  type: typeof TodoConstants.SEARCH_VALUE;
+  payload: Todo["todoTitle"];
+};
+
 export type TodoActionTypes =
   | AddTodoAction
   | SetTodoTitleAction
@@ -70,4 +80,6 @@ export type TodoActionTypes =
   | EditTodoAction
   | SetCurrentTodoAction
   | SetFiltrationValueAction
-  | DeleteCompletedTodoAction;
+  | DeleteCompletedTodoAction
+  | SearchTodosAction
+  | SetSearchValueAction;

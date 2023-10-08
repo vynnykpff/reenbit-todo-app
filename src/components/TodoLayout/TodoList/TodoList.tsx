@@ -5,13 +5,15 @@ import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import styles from "./TodoList.module.scss";
 
 export const TodoList = () => {
-  const { todos, filterValue } = useAppSelector(state => state.todoReducer);
+  const { searchedTodos, todos, filterValue, searchValue } = useAppSelector(state => state.todoReducer);
+
+  const visibleTodos = searchValue.length ? searchedTodos : todos;
 
   return (
     <section className={styles.todoListSection}>
       <TodoListHeader />
       <ul className={styles.todoListContainer}>
-        {todos.length ? todos.map(todo => <Todo key={todo.todoId} {...todo} />) : <TodoListNoData title={filterValue} />}
+        {visibleTodos.length ? visibleTodos.map(todo => <Todo key={todo.todoId} {...todo} />) : <TodoListNoData title={filterValue} />}
       </ul>
     </section>
   );
