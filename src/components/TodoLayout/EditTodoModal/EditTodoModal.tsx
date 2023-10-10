@@ -37,7 +37,6 @@ export const EditTodoModal = () => {
     const { todoId, createdDate } = todo;
 
     const formattedExpirationDate = expirationDate !== null ? setExpirationDateFormat(expirationDate) : "";
-
     dispatch(editTodo({ todoTitle, expirationDate: formattedExpirationDate, createdDate, todoId }));
   };
 

@@ -2,7 +2,7 @@
 
 .createTodoContainer {
   margin-top: -25px;
-  margin-bottom: 70px;
+  margin-bottom: 25px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -20,11 +20,6 @@
     background-color: var(--background-primary-500);
     border: 1px solid var(--background-primary-700);
     transition: .3s all;
-
-    &:hover {
-      transition: .3s all;
-      background-color: var(--background-primary-400);
-    }
 
     @media (max-width: $MAX_MOBILE) {
       width: 100%;

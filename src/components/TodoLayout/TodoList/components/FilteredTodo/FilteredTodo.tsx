@@ -12,7 +12,7 @@ export const FilteredTodo = () => {
 
   return (
     <div className={styles.filteredTodoContainer}>
-      {CurrentTodoFilterArray.map(value => (
+      {CurrentTodoFilterArray.map((value: string) => (
         <Button
           key={uuidv4()}
           disabled={filterValue === value}

@@ -13,6 +13,8 @@ export enum TodoEditingActions {
 
 export enum TodoFilteringActions {
   SET_FILTRATION_VALUE = "SET_FILTRATION_VALUE",
+  SEARCH_TODO = "SEARCH_TODO",
+  SEARCH_VALUE = "SEARCH_VALUE",
 }
 
 export const TodoConstants = {
