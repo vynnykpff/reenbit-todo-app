@@ -10,7 +10,7 @@
 
   &:hover {
     transition: .2s all;
-    background-color: var(--background-primary-400);
+    opacity: 0.7;
     border: 1px solid var(--background-primary-500);
   }
 
@@ -45,11 +45,13 @@
       line-height: 150%;
       overflow-wrap: break-word;
       max-width: 100%;
+      transition: .2s all;
     }
 
     .todoCompleted {
       text-decoration: line-through;
-      color: var(--background-primary-300)
+      opacity: 0.5;
+      transition: .2s all;
     }
   }
 
@@ -62,7 +64,7 @@
     .todoDateContent {
       font-size: 12px;
       font-weight: 500;
-      color: var(--background-primary-300);
+      color: var(--text-secondary-200);
     }
   }
 
@@ -78,16 +80,16 @@
 
   .infoIcon {
     right: 16px;
-    color: var(--text-primary-600);
+    color: var(--text-accent-600);
 
     &:hover {
-      color: var(--text-primary-500);
+      color: var(--text-accent-500);
     }
   }
 
   .trashIcon {
     right: 48px;
-    color: var(--background-primary-300);
+    color: var(--text-secondary-200);
 
     &:hover {
       opacity: 0.7;
@@ -96,7 +98,7 @@
 
   .editIcon {
     right: 80px;
-    color: var(--background-primary-300);
+    color: var(--text-secondary-200);
 
     &:hover {
       opacity: 0.7;

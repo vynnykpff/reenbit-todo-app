@@ -5,6 +5,7 @@
   column-gap: 12px;
   height: 200px;
   background-color: var(--background-primary-700);
+  transition: all .2s ease;
 
   .headerTitle {
 
@@ -13,11 +14,11 @@
       font-weight: 900;
 
       &:first-child {
-        color: var(--text-primary-500);
+        color: var(--text-accent-500);
       }
 
       &:last-child {
-        color: var(--text-accent-600);
+        color: var(--text-accent-400);
       }
     }
   }

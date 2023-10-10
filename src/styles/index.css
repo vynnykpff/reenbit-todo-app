@@ -8,27 +8,46 @@
 }
 
 :root {
-	--text-primary-600: #1E6F9F;
-	--text-primary-500: #4EA8DE;
+	--text-accent-600: #1E6F9F;
+	--text-accent-500: #4EA8DE;
+	--text-accent-400: #5E60CE;
+	--text-accent-300: #8284FA;
 
-	--text-secondary-200: #D9D9D9;
-	--text-secondary-100: #F2F2F2;
+	--text-secondary-accent-100: #F2F2F2;
 
-	--text-accent-600: #5E60CE;
-	--text-accent-500: #8284FA;
+	--placeholder-primary-300: #808080;
 
+	--text-danger: #de2020;
+}
+
+:root[data-theme="light"] {
+	--background-primary-700: #F0F0F0;
+	--background-primary-600: #FAFAFA;
+	--background-primary-500: #D9D9D9;
+	--background-primary-400: #D9D9D9;
+
+	--background-secondary-300: #e5e2e2;
+
+	--text-secondary-100: #262626;
+	--text-secondary-200: #1A1A1A;
+}
+
+:root[data-theme="dark"] {
 	--background-primary-700: #0D0D0D;
 	--background-primary-600: #1A1A1A;
 	--background-primary-500: #262626;
 	--background-primary-400: #333333;
-	--background-primary-300: #808080;
 
-	--text-danger: #de2020;
+	--background-secondary-300: #808080;
+
+	--text-secondary-100: #F2F2F2;
+	--text-secondary-200: #D9D9D9;
 }
 
 body {
 	font-family: 'Inter', sans-serif;
 	background-color: var(--background-primary-600);
+	transition: all .2s ease;
 	min-width: 250px;
 }
 

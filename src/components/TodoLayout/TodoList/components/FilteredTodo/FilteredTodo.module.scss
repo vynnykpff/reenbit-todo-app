@@ -8,14 +8,17 @@
   gap: 15px;
 
   @media (max-width: $TABLET) {
-    justify-content: center;
     gap: 20px;
+  }
+
+  @media (max-width: $MAX_MOBILE) {
+    max-width: none;
   }
 }
 
 .filteredTodoButton {
-  background-color: var(--text-primary-600);
-  color: var(--text-secondary-100);
+  background-color: var(--text-accent-600);
+  color: var(--text-secondary-accent-100);
   font-weight: 600;
   font-size: 14px;
   padding: 5px 15px;
@@ -23,13 +26,14 @@
 
 
   &:disabled {
-    color: var(--text-secondary-100);
+    color: var(--text-secondary-200);
     background-color: var(--background-primary-400);
     cursor: auto;
+    transition: .2s all;
 
     &:hover {
-      color: var(--text-secondary-200);
-      background-color: var(--background-primary-300);
+      background-color: var(--background-secondary-300);
+      transition: .2s all;
     }
   }
 
@@ -39,6 +43,6 @@
 
   &:hover {
     transition: .2s all;
-    background-color: var(--text-primary-500);
+    background-color: var(--text-accent-400);
   }
 }

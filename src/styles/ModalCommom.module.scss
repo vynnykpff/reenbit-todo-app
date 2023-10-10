@@ -21,12 +21,12 @@
 }
 
 .agreeButton {
-  background-color: var(--text-primary-600);
-  color: var(--text-secondary-100);
+  background-color: var(--text-accent-600);
+  color: var(--text-secondary-accent-100);
   transition: .3s all;
 
   &:hover {
-    background-color: var(--text-primary-500);
+    background-color: var(--text-accent-500);
     transition: .3s all;
   }
 }
