@@ -28,6 +28,7 @@
       column-gap: 8px;
       align-items: center;
       margin-bottom: 8px;
+      transition: .2s all;
 
       @media (max-width: $TABLET) {
         margin-bottom: 20px;
@@ -38,15 +39,15 @@
       }
 
       &:first-child {
-        color: var(--text-primary-500);
+        color: var(--text-accent-500);
       }
 
-
       .todoListCounter {
-        color: var(--text-secondary-200);
+        color: var(--text-secondary-100);
         background-color: var(--background-primary-400);
         padding: 4px 8px;
         border-radius: 50%;
+        transition: .2s all;
       }
     }
 
@@ -57,8 +58,9 @@
     }
 
     .completedTodosTitle {
-      color: var(--text-accent-500);
+      color: var(--text-accent-300);
       margin-bottom: 20px;
+      transition: .2s all;
     }
   }
 }

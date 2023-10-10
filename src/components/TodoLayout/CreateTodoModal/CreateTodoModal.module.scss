@@ -37,7 +37,7 @@
 
       &:hover {
         transition: .3s all;
-        background-color: var(--background-primary-400);
+        opacity: 0.7;
       }
     }
 
@@ -47,7 +47,7 @@
     }
 
     .disabledModalField {
-      color: var(--background-primary-300);
+      color: var(--placeholder-primary-300);
       cursor: not-allowed;
     }
 
