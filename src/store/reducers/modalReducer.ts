@@ -9,6 +9,7 @@ export type ComponentsState<P extends object = object> = {
 export type ModalState = {
   createTodoModal: ComponentsState;
   editTodoModal: ComponentsState;
+  modalConfirm: ComponentsState;
 };
 
 const initialState: ModalState = {
@@ -17,6 +18,10 @@ const initialState: ModalState = {
     props: {},
   },
   editTodoModal: {
+    visible: false,
+    props: {},
+  },
+  modalConfirm: {
     visible: false,
     props: {},
   },

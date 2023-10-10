@@ -1,5 +1,5 @@
 import { NotificationType } from "@/common/constants/NotificationConstants.ts";
-import { TodoErrorMessages, TodoValidateData } from "@/common/constants/TodoConstants.ts";
+import { TodoNotificationMessages, TodoValidateData } from "@/common/constants/TodoConstants.ts";
 import { ButtonType } from "@/common/constants/UIConstants.ts";
 import { Button } from "@/components/ui/Button/Button.tsx";
 import { Input } from "@/components/ui/Input/Input.tsx";
@@ -34,7 +34,7 @@ export const TodoCreate = () => {
     }
 
     if (!todoTitle.trim().length) {
-      return dispatch(setNotification({ title: TodoErrorMessages.EMPTY_TITLE, type: NotificationType.ERROR }));
+      return dispatch(setNotification({ title: TodoNotificationMessages.EMPTY_TITLE, type: NotificationType.ERROR }));
     }
     dispatch(
       addTodo({
@@ -50,7 +50,7 @@ export const TodoCreate = () => {
 
   const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.value.trim().length >= TodoValidateData.MAX_TITLE_LENGTH) {
-      dispatch(setNotification({ title: TodoErrorMessages.MAX_LENGTH, type: NotificationType.ERROR }));
+      dispatch(setNotification({ title: TodoNotificationMessages.MAX_LENGTH, type: NotificationType.ERROR }));
       return setTitleStoreValue(todoTitle.replace(e.target.value, ""));
     }
     setTitleStoreValue(isValidField(e.target.value));

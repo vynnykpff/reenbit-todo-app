@@ -8,7 +8,7 @@ type ModalProps = {
   modalActive: boolean;
   setModalActive: Dispatch<SetStateAction<boolean>> | ((value: boolean) => void);
   children: ReactNode;
-  title: string;
+  title?: string;
   onHide?: () => void;
 } & HTMLAttributes<HTMLDivElement>;
 

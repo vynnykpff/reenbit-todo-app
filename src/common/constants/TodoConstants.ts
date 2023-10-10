@@ -29,15 +29,22 @@ export const enum TodoValidateFields {
   EXPIRATION_DATE = "expirationDate",
 }
 
-export const enum TodoErrorMessages {
+export const enum TodoNotificationMessages {
   MAX_LENGTH = "The maximum length of the title mustn't exceed 120 characters",
   EMPTY_TITLE = "You can't to create empty todo",
   REQUIRED_FIELD = "Required field",
-  CLEAR_COMPLETED = "Successfully cleared the completed tasks",
+  DELETE_COMPLETED_TODOS = "Successfully cleared the completed tasks",
+  DELETE_TODO = "Successfully deleted the todo",
+}
+
+export const enum TodoConfirmMessages {
+  DELETE_TODO = "delete current todo",
+  DELETE_COMPLETED_TODOS = "delete completed todos",
 }
 
 export const enum TodoTimeConstants {
   ADDITION_TODO_TIME = 5,
+  RESET_ADDITION_TODO_TIME = -5,
   TIME_INTERVAL = 1,
 }
 

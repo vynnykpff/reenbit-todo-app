@@ -1,8 +1,9 @@
 import { NotificationType } from "@/common/constants/NotificationConstants.ts";
-import { TodoCurrentFilter, TodoErrorMessages } from "@/common/constants/TodoConstants.ts";
+import { TodoConfirmMessages, TodoCurrentFilter, TodoNotificationMessages } from "@/common/constants/TodoConstants.ts";
 import { TodoFiltered } from "@/components/TodoLayout/TodoList/components/TodoFiltered/TodoFiltered.tsx";
 import { Button } from "@/components/ui/Button/Button.tsx";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
+import { useModalState } from "@/hooks/useModalState.ts";
 import { setNotification } from "@/store/actions/notificationActionCreators.ts";
 import { deleteCompletedTodos, setFiltrationValue } from "@/store/actions/todoActionCreators.ts";
 import cn from "classnames";
@@ -14,6 +15,7 @@ import filteredStyles from "@/components/TodoLayout/TodoList/components/TodoFilt
 export const TodoListHeader = () => {
   const { originalTodos } = useAppSelector(state => state.todoReducer);
   const [completedTodo, setCompletedTodo] = useState(0);
+  const setConfirmModalActive = useModalState("modalConfirm")[1];
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -22,9 +24,14 @@ export const TodoListHeader = () => {
   }, [originalTodos]);
 
   const handleDeleteCompletedTodos = () => {
-    dispatch(setNotification({ title: TodoErrorMessages.CLEAR_COMPLETED, type: NotificationType.SUCCESS }));
-    dispatch(deleteCompletedTodos());
-    dispatch(setFiltrationValue(TodoCurrentFilter.ALL));
+    setConfirmModalActive(true, {
+      confirmCallback: () => {
+        dispatch(setNotification({ title: TodoNotificationMessages.DELETE_COMPLETED_TODOS, type: NotificationType.SUCCESS }));
+        dispatch(deleteCompletedTodos());
+        dispatch(setFiltrationValue(TodoCurrentFilter.ALL));
+      },
+      message: TodoConfirmMessages.DELETE_COMPLETED_TODOS,
+    });
   };
 
   return (
