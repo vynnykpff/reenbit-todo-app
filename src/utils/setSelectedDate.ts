@@ -2,7 +2,7 @@ import { TodoTimeConstants, TodoValidateFields } from "@/common/constants/TodoCo
 import { setMinutesToDate } from "@/utils/setTimeToDate.ts";
 import { Dispatch, SetStateAction } from "react";
 
-export const handleDateChange = (
+export const setSelectedDate = (
   date: Date | null,
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void,
   setExpirationDate: Dispatch<SetStateAction<Date | null>>,

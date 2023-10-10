@@ -3,14 +3,14 @@ import { FC, HTMLAttributes } from "react";
 
 import styles from "./Input.module.scss";
 
-type AdditionalInputProps = {
+type InputAdditionalProps = {
   value?: string;
   disabled?: boolean;
   type?: string;
   checked?: boolean;
 };
 
-type InputProps = HTMLAttributes<HTMLInputElement> & AdditionalInputProps;
+type InputProps = HTMLAttributes<HTMLInputElement> & InputAdditionalProps;
 
 export const Input: FC<InputProps> = ({ placeholder, className, value = "", disabled = false, type = "text", checked, ...props }) => {
   return (

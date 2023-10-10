@@ -1,6 +1,6 @@
 import { Todo } from "@/components/TodoLayout/TodoList/components/Todo/Todo.tsx";
 import { TodoListHeader } from "@/components/TodoLayout/TodoList/components/TodoListHeader/TodoListHeader.tsx";
-import { TodoListNoData } from "@/components/TodoLayout/TodoList/components/TodoListNoData/TodoListNoData.tsx";
+import { TodoListEmpty } from "@/components/TodoLayout/TodoList/components/TodoListEmpty/TodoListEmpty.tsx";
 import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import styles from "./TodoList.module.scss";
 
@@ -9,7 +9,7 @@ export const TodoList = () => {
 
   const visibleTodos = searchValue.length ? searchedTodos : todos;
 
-  const setNoDataMessage = () => {
+  const setTodoEmptyMessage = () => {
     return searchValue.length ? `Nothing found in the filter: ${filterValue}` : filterValue;
   };
 
@@ -20,7 +20,7 @@ export const TodoList = () => {
         {visibleTodos.length ? (
           visibleTodos.map(todo => <Todo key={todo.todoId} {...todo} />)
         ) : (
-          <TodoListNoData title={setNoDataMessage()} />
+          <TodoListEmpty title={setTodoEmptyMessage()} />
         )}
       </ul>
     </section>

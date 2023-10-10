@@ -41,10 +41,19 @@ export const enum TodoTimeConstants {
   TIME_INTERVAL = 1,
 }
 
-export const CurrentTodoFilter = {
+export const TodoCurrentFilter = {
   ALL: "All",
   ACTIVE: "Active",
   COMPLETED: "Completed",
 };
 
-export const CurrentTodoFilterArray = Object.values(CurrentTodoFilter);
+export const TodoCurrentFilterArray = Object.values(TodoCurrentFilter);
+
+export const enum DateInfo {
+  HOURS_IN_DAY = 24,
+}
+
+export const TodoValidateData = {
+  MAX_TITLE_LENGTH: 120,
+  MIN_TITLE_LENGTH: 1,
+};
