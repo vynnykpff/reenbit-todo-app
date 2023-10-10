@@ -4,6 +4,7 @@ import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useDebounce } from "@/hooks/useDebounce.ts";
 import { setSearchValue } from "@/store/actions/todoActionCreators.ts";
 import { ChangeEvent, useEffect, useState } from "react";
+import { IoIosClose } from "react-icons/io";
 import styles from "./SearchTodo.module.scss";
 
 export const SearchTodo = () => {
@@ -26,5 +27,14 @@ export const SearchTodo = () => {
     setValue(event.target.value);
   };
 
-  return <Input value={value} onChange={handleChange} className={styles.searchTodoInput} placeholder="Enter to search for your todos" />;
+  const handleClearSearchValue = () => {
+    dispatch(setSearchValue(""));
+  };
+
+  return (
+    <span className={styles.searchTodoContainer}>
+      <IoIosClose onClick={handleClearSearchValue} className={styles.searchClearIcon} />
+      <Input value={value} onChange={handleChange} className={styles.searchTodoInput} placeholder="Enter to search for your todos" />
+    </span>
+  );
 };

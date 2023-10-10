@@ -44,6 +44,10 @@ const updateTodosAndOriginalTodos = (state: TodoState, updatedTodos: Todo[], fil
   };
 };
 
+const getSearchedTodos = (todos: Todo[], searchValue: string) => {
+  return todos.filter(todo => todo.todoTitle.toLowerCase().includes(searchValue.toLowerCase()));
+};
+
 export const todoReducer = (state = initialState, action: TodoActionTypes): TodoState => {
   switch (action.type) {
     case TodoConstants.ADD_TODO: {
@@ -117,8 +121,7 @@ export const todoReducer = (state = initialState, action: TodoActionTypes): Todo
         ...state,
         filterValue: filter,
         todos: updatedTodos,
-        searchedTodos: updatedTodos,
-        searchValue: "",
+        searchedTodos: getSearchedTodos(filteredTodos, state.searchValue),
       };
     }
     case TodoConstants.DELETE_COMPLETED_TODOS: {
@@ -127,12 +130,11 @@ export const todoReducer = (state = initialState, action: TodoActionTypes): Todo
     }
     case TodoConstants.SEARCH_VALUE: {
       const searchValue = action.payload;
-      const searchedTodos = state.todos.filter(todo => todo.todoTitle.toLowerCase().includes(searchValue.toLowerCase()));
 
       return {
         ...state,
         searchValue,
-        searchedTodos,
+        searchedTodos: getSearchedTodos(state.todos, searchValue),
       };
     }
     default:
