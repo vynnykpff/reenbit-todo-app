@@ -6,6 +6,7 @@ import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
 import { setNotification } from "@/store/actions/notificationActionCreators.ts";
 import { deleteTodo, setCurrentTodo, updateStatusTodo } from "@/store/actions/todoActionCreators.ts";
+import { checkOnCurrentExpirationDate } from "@/utils/checkOnCurrentExpirationDate.ts";
 import cn from "classnames";
 import { FC, useState } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
@@ -42,7 +43,7 @@ export const Todo: FC<TodoProps> = ({ todoTitle, createdDate, expirationDate, to
   };
 
   return (
-    <li className={styles.todoContainer}>
+    <li className={cn(styles.todoContainer, !checkOnCurrentExpirationDate(expirationDate) && styles.expiredTodoContainer)}>
       <div>
         <div className={styles.todoContent}>
           <label className={styles.todoCheck}>
