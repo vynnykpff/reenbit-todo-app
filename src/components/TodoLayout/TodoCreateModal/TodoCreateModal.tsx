@@ -58,6 +58,12 @@ export const TodoCreateModal = () => {
     }
   };
 
+  const handleChangeDatePicker = (date: Date, setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void) => {
+    if (setExpirationDateFormat(date).length === 16) {
+      return setSelectedDate(date, setFieldValue, setExpirationDate);
+    }
+  };
+
   return (
     <Modal className={styles.modalContainer} setModalActive={setModalActive} modalActive={modalActive} title="Create Todo">
       <form onSubmit={e => e.preventDefault()} className={styles.modalForm}>
@@ -101,7 +107,7 @@ export const TodoCreateModal = () => {
                 <DatePicker
                   className={cn(styles.modalField, errors.expirationDate ? styles.modalFieldError : styles.modalField)}
                   selected={expirationDate}
-                  onChange={date => setSelectedDate(date, setFieldValue, setExpirationDate)}
+                  onChange={(date: Date) => handleChangeDatePicker(date, setFieldValue)}
                   showTimeSelect
                   todayButton="Today"
                   timeFormat="HH:mm"
