@@ -1,12 +1,12 @@
-import { checkOnValidField } from "@/utils/checkOnValidField.ts";
+import { isValidField } from "@/utils/isValidField.ts";
 import { FormEvent } from "react";
 
-export const handleChangeTodoTitle = (
+export const setSelectedTodoTitle = (
   e: FormEvent<HTMLInputElement>,
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void,
   field: string,
 ) => {
-  const newValue = checkOnValidField(e.currentTarget.value);
+  const newValue = isValidField(e.currentTarget.value);
   setFieldValue(field, newValue);
 
   return newValue;

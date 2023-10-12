@@ -1,5 +1,6 @@
 import { NotificationType } from "@/common/constants/NotificationConstants.ts";
-import { TodoErrorMessages } from "@/common/constants/TodoConstants.ts";
+import { TodoNotificationMessages } from "@/common/constants/TodoConstants/TodoValidation.ts";
+import { TodoValidateData } from "@/common/constants/TodoConstants/TodoValidationData.ts";
 import { ButtonType } from "@/common/constants/UIConstants.ts";
 import { Button } from "@/components/ui/Button/Button.tsx";
 import { Input } from "@/components/ui/Input/Input.tsx";
@@ -8,17 +9,17 @@ import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
 import { setNotification } from "@/store/actions/notificationActionCreators.ts";
 import { addTodo, setTodoTitle } from "@/store/actions/todoActionCreators.ts";
-import { checkOnValidField } from "@/utils/checkOnValidField.ts";
+import { isValidField } from "@/utils/isValidField.ts";
 import { getNextDate } from "@/utils/getNextDate.ts";
 import { setExpirationDateFormat } from "@/utils/setExpirationDateFormat.ts";
 import { ChangeEvent, KeyboardEvent } from "react";
 import { BsPlusLg } from "react-icons/bs";
 import { v4 as uuidv4 } from "uuid";
-import styles from "./CreateTodo.module.scss";
+import styles from "./TodoCreate.module.scss";
 
-const MAX_TITLE_LENGTH = 120;
+const SEND_KEY = "Enter";
 
-export const CreateTodo = () => {
+export const TodoCreate = () => {
   const { todoTitle } = useAppSelector(state => state.todoReducer);
   const dispatch = useAppDispatch();
 
@@ -29,17 +30,17 @@ export const CreateTodo = () => {
   const setModalActive = useModalState("createTodoModal")[1];
 
   const handleCreateTodo = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.code !== "Enter") {
+    if (e.code !== SEND_KEY) {
       return;
     }
 
     if (!todoTitle.trim().length) {
-      return dispatch(setNotification({ title: TodoErrorMessages.EMPTY_TITLE, type: NotificationType.ERROR }));
+      return dispatch(setNotification({ title: TodoNotificationMessages.EMPTY_TITLE, type: NotificationType.ERROR }));
     }
     dispatch(
       addTodo({
         createdDate: setExpirationDateFormat(new Date()),
-        expirationDate: getNextDate(setExpirationDateFormat(new Date())),
+        expirationDate: getNextDate(new Date()),
         todoTitle,
         isCompleted: false,
         todoId: uuidv4(),
@@ -49,11 +50,13 @@ export const CreateTodo = () => {
   };
 
   const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value.trim().length >= MAX_TITLE_LENGTH) {
-      dispatch(setNotification({ title: TodoErrorMessages.MAX_LENGTH, type: NotificationType.ERROR }));
-      return setTitleStoreValue(todoTitle.replace(e.target.value, ""));
+    const inputValue = e.target.value;
+
+    if (inputValue.trim().length >= TodoValidateData.MAX_TITLE_LENGTH) {
+      dispatch(setNotification({ title: TodoNotificationMessages.MAX_LENGTH, type: NotificationType.ERROR }));
+      return setTitleStoreValue(todoTitle.replace(inputValue, ""));
     }
-    setTitleStoreValue(checkOnValidField(e.target.value));
+    setTitleStoreValue(isValidField(inputValue));
   };
 
   return (

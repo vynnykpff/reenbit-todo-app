@@ -1,0 +1,17 @@
+@import "@/styles/MediaQueries";
+
+.confirmMessage {
+  font-size: 18px;
+  text-align: center;
+  color: var(--text-secondary-200);
+  margin-bottom: 30px;
+
+  .highlightConfirmMessage {
+    font-weight: 600;
+    color: var(--text-danger);
+  }
+
+  @media (max-width: $MAX_MOBILE) {
+    font-size: 16px;
+  }
+}

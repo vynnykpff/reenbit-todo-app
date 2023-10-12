@@ -1,4 +1,5 @@
-import { CurrentTodoFilter, TodoConstants } from "@/common/constants/TodoConstants.ts";
+import { TodoCurrentFilter } from "@/common/constants/TodoConstants/TodoFilters.ts";
+import { TodoConstants, TodoEditingConstants, TodoFilteringConstants } from "@/common/constants/TodoConstants/TodoManagementActions.ts";
 import { Todo, TodoActionTypes } from "@/common/types/Todo.ts";
 
 type TodoState = {
@@ -6,7 +7,7 @@ type TodoState = {
   todoTitle: string;
   todo: Todo;
   originalTodos: Todo[];
-  filterValue: typeof CurrentTodoFilter.ALL;
+  filterValue: typeof TodoCurrentFilter.ALL;
   searchedTodos: Todo[];
   searchValue: string;
 };
@@ -16,23 +17,23 @@ const initialState: TodoState = {
   todoTitle: "",
   todo: { todoId: "", todoTitle: "", createdDate: "", isCompleted: false, expirationDate: "" },
   originalTodos: [],
-  filterValue: CurrentTodoFilter.ALL,
+  filterValue: TodoCurrentFilter.ALL,
   searchedTodos: [],
   searchValue: "",
 };
 
 const filterTodos = (todos: Todo[], filter: string): Todo[] => {
   switch (filter) {
-    case CurrentTodoFilter.ACTIVE:
+    case TodoCurrentFilter.ACTIVE:
       return todos.filter(todo => !todo.isCompleted);
-    case CurrentTodoFilter.COMPLETED:
+    case TodoCurrentFilter.COMPLETED:
       return todos.filter(todo => todo.isCompleted);
     default:
       return todos;
   }
 };
 
-const updateTodosAndOriginalTodos = (state: TodoState, updatedTodos: Todo[], filterValue: typeof CurrentTodoFilter.ALL): TodoState => {
+const updateTodosAndOriginalTodos = (state: TodoState, updatedTodos: Todo[], filterValue: typeof TodoCurrentFilter.ALL): TodoState => {
   const filteredTodos = filterTodos(updatedTodos, filterValue);
   return {
     ...state,
@@ -53,16 +54,23 @@ export const todoReducer = (state = initialState, action: TodoActionTypes): Todo
     case TodoConstants.ADD_TODO: {
       const newTodo = action.payload;
       const updatedOriginalTodos = [newTodo, ...state.originalTodos];
-      return updateTodosAndOriginalTodos(state, updatedOriginalTodos, CurrentTodoFilter.ALL);
+      return updateTodosAndOriginalTodos(state, updatedOriginalTodos, TodoCurrentFilter.ALL);
     }
-    case TodoConstants.SET_TODO_TITLE:
+    case TodoEditingConstants.SET_TODO_TITLE:
       return {
         ...state,
         ...action.payload,
       };
-    case TodoConstants.SET_COMPLETED_TODO: {
+    case TodoEditingConstants.SET_COMPLETED_TODO: {
       const { todoId } = action.payload;
-      const updatedTodos = state.todos.map(todo => (todo.todoId === todoId ? { ...todo, isCompleted: !todo.isCompleted } : todo));
+      const updatedTodos = state.todos.map(todo =>
+        todo.todoId === todoId
+          ? {
+              ...todo,
+              isCompleted: !todo.isCompleted,
+            }
+          : todo,
+      );
       const updatedOriginalTodos = state.originalTodos.map(todo =>
         todo.todoId === todoId ? { ...todo, isCompleted: !todo.isCompleted } : todo,
       );
@@ -82,7 +90,7 @@ export const todoReducer = (state = initialState, action: TodoActionTypes): Todo
       return updateTodosAndOriginalTodos(state, filteredTodos, state.filterValue);
     }
 
-    case TodoConstants.EDIT_TODO: {
+    case TodoEditingConstants.EDIT_TODO: {
       const { todoId, todoTitle, createdDate, expirationDate } = action.payload;
 
       const updatedTodoIndex = state.originalTodos.findIndex(todo => todo.todoId === todoId);
@@ -106,16 +114,16 @@ export const todoReducer = (state = initialState, action: TodoActionTypes): Todo
 
       return updateTodosAndOriginalTodos(state, updatedOriginalTodos, state.filterValue);
     }
-    case TodoConstants.SET_CURRENT_TODO: {
+    case TodoEditingConstants.SET_CURRENT_TODO: {
       return {
         ...state,
         todo: action.payload,
       };
     }
-    case TodoConstants.SET_FILTRATION_VALUE: {
+    case TodoFilteringConstants.SET_FILTRATION_VALUE: {
       const { filter } = action.payload;
       const filteredTodos = filterTodos(state.originalTodos, filter);
-      const updatedTodos = filter === CurrentTodoFilter.ALL ? state.originalTodos : filteredTodos;
+      const updatedTodos = filter === TodoCurrentFilter.ALL ? state.originalTodos : filteredTodos;
 
       return {
         ...state,
@@ -126,9 +134,9 @@ export const todoReducer = (state = initialState, action: TodoActionTypes): Todo
     }
     case TodoConstants.DELETE_COMPLETED_TODOS: {
       const filteredCompletedTodos = state.originalTodos.filter(todo => !todo.isCompleted);
-      return updateTodosAndOriginalTodos(state, filteredCompletedTodos, CurrentTodoFilter.ALL);
+      return updateTodosAndOriginalTodos(state, filteredCompletedTodos, TodoCurrentFilter.ALL);
     }
-    case TodoConstants.SEARCH_VALUE: {
+    case TodoFilteringConstants.SEARCH_VALUE: {
       const searchValue = action.payload;
 
       return {

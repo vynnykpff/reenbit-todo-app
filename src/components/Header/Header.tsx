@@ -1,10 +1,8 @@
 import logoImage from "#/icons/logo.svg";
-import { SwitchTheme } from "@/components/ui/SwitchTheme/SwitchTheme.tsx";
-import { FC } from "react";
-
+import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher/ThemeSwitcher.tsx";
 import styles from "./Header.module.scss";
 
-export const Header: FC = () => {
+export const Header = () => {
   return (
     <header className={styles.headerContainer}>
       <img className={styles.headerLogo} src={logoImage} alt="logo image" />
@@ -12,7 +10,7 @@ export const Header: FC = () => {
         <span className={styles.headerContent}>to</span>
         <span className={styles.headerContent}>do</span>
       </h1>
-      <SwitchTheme />
+      <ThemeSwitcher />
     </header>
   );
 };

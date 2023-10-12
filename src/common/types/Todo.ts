@@ -1,4 +1,4 @@
-import { TodoConstants } from "@/common/constants/TodoConstants.ts";
+import { TodoConstants, TodoEditingConstants, TodoFilteringConstants } from "@/common/constants/TodoConstants/TodoManagementActions.ts";
 
 export type Todo = {
   todoTitle: string;
@@ -14,14 +14,14 @@ type AddTodoAction = {
 };
 
 type SetTodoTitleAction = {
-  type: typeof TodoConstants.SET_TODO_TITLE;
+  type: typeof TodoEditingConstants.SET_TODO_TITLE;
   payload: {
     todoTitle: Todo["todoTitle"];
   };
 };
 
 type SetTodoCompletedAction = {
-  type: typeof TodoConstants.SET_COMPLETED_TODO;
+  type: typeof TodoEditingConstants.SET_COMPLETED_TODO;
   payload: {
     todoId: Todo["todoId"];
   };
@@ -42,17 +42,17 @@ export type EditTodo = {
 };
 
 type EditTodoAction = {
-  type: typeof TodoConstants.EDIT_TODO;
+  type: typeof TodoEditingConstants.EDIT_TODO;
   payload: EditTodo;
 };
 
 type SetCurrentTodoAction = {
-  type: typeof TodoConstants.SET_CURRENT_TODO;
+  type: typeof TodoEditingConstants.SET_CURRENT_TODO;
   payload: Todo;
 };
 
 type SetFiltrationValueAction = {
-  type: typeof TodoConstants.SET_FILTRATION_VALUE;
+  type: typeof TodoFilteringConstants.SET_FILTRATION_VALUE;
   payload: {
     filter: string;
   };
@@ -63,12 +63,12 @@ type DeleteCompletedTodoAction = {
 };
 
 type SearchTodosAction = {
-  type: typeof TodoConstants.SEARCH_TODO;
+  type: typeof TodoFilteringConstants.SEARCH_TODO;
   payload: Todo[];
 };
 
 type SetSearchValueAction = {
-  type: typeof TodoConstants.SEARCH_VALUE;
+  type: typeof TodoFilteringConstants.SEARCH_VALUE;
   payload: Todo["todoTitle"];
 };
 

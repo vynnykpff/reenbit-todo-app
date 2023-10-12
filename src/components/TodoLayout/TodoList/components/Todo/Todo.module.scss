@@ -22,6 +22,7 @@
       display: flex;
       align-items: center;
       cursor: pointer;
+
       .todoInput {
         position: relative;
         appearance: none;
@@ -108,5 +109,13 @@
   .disabledEditIcon {
     cursor: auto;
     opacity: 0.4;
+  }
+}
+
+.expiredTodoContainer {
+  border: 1px solid var(--text-danger);
+
+  &:hover {
+    border: 1px solid var(--text-danger);
   }
 }

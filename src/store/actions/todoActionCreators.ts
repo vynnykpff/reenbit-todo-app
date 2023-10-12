@@ -1,4 +1,4 @@
-import { TodoConstants } from "@/common/constants/TodoConstants.ts";
+import { TodoConstants, TodoEditingConstants, TodoFilteringConstants } from "@/common/constants/TodoConstants/TodoManagementActions.ts";
 import { EditTodo, Todo, TodoActionTypes } from "@/common/types/Todo.ts";
 
 export const addTodo = (todo: Todo): TodoActionTypes => ({
@@ -9,14 +9,14 @@ export const addTodo = (todo: Todo): TodoActionTypes => ({
 });
 
 export const setTodoTitle = (todoTitle: Todo["todoTitle"]): TodoActionTypes => ({
-  type: TodoConstants.SET_TODO_TITLE,
+  type: TodoEditingConstants.SET_TODO_TITLE,
   payload: {
     todoTitle,
   },
 });
 
 export const updateStatusTodo = (todoId: Todo["todoId"]): TodoActionTypes => ({
-  type: TodoConstants.SET_COMPLETED_TODO,
+  type: TodoEditingConstants.SET_COMPLETED_TODO,
   payload: {
     todoId,
   },
@@ -30,21 +30,21 @@ export const deleteTodo = (todoId: Todo["todoId"]): TodoActionTypes => ({
 });
 
 export const editTodo = (todo: EditTodo): TodoActionTypes => ({
-  type: TodoConstants.EDIT_TODO,
+  type: TodoEditingConstants.EDIT_TODO,
   payload: {
     ...todo,
   },
 });
 
 export const setCurrentTodo = (todo: Todo): TodoActionTypes => ({
-  type: TodoConstants.SET_CURRENT_TODO,
+  type: TodoEditingConstants.SET_CURRENT_TODO,
   payload: {
     ...todo,
   },
 });
 
 export const setFiltrationValue = (filter: string): TodoActionTypes => ({
-  type: TodoConstants.SET_FILTRATION_VALUE,
+  type: TodoFilteringConstants.SET_FILTRATION_VALUE,
   payload: {
     filter,
   },
@@ -55,6 +55,6 @@ export const deleteCompletedTodos = (): TodoActionTypes => ({
 });
 
 export const setSearchValue = (todo: Todo["todoTitle"]): TodoActionTypes => ({
-  type: TodoConstants.SEARCH_VALUE,
+  type: TodoFilteringConstants.SEARCH_VALUE,
   payload: todo,
 });

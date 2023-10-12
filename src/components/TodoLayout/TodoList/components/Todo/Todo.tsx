@@ -1,8 +1,12 @@
+import { NotificationType } from "@/common/constants/NotificationConstants.ts";
+import { TodoConfirmMessages, TodoNotificationMessages } from "@/common/constants/TodoConstants/TodoValidation.ts";
 import { Todo as TodoProps } from "@/common/types/Todo.ts";
 import { Input } from "@/components/ui/Input/Input.tsx";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
+import { setNotification } from "@/store/actions/notificationActionCreators.ts";
 import { deleteTodo, setCurrentTodo, updateStatusTodo } from "@/store/actions/todoActionCreators.ts";
+import { checkOnCurrentExpirationDate } from "@/utils/checkOnCurrentExpirationDate.ts";
 import cn from "classnames";
 import { FC, useState } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
@@ -13,7 +17,8 @@ import styles from "./Todo.module.scss";
 
 export const Todo: FC<TodoProps> = ({ todoTitle, createdDate, expirationDate, todoId, isCompleted }) => {
   const [isShowInfo, setIsShowInfo] = useState(false);
-  const setModalActive = useModalState("editTodoModal")[1];
+  const setEditModalActive = useModalState("editTodoModal")[1];
+  const setConfirmModalActive = useModalState("confirmModal")[1];
   const dispatch = useAppDispatch();
 
   const handleChangeStatusTodo = () => {
@@ -21,18 +26,24 @@ export const Todo: FC<TodoProps> = ({ todoTitle, createdDate, expirationDate, to
   };
 
   const handleClickDeleteTodo = () => {
-    dispatch(deleteTodo(todoId));
+    setConfirmModalActive(true, {
+      confirmCallback: () => {
+        dispatch(deleteTodo(todoId));
+        dispatch(setNotification({ title: TodoNotificationMessages.DELETE_TODO, type: NotificationType.SUCCESS }));
+      },
+      message: TodoConfirmMessages.DELETE_TODO,
+    });
   };
 
   const handleClickEditTodo = () => {
     if (!isCompleted) {
-      setModalActive(true);
+      setEditModalActive(true);
       dispatch(setCurrentTodo({ todoId, todoTitle, expirationDate, createdDate, isCompleted }));
     }
   };
 
   return (
-    <li className={styles.todoContainer}>
+    <li className={cn(styles.todoContainer, !checkOnCurrentExpirationDate(expirationDate) && styles.expiredTodoContainer)}>
       <div>
         <div className={styles.todoContent}>
           <label className={styles.todoCheck}>

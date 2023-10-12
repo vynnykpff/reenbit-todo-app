@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/Button/Button.tsx";
 import { ThemeContext } from "@/providers/ThemeProvider.tsx";
 import { useContext } from "react";
 import { BiMoon, BiSun } from "react-icons/bi";
-import styles from "./SwitchTheme.module.scss";
+import styles from "./ThemeSwitcher.module.scss";
 
-export const SwitchTheme = () => {
+export const ThemeSwitcher = () => {
   const { type, setType } = useContext(ThemeContext);
 
   return (
