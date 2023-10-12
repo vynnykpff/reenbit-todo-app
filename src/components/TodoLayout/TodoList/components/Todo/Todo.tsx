@@ -1,5 +1,5 @@
 import { NotificationType } from "@/common/constants/NotificationConstants.ts";
-import { TodoConfirmMessages, TodoNotificationMessages } from "@/common/constants/TodoConstants.ts";
+import { TodoConfirmMessages, TodoNotificationMessages } from "@/common/constants/TodoConstants/TodoValidation.ts";
 import { Todo as TodoProps } from "@/common/types/Todo.ts";
 import { Input } from "@/components/ui/Input/Input.tsx";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
@@ -18,7 +18,7 @@ import styles from "./Todo.module.scss";
 export const Todo: FC<TodoProps> = ({ todoTitle, createdDate, expirationDate, todoId, isCompleted }) => {
   const [isShowInfo, setIsShowInfo] = useState(false);
   const setEditModalActive = useModalState("editTodoModal")[1];
-  const setConfirmModalActive = useModalState("modalConfirm")[1];
+  const setConfirmModalActive = useModalState("confirmModal")[1];
   const dispatch = useAppDispatch();
 
   const handleChangeStatusTodo = () => {

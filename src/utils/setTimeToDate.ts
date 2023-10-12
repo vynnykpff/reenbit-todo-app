@@ -1,4 +1,4 @@
-import { DateInfo, TodoTimeConstants } from "@/common/constants/TodoConstants.ts";
+import { TodoDateInfo, TodoTimeConstants } from "@/common/constants/TodoConstants/TodoTimeConstants.ts";
 import { millisecondsInMinute, secondsInMinute } from "date-fns";
 
 export const setMinutesToDate = (date: Date, minutes: number): Date => {
@@ -11,7 +11,7 @@ export const setMinutesToDate = (date: Date, minutes: number): Date => {
 export const setMaxTimeToDate = (date: Date): Date => {
   const nextDay = new Date(date);
   nextDay.setDate(nextDay.getDate() + TodoTimeConstants.TIME_INTERVAL);
-  nextDay.setHours(DateInfo.HOURS_IN_DAY - 1, secondsInMinute - 1, 0, 0);
+  nextDay.setHours(TodoDateInfo.HOURS_IN_DAY - 1, secondsInMinute - 1, 0, 0);
   return nextDay;
 };
 

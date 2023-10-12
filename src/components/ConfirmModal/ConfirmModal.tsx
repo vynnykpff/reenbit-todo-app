@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/Button/Button.tsx";
 import { Modal } from "@/components/ui/Modal/Modal.tsx";
 import { useModalState } from "@/hooks/useModalState.ts";
 import modalStyles from "@/styles/ModalCommom.module.scss";
-import styles from "./ModalConfirm.module.scss";
+import styles from "./ConfirmModal.module.scss";
 import cn from "classnames";
 import { FC } from "react";
 
@@ -12,15 +12,15 @@ type Props = {
   message: string;
 };
 
-export const ModalConfirm: FC<Props> = ({ confirmCallback, message }) => {
-  const [modalActive, setModalActive] = useModalState("modalConfirm");
+export const ConfirmModal: FC<Props> = ({ confirmCallback, message }) => {
+  const [modalActive, setModalActive] = useModalState("confirmModal");
 
   const handleCloseModal = () => {
     setModalActive(false);
   };
 
   const handleSubmit = () => {
-    setModalActive(false);
+    handleCloseModal();
     confirmCallback();
   };
 

@@ -1,4 +1,4 @@
-import { TodoCurrentFilter } from "@/common/constants/TodoConstants.ts";
+import { TodoCurrentFilter } from "@/common/constants/TodoConstants/TodoFilters.ts";
 import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { FC } from "react";
 import { PiClipboardText } from "react-icons/pi";

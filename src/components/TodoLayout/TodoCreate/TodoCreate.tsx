@@ -1,5 +1,6 @@
 import { NotificationType } from "@/common/constants/NotificationConstants.ts";
-import { TodoNotificationMessages, TodoValidateData } from "@/common/constants/TodoConstants.ts";
+import { TodoNotificationMessages } from "@/common/constants/TodoConstants/TodoValidation.ts";
+import { TodoValidateData } from "@/common/constants/TodoConstants/TodoValidationData.ts";
 import { ButtonType } from "@/common/constants/UIConstants.ts";
 import { Button } from "@/components/ui/Button/Button.tsx";
 import { Input } from "@/components/ui/Input/Input.tsx";
@@ -49,11 +50,13 @@ export const TodoCreate = () => {
   };
 
   const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value.trim().length >= TodoValidateData.MAX_TITLE_LENGTH) {
+    const inputValue = e.target.value;
+
+    if (inputValue.trim().length >= TodoValidateData.MAX_TITLE_LENGTH) {
       dispatch(setNotification({ title: TodoNotificationMessages.MAX_LENGTH, type: NotificationType.ERROR }));
-      return setTitleStoreValue(todoTitle.replace(e.target.value, ""));
+      return setTitleStoreValue(todoTitle.replace(inputValue, ""));
     }
-    setTitleStoreValue(isValidField(e.target.value));
+    setTitleStoreValue(isValidField(inputValue));
   };
 
   return (

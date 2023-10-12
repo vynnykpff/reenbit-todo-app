@@ -1,4 +1,4 @@
-import { TodoCurrentFilterArray } from "@/common/constants/TodoConstants.ts";
+import { TodoCurrentFilterArray } from "@/common/constants/TodoConstants/TodoFilters.ts";
 import { Button } from "@/components/ui/Button/Button.tsx";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
 import { useAppSelector } from "@/hooks/useAppSelector.ts";

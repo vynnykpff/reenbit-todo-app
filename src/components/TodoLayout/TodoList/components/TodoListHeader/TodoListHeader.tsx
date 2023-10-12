@@ -1,5 +1,6 @@
 import { NotificationType } from "@/common/constants/NotificationConstants.ts";
-import { TodoConfirmMessages, TodoCurrentFilter, TodoNotificationMessages } from "@/common/constants/TodoConstants.ts";
+import { TodoCurrentFilter } from "@/common/constants/TodoConstants/TodoFilters.ts";
+import { TodoConfirmMessages, TodoNotificationMessages } from "@/common/constants/TodoConstants/TodoValidation.ts";
 import { TodoFiltered } from "@/components/TodoLayout/TodoList/components/TodoFiltered/TodoFiltered.tsx";
 import { Button } from "@/components/ui/Button/Button.tsx";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
@@ -15,7 +16,7 @@ import filteredStyles from "@/components/TodoLayout/TodoList/components/TodoFilt
 export const TodoListHeader = () => {
   const { originalTodos } = useAppSelector(state => state.todoReducer);
   const [completedTodo, setCompletedTodo] = useState(0);
-  const setConfirmModalActive = useModalState("modalConfirm")[1];
+  const setConfirmModalActive = useModalState("confirmModal")[1];
   const dispatch = useAppDispatch();
 
   useEffect(() => {

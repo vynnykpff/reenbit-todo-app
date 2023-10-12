@@ -1,4 +1,6 @@
-import { TodoTimeConstants, TodoValidateFields } from "@/common/constants/TodoConstants.ts";
+import { TodoTimeConstants } from "@/common/constants/TodoConstants/TodoTimeConstants.ts";
+import { TodoValidateFields } from "@/common/constants/TodoConstants/TodoValidation.ts";
+import { TodoValidateData } from "@/common/constants/TodoConstants/TodoValidationData.ts";
 import { ButtonType } from "@/common/constants/UIConstants.ts";
 import { TodoScheme } from "@/common/schemes/TodoScheme.ts";
 import { Button } from "@/components/ui/Button/Button.tsx";
@@ -59,7 +61,7 @@ export const TodoCreateModal = () => {
   };
 
   const handleChangeDatePicker = (date: Date, setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void) => {
-    if (setExpirationDateFormat(date).length === 16) {
+    if (setExpirationDateFormat(date).length === TodoValidateData.MAX_DATE_LENGTH) {
       return setSelectedDate(date, setFieldValue, setExpirationDate);
     }
   };

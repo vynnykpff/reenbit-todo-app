@@ -1,4 +1,5 @@
-import { TodoTimeConstants, TodoValidateFields } from "@/common/constants/TodoConstants.ts";
+import { TodoTimeConstants } from "@/common/constants/TodoConstants/TodoTimeConstants.ts";
+import { TodoValidateFields } from "@/common/constants/TodoConstants/TodoValidation.ts";
 import { ButtonType } from "@/common/constants/UIConstants.ts";
 import { TodoScheme } from "@/common/schemes/TodoScheme.ts";
 import { Button } from "@/components/ui/Button/Button.tsx";

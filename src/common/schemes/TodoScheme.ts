@@ -1,4 +1,5 @@
-import { TodoNotificationMessages, TodoValidateData } from "@/common/constants/TodoConstants.ts";
+import { TodoNotificationMessages } from "@/common/constants/TodoConstants/TodoValidation.ts";
+import { TodoValidateData } from "@/common/constants/TodoConstants/TodoValidationData.ts";
 import * as Yup from "yup";
 
 export const TodoScheme = Yup.object().shape({
