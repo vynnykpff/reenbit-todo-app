@@ -15,6 +15,7 @@ import { setSelectedDate } from "@/utils/setSelectedDate.ts";
 import { setExpirationDateFormat } from "@/utils/setExpirationDateFormat.ts";
 import { setMaxTimeToDate, setMinTimeToDate } from "@/utils/setTimeToDate.ts";
 import cn from "classnames";
+import { isValid } from "date-fns";
 import { Formik } from "formik";
 import { ChangeEvent, useState } from "react";
 import DatePicker from "react-datepicker";
@@ -35,8 +36,8 @@ export const TodoEditModal = () => {
     setModalActive(false);
     const { todoTitle, expirationDate } = data;
     const { todoId, createdDate } = todo;
-
-    const formattedExpirationDate = expirationDate !== null ? setExpirationDateFormat(expirationDate) : "";
+    const formattedExpirationDate =
+      isValid(expirationDate) && expirationDate !== null ? setExpirationDateFormat(expirationDate) : todo.expirationDate;
     dispatch(editTodo({ todoTitle, expirationDate: formattedExpirationDate, createdDate, todoId }));
   };
 
