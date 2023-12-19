@@ -7,7 +7,6 @@
     "start": "ts-node src/server.ts",
     "dev": "nodemon src/server.ts",
     "server": "npm run build && node ./dist/server.js",
-    "build:clean": "rimraf dist",
     "build": "npm run build:clean && tsc && tsc-alias -p tsconfig.json",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix"
