@@ -10,8 +10,7 @@
     "build:clean": "rimraf dist",
     "build": "npm run build:clean && tsc && tsc-alias -p tsconfig.json",
     "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --ext .ts --fix",
-    "prepare": "husky install"
+    "lint:fix": "eslint . --ext .ts --fix"
   },
   "keywords": [],
   "author": "vynnykpff",

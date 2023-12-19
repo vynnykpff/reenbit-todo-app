@@ -11,6 +11,8 @@ pnpm-debug.log*
 node_modules
 dist
 dist-ssr
+yarn.lock
+package-loc.json
 *.local
 
 # Editor directories and files
