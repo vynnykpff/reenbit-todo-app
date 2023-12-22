@@ -1,0 +1,1 @@
+export { requiresAuth } from "./auth";

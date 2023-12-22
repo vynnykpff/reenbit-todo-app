@@ -126,7 +126,6 @@
         "selector": [
           "classMethod",
           "classProperty",
-          "parameter",
           "variable"
         ]
       },
