@@ -29,7 +29,6 @@
     "prettier"
   ],
   "rules": {
-    "no-console": "warn",
     "prefer-const": "warn",
     "quotes": "warn",
     "jsx-quotes": [
@@ -72,6 +71,8 @@
       }
     ],
     "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unsafe-argument": "off",
+    "@typescript-eslint/no-unsafe-assignment": "off",
     "react/prop-types": "off",
     "react-hooks/exhaustive-deps": "off",
     "react/react-in-jsx-scope": "off",

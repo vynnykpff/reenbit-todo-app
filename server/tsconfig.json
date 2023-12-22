@@ -10,6 +10,9 @@
       "@constants": ["src/common/constants"],
       "@types": ["src/common/types"],
       "@models": ["src/models"],
+      "@middlewares": ["src/middlewares"],
+      "@controllers": ["src/controllers"],
+      "@routes": ["src/routes"]
     },
     "sourceMap": true,
     "esModuleInterop": true,
