@@ -9,6 +9,7 @@ const { String } = Schema.Types;
 const userSchemaFields = {
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  accessToken: { type: String },
 };
 
 const userSchema = new Schema(userSchemaFields);

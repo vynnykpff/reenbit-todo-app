@@ -1,6 +1,6 @@
+import bcrypt from "bcrypt";
 import { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
 import { UserModel } from "@models";
 import { getUserToken, makeError, validateEnv, verifyAccessToken } from "@utils";
 import {
@@ -24,14 +24,15 @@ export const getAuthenticatedUser: RequestHandler = async (req, res, next) => {
     const token = getUserToken(req);
 
     if (!token) {
-      return makeError({ res, statusCode: AuthExceptionStatusCode.UNAUTHORIZED, exceptionMessage: UNAUTHORIZED });
+      return res.status(AuthExceptionStatusCode.UNAUTHORIZED).json(UNAUTHORIZED);
     }
 
     const userId = verifyAccessToken(token);
+
     const user = await UserModel.findById(userId).select(`+${EMAIL}`).exec();
 
     if (!user) {
-      return makeError({ res, statusCode: ServerExceptionStatusCodes.NOT_FOUND, exceptionMessage: USER_NOT_FOUND });
+      return res.status(ServerExceptionStatusCodes.NOT_FOUND).json(USER_NOT_FOUND);
     }
 
     res.status(ServerSuccessStatusCodes.OK).json(user);
@@ -60,8 +61,8 @@ export const login: RequestHandler = async (req, res, next) => {
       return makeError({ res, statusCode: AuthExceptionStatusCode.UNAUTHORIZED, exceptionMessage: INVALID_PASSWORD });
     }
 
-    const token = jwt.sign({ userId: user._id }, JWT_ACCESS_SECRET, { expiresIn: EXPIRATION_TIME });
-    res.status(ServerSuccessStatusCodes.CREATED).json({ user, token });
+    const accessToken = jwt.sign({ userId: user._id }, JWT_ACCESS_SECRET, { expiresIn: EXPIRATION_TIME });
+    res.status(ServerSuccessStatusCodes.CREATED).json({ user, accessToken });
   } catch (error) {
     next(error);
   }

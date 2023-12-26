@@ -8,6 +8,7 @@ const { JWT_ACCESS_SECRET } = validateEnv();
 
 export const verifyAccessToken = (token: string) => {
   try {
+    console.log(token);
     const decoded = jwt.verify(token, JWT_ACCESS_SECRET) as UserRequestId;
     return decoded.userId;
   } catch (error) {

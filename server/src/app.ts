@@ -1,5 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
 import createHttpError, { isHttpError } from "http-errors";
+import cors from "cors";
 import "dotenv/config";
 import { UserRouter } from "@routes";
 import { API_PATH, ServerExceptionMessage, ServerExceptionStatusCodes } from "@constants";
@@ -9,6 +10,7 @@ const { INTERNAL_SERVER_ERROR, NOT_FOUND } = ServerExceptionStatusCodes;
 
 export const app = express();
 
+app.use(cors());
 app.use(express.json());
 
 app.use(API_PATH, UserRouter);

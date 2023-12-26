@@ -1,6 +1,6 @@
 import express from "express";
-import { getAuthenticatedUser, login } from "@controllers";
 import { requiresAuth } from "@middlewares";
+import { getAuthenticatedUser, login } from "@controllers";
 import { Routes } from "@constants";
 
 const router = express.Router();
