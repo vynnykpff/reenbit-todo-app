@@ -9,10 +9,9 @@ import { Routes } from "@/common/constants/Routes.ts";
 const HomePage: FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const token = localStorage.getItem("access-token");
 
   useEffect(() => {
-    const token = localStorage.getItem("access-token");
-
     if (!token) {
       navigate(Routes.LOGIN);
       return;
@@ -20,6 +19,10 @@ const HomePage: FC = () => {
 
     void dispatch(checkOnValidTokenThunk(token));
   }, []);
+
+  if (!token) {
+    return null;
+  }
 
   return (
     <>
