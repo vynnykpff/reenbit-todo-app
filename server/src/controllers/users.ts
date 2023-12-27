@@ -3,13 +3,12 @@ import bcrypt from "bcrypt";
 import { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
 import { UserModel } from "@models";
-import { getUserToken, makeError, validateEnv, verifyAccessToken } from "@utils";
+import { makeError, validateEnv } from "@utils";
 import {
   AuthExceptionMessage,
   AuthExceptionStatusCode,
-  ServerExceptionStatusCodes,
   ServerSuccessStatusCodes,
-  UserExceptionMessage, UserSuccessMessage,
+  UserExceptionMessage,
   UserValidationField,
 } from "@constants";
 
@@ -18,29 +17,7 @@ const { JWT_ACCESS_SECRET } = validateEnv();
 
 const { PASSWORD, EMAIL } = UserValidationField;
 const { USER_NOT_FOUND, INVALID_PASSWORD } = UserExceptionMessage;
-const { UNAUTHORIZED, PARAMETERS_MISSING } = AuthExceptionMessage;
-
-export const getAuthenticatedUser: RequestHandler = async (req, res, next) => {
-  try {
-    const token = getUserToken(req);
-
-    if (!token) {
-      return res.status(AuthExceptionStatusCode.UNAUTHORIZED).json(UNAUTHORIZED);
-    }
-
-    const userId = verifyAccessToken(token);
-
-    const user = await UserModel.findById(userId).select(`+${EMAIL}`).exec();
-
-    if (!user) {
-      return res.status(ServerExceptionStatusCodes.NOT_FOUND).json(USER_NOT_FOUND);
-    }
-
-    res.status(ServerSuccessStatusCodes.OK).json(UserSuccessMessage.VERIFIED);
-  } catch (error) {
-    next(error);
-  }
-};
+const { PARAMETERS_MISSING } = AuthExceptionMessage;
 
 export const login: RequestHandler = async (req, res, next) => {
   const { email, password } = req.body;
