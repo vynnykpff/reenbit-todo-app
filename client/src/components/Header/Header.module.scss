@@ -8,7 +8,6 @@
   transition: all .2s ease;
 
   .headerTitle {
-
     .headerContent {
       font-size: 40px;
       font-weight: 900;
@@ -20,6 +19,22 @@
       &:last-child {
         color: var(--text-accent-400);
       }
+    }
+  }
+
+  .headerNavigationContainer {
+    position: absolute;
+    display: flex;
+    gap: 30px;
+    top: 30px;
+    right: 30px;
+
+    .logoutButton {
+      padding: 5px 30px;
+      background-color: var(--text-accent-600);
+      color: var(--text-secondary-accent-100);
+      font-weight: 700;
+      transition: 0.2s all;
     }
   }
 }

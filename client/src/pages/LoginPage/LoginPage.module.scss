@@ -1,0 +1,27 @@
+.loginFormContainer {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background-primary-400);
+  max-width: 450px;
+  min-height: 300px;
+  width: 100%;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.06);
+
+  .loginPageTitle {
+    font-size: 22px;
+    text-align: center;
+    color: var(--text-secondary-100);
+    margin-bottom: 25px;
+  }
+}
+
+.loginPageContainer {
+  display: flex;
+  padding: 20px;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  height: 100vh;
+}

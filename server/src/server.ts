@@ -4,10 +4,10 @@ import { app } from "./app";
 import { validateEnv } from "@utils";
 import "dotenv/config";
 
-const { MONGO_CONNECTION_STRING, PORT } = validateEnv();
+const { MONGO_URI, PORT } = validateEnv();
 
 mongoose
-  .connect(MONGO_CONNECTION_STRING)
+  .connect(MONGO_URI)
   .then(() => {
     console.log("Mongoose connected");
 

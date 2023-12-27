@@ -1,0 +1,77 @@
+.authForm {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .authFieldContainer {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .authInputContainer {
+      border: none;
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      position: relative;
+
+      .authFieldError {
+        position: relative;
+        top: 5px;
+      }
+    }
+
+    .authLabel {
+      position: relative;
+      font-weight: 500;
+      color: var(--text-secondary-100);
+      margin-bottom: 4px;
+    }
+
+    .authInput {
+      border-radius: 8px;
+      width: 100%;
+      height: 40px;
+      padding: 16px;
+      background-color: var(--background-primary-500);
+      border: 1px solid var(--background-primary-700);
+      color: var(--text-secondary-100);
+      transition: .3s all;
+    }
+  }
+
+  .authFormNavigationContainer {
+    display: flex;
+    justify-content: space-between;
+
+    .formButton {
+      padding: 5px 20px;
+      transition: .3s all;
+
+      &:hover {
+        transition: .3s all;
+        opacity: 0.8;
+      }
+    }
+
+    .authButton {
+      background-color: var(--text-accent-600);
+      color: var(--text-secondary-accent-100);
+    }
+
+    .resetButton {
+      background-color: var(--text-secondary-100);
+      color: var(--background-primary-600);
+    }
+  }
+}
+
+
+
+.testError {
+  position: relative;
+  top: 0;
+  left: 0;
+  font-size: 14px;
+}

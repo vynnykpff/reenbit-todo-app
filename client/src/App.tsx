@@ -1,8 +1,7 @@
-import { THEME } from "@/common/constants/ThemeConstats.ts";
-import { Header } from "@/components/Header/Header.tsx";
-import { TodoLayout } from "@/components/TodoLayout/TodoLayout.tsx";
-import { ThemeContext } from "@/providers/ThemeProvider.tsx";
 import { useContext, useEffect } from "react";
+import { Routing } from "@/components/Routing.tsx";
+import { THEME } from "@/common/constants/ThemeConstats.ts";
+import { ThemeContext } from "@/providers/ThemeProvider.tsx";
 
 export const App = () => {
   const { type } = useContext(ThemeContext);
@@ -12,10 +11,5 @@ export const App = () => {
     localStorage.setItem(THEME, type);
   }, [type]);
 
-  return (
-    <>
-      <Header />
-      <TodoLayout />
-    </>
-  );
+  return <Routing />;
 };

@@ -8,4 +8,8 @@
   font-weight: 500;
   cursor: pointer;
   border-radius: 8px;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
 }
