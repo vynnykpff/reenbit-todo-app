@@ -1,5 +1,5 @@
 import { FC, Suspense, lazy } from "react";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { RouterProvider, createHashRouter } from "react-router-dom";
 import { Loader } from "@/components/ui/Loader/Loader.tsx";
 import { Routes } from "@/common/constants/Routes.ts";
 
@@ -7,7 +7,7 @@ const HomePage = lazy(() => import("@/pages/HomePage/HomePage.tsx"));
 const LoginPage = lazy(() => import("@/pages/LoginPage/LoginPage.tsx"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage/NotFoundPage.tsx"));
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: Routes.HOME,
     element: <HomePage />,
