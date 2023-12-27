@@ -1,3 +1,4 @@
+import { UserPayload } from "@types";
 import bcrypt from "bcrypt";
 import { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
@@ -8,7 +9,7 @@ import {
   AuthExceptionStatusCode,
   ServerExceptionStatusCodes,
   ServerSuccessStatusCodes,
-  UserExceptionMessage,
+  UserExceptionMessage, UserSuccessMessage,
   UserValidationField,
 } from "@constants";
 
@@ -35,7 +36,7 @@ export const getAuthenticatedUser: RequestHandler = async (req, res, next) => {
       return res.status(ServerExceptionStatusCodes.NOT_FOUND).json(USER_NOT_FOUND);
     }
 
-    res.status(ServerSuccessStatusCodes.OK).json(user);
+    res.status(ServerSuccessStatusCodes.OK).json(UserSuccessMessage.VERIFIED);
   } catch (error) {
     next(error);
   }
@@ -49,7 +50,7 @@ export const login: RequestHandler = async (req, res, next) => {
       return makeError({ res, statusCode: AuthExceptionStatusCode.BAD_REQUEST, exceptionMessage: PARAMETERS_MISSING });
     }
 
-    const user = await UserModel.findOne({ email }).select(`+${PASSWORD} +${EMAIL}`).exec();
+    const user: UserPayload | null = await UserModel.findOne({ email }).select(`+${PASSWORD} +${EMAIL}`).lean().exec();
 
     if (!user) {
       return makeError({ res, statusCode: AuthExceptionStatusCode.UNAUTHORIZED, exceptionMessage: USER_NOT_FOUND });
@@ -61,8 +62,11 @@ export const login: RequestHandler = async (req, res, next) => {
       return makeError({ res, statusCode: AuthExceptionStatusCode.UNAUTHORIZED, exceptionMessage: INVALID_PASSWORD });
     }
 
+    const userCredential: Partial<UserPayload> = { ...user };
+    delete userCredential.password;
+
     const accessToken = jwt.sign({ userId: user._id }, JWT_ACCESS_SECRET, { expiresIn: EXPIRATION_TIME });
-    res.status(ServerSuccessStatusCodes.CREATED).json({ user, accessToken });
+    res.status(ServerSuccessStatusCodes.CREATED).json({ user: userCredential, accessToken });
   } catch (error) {
     next(error);
   }
