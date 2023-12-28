@@ -7,7 +7,6 @@ const { PARAMETERS_MISSING } = AuthExceptionMessage;
 
 export const getAllTodos: RequestHandler = async (req, res, next) => {
   const { userId } = req.query;
-
   try {
     getAuthenticatedUser(req, res, next);
 

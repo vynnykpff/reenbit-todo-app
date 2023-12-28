@@ -53,7 +53,7 @@ export const TodoCreateModal = () => {
           expirationDate: setExpirationDateFormat(expirationDate),
           todoTitle,
           isCompleted: false,
-          todoId: uuidv4(),
+          _id: uuidv4(),
         }),
       );
       dispatch(setTodoTitle(""));
@@ -67,7 +67,7 @@ export const TodoCreateModal = () => {
   };
 
   return (
-    <Modal className={styles.modalContainer} setModalActive={setModalActive} modalActive={modalActive} title="Create Todo">
+    <Modal className={styles.modalContainer} setModalActive={setModalActive} modalActive={modalActive} title="Create TodoActions">
       <form onSubmit={e => e.preventDefault()} className={styles.modalForm}>
         <Formik
           initialValues={{

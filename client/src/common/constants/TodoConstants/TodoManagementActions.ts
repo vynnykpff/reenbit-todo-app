@@ -2,6 +2,7 @@ export enum TodoManagementActions {
   ADD_TODO = "ADD_TODO",
   DELETE_TODO = "DELETE_TODO",
   DELETE_COMPLETED_TODOS = "DELETE_COMPLETED_TODOS",
+  RESET_TODOS = "RESET_TODOS",
 }
 
 export const TodoConstants = {
@@ -28,3 +29,9 @@ export enum TodoFilteringActions {
 export const TodoFilteringConstants = {
   ...TodoFilteringActions,
 };
+
+export enum TodoAsyncActions {
+  TODO_PENDING = "TODO_PENDING",
+  TODO_SUCCESS = "TODO_SUCCESS",
+  TODO_ERROR = "TODO_ERROR",
+}

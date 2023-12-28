@@ -21,7 +21,9 @@
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": "latest",
-    "project": ["tsconfig.json"],
+    "project": [
+      "tsconfig.json"
+    ],
     "sourceType": "module"
   },
   "plugins": [
@@ -73,6 +75,7 @@
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-unsafe-argument": "off",
     "@typescript-eslint/no-unsafe-assignment": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
     "react/prop-types": "off",
     "react-hooks/exhaustive-deps": "off",
     "react/react-in-jsx-scope": "off",

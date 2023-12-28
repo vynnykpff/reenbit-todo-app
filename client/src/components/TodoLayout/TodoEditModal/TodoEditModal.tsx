@@ -35,14 +35,14 @@ export const TodoEditModal = () => {
   const handleSubmit = (data: FormData) => {
     setModalActive(false);
     const { todoTitle, expirationDate } = data;
-    const { todoId, createdDate } = todo;
+    const { _id: userId, createdDate } = todo;
     const formattedExpirationDate =
       isValid(expirationDate) && expirationDate !== null ? setExpirationDateFormat(expirationDate) : todo.expirationDate;
-    dispatch(editTodo({ todoTitle, expirationDate: formattedExpirationDate, createdDate, todoId }));
+    dispatch(editTodo({ todoTitle, expirationDate: formattedExpirationDate, createdDate, _id: userId }));
   };
 
   return (
-    <Modal className={styles.modalContainer} setModalActive={setModalActive} modalActive={modalActive} title="Edit Todo">
+    <Modal className={styles.modalContainer} setModalActive={setModalActive} modalActive={modalActive} title="Edit TodoActions">
       <form onSubmit={e => e.preventDefault()} className={styles.modalForm}>
         <Formik
           initialValues={{
