@@ -3,7 +3,7 @@ import { UserRequestId } from "@types";
 import { getUserToken, verifyAccessToken } from "@utils";
 import { AuthExceptionMessage, AuthExceptionStatusCode } from "@constants";
 
-type RequestData = UserRequestId & Request;
+export type RequestData = UserRequestId & Request;
 
 export const requiresAuth: RequestHandler = (req: RequestData, res, next) => {
   const token = getUserToken(req);
