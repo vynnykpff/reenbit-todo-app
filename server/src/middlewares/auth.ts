@@ -7,14 +7,14 @@ export type RequestData = UserRequestId & Request;
 
 export const requiresAuth: RequestHandler = (req: RequestData, res, next) => {
   const rawAccessToken = req.headers.authorization!;
-  const token = getUserToken(rawAccessToken);
+  const accessToken = getUserToken(rawAccessToken);
 
-  if (!token) {
+  if (!accessToken) {
     return res.status(AuthExceptionStatusCode.UNAUTHORIZED).json(AuthExceptionMessage.UNAUTHORIZED);
   }
 
   try {
-    req.userId = verifyAccessToken(token);
+    req.userId = verifyAccessToken({ res, accessToken });
     next();
   } catch {
     return res.status(AuthExceptionStatusCode.UNAUTHORIZED).json(AuthExceptionMessage.UNAUTHORIZED);

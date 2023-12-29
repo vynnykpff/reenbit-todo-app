@@ -41,6 +41,8 @@ export const authReducer = (state = initialState, action: AuthActionTypes): Auth
       return {
         ...state,
         user: null,
+        isPending: false,
+        error: null,
       };
     case RESET_ERROR:
       return {

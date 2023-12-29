@@ -8,10 +8,10 @@ const { USER_NOT_FOUND } = UserExceptionMessage;
 
 export const getAuthenticatedUser: RequestHandler = async (req, res, next) => {
   const rawAccessToken = req.headers.authorization!;
-  const token = getUserToken(rawAccessToken);
+  const accessToken = getUserToken(rawAccessToken);
 
   try {
-    const userId = verifyAccessToken(token);
+    const userId = verifyAccessToken({ res, accessToken });
     const user = await UserModel.findById(userId).select(`+${EMAIL}`).exec();
 
     if (!user) {
