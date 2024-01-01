@@ -8,7 +8,8 @@ import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
 import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
 import { setNotification } from "@/store/actions/notificationActionCreators.ts";
-import { addTodo, setTodoTitle } from "@/store/actions/todoActionCreators.ts";
+import { setTodoTitle } from "@/store/actions/todoActionCreators.ts";
+import { createTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
 import { isValidField } from "@/utils/isValidField.ts";
 import { getNextDate } from "@/utils/getNextDate.ts";
 import { setExpirationDateFormat } from "@/utils/setExpirationDateFormat.ts";
@@ -21,7 +22,9 @@ const SEND_KEY = "Enter";
 
 export const TodoCreate = () => {
   const { todoTitle } = useAppSelector(state => state.todoReducer);
+  const { user } = useAppSelector(state => state.authReducer);
   const dispatch = useAppDispatch();
+  const token = localStorage.getItem("access-token")!;
 
   const setTitleStoreValue = (value: string) => {
     dispatch(setTodoTitle(value));
@@ -29,7 +32,7 @@ export const TodoCreate = () => {
 
   const setModalActive = useModalState("createTodoModal")[1];
 
-  const handleCreateTodo = (e: KeyboardEvent<HTMLInputElement>) => {
+  const handleCreateTodo = async (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.code !== SEND_KEY) {
       return;
     }
@@ -37,16 +40,20 @@ export const TodoCreate = () => {
     if (!todoTitle.trim().length) {
       return dispatch(setNotification({ title: TodoNotificationMessages.EMPTY_TITLE, type: NotificationType.ERROR }));
     }
-    dispatch(
-      addTodo({
+
+    await dispatch(
+      createTodosThunk({
         createdDate: setExpirationDateFormat(new Date()),
         expirationDate: getNextDate(new Date()),
         todoTitle,
         isCompleted: false,
-        _id: uuidv4(),
+        todoId: uuidv4(),
+        userId: user?._id!,
       }),
     );
-    return setTitleStoreValue("");
+
+    await dispatch(getTodosThunk({ token, userId: user?._id! }));
+    setTitleStoreValue("");
   };
 
   const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {

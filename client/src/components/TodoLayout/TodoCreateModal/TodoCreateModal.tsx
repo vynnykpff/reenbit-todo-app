@@ -9,7 +9,9 @@ import { Modal } from "@/components/ui/Modal/Modal.tsx";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
 import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
-import { addTodo, setTodoTitle } from "@/store/actions/todoActionCreators.ts";
+import { setTodoTitle } from "@/store/actions/todoActionCreators.ts";
+import { createTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
+import { getNextDate } from "@/utils/getNextDate.ts";
 import { setSelectedTodoTitle } from "@/utils/setSelectedTodoTitle.ts";
 import { setSelectedDate } from "@/utils/setSelectedDate.ts";
 import { setExpirationDateFormat } from "@/utils/setExpirationDateFormat.ts";
@@ -24,9 +26,9 @@ import styles from "@/styles/ModalCommom.module.scss";
 
 export const TodoCreateModal = () => {
   const [modalActive, setModalActive] = useModalState("createTodoModal");
-
+  const { user } = useAppSelector(state => state.authReducer);
   const [expirationDate, setExpirationDate] = useState<Date | null>(null);
-
+  const token = localStorage.getItem("access-token")!;
   const { todoTitle } = useAppSelector(state => state.todoReducer);
   const dispatch = useAppDispatch();
 
@@ -44,18 +46,21 @@ export const TodoCreateModal = () => {
     dispatch(setTodoTitle(newTodoValue));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setModalActive(false);
     if (expirationDate) {
-      dispatch(
-        addTodo({
+      await dispatch(
+        createTodosThunk({
           createdDate: setExpirationDateFormat(new Date()),
-          expirationDate: setExpirationDateFormat(expirationDate),
+          expirationDate: getNextDate(new Date()),
           todoTitle,
           isCompleted: false,
-          _id: uuidv4(),
+          todoId: uuidv4(),
+          userId: user?._id!,
         }),
       );
+
+      await dispatch(getTodosThunk({ token, userId: user?._id! }));
       dispatch(setTodoTitle(""));
     }
   };

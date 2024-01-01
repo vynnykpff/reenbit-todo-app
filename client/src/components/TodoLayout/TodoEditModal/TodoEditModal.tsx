@@ -35,10 +35,10 @@ export const TodoEditModal = () => {
   const handleSubmit = (data: FormData) => {
     setModalActive(false);
     const { todoTitle, expirationDate } = data;
-    const { _id: userId, createdDate } = todo;
+    const { todoId, createdDate } = todo;
     const formattedExpirationDate =
       isValid(expirationDate) && expirationDate !== null ? setExpirationDateFormat(expirationDate) : todo.expirationDate;
-    dispatch(editTodo({ todoTitle, expirationDate: formattedExpirationDate, createdDate, _id: userId }));
+    dispatch(editTodo({ todoTitle, expirationDate: formattedExpirationDate, createdDate, todoId }));
   };
 
   return (

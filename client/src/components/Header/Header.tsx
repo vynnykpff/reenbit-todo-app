@@ -1,3 +1,5 @@
+import { useAppSelector } from "@/hooks/useAppSelector.ts";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { TodoManagementActions } from "@/common/constants/TodoConstants/TodoManagementActions.ts";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
@@ -10,6 +12,13 @@ import styles from "./Header.module.scss";
 export const Header = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const { user } = useAppSelector(state => state.authReducer);
+
+  useEffect(() => {
+    if (!user?._id) {
+      handleLogout();
+    }
+  }, [user?._id]);
 
   const handleLogout = () => {
     localStorage.removeItem("access-token");
