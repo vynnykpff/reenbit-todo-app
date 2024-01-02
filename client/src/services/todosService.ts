@@ -19,4 +19,9 @@ export class TodosService {
     const response = await api.post<TodoActions>(Routes.CREATE_TODO, { ...params });
     return response.data;
   }
+
+  public static async editTodo(params: TodoActions): Promise<TodoActions> {
+    const response = await api.patch<TodoActions>(Routes.EDIT_TODO, { ...params });
+    return response.data;
+  }
 }

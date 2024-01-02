@@ -1,4 +1,4 @@
-import { TodoAsyncActions, TodoManagementActions } from "@/common/constants/TodoConstants/TodoManagementActions.ts";
+import { TodoAsyncActions, TodoEditingActions, TodoManagementActions } from "@/common/constants/TodoConstants/TodoManagementActions.ts";
 import { GetTodoParams } from "@/common/types/Todos/Todo.ts";
 import { TodoActionTypes, TodoActions } from "@/common/types/Todos/TodoActions.ts";
 import { AsyncTodosActions } from "@/common/types/Todos/TodoAsyncActions.ts";
@@ -39,6 +39,29 @@ export function createTodosThunk(params: TodoActions) {
 
       dispatch({
         type: TodoManagementActions.CREATE_TODO,
+        payload: response,
+      });
+
+      dispatch({
+        type: TodoAsyncActions.TODO_SUCCESS,
+      });
+    } catch (error) {
+      dispatch({ type: TodoManagementActions.RESET_TODOS });
+    }
+  };
+}
+
+export function editTodosThunk(params: TodoActions) {
+  return async function (dispatch: Dispatch<TodoActionTypes | AsyncTodosActions>) {
+    try {
+      dispatch({
+        type: TodoAsyncActions.TODO_PENDING,
+      });
+
+      const response = await TodosService.editTodo({ ...params });
+
+      dispatch({
+        type: TodoEditingActions.EDIT_TODO,
         payload: response,
       });
 

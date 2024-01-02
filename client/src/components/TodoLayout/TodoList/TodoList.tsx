@@ -20,7 +20,7 @@ export const TodoList = () => {
       ) : (
         <ul className={styles.todoListContainer}>
           {searchedTodos.length ? (
-            searchedTodos.map(todo => <Todo key={todo.todoId} {...todo} />)
+            searchedTodos.map(todo => <Todo key={todo._id} {...todo} />)
           ) : (
             <TodoListEmpty title={setTodoEmptyMessage()} />
           )}

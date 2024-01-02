@@ -78,30 +78,6 @@ export const todoReducer = (state = initialTodoState, action: TodoActionTypes | 
       return updateTodosAndOriginalTodos(state, filteredTodos, state.filterValue);
     }
 
-    case TodoEditingConstants.EDIT_TODO: {
-      const { todoId: userId, todoTitle, createdDate, expirationDate } = action.payload;
-
-      const updatedTodoIndex = state.originalTodos.findIndex(todo => todo.todoId === userId);
-
-      if (updatedTodoIndex === -1) {
-        return state;
-      }
-
-      const updatedTodo = {
-        ...state.originalTodos[updatedTodoIndex],
-        todoTitle,
-        createdDate,
-        expirationDate,
-      };
-
-      const updatedOriginalTodos = [
-        ...state.originalTodos.slice(0, updatedTodoIndex),
-        updatedTodo,
-        ...state.originalTodos.slice(updatedTodoIndex + 1),
-      ];
-
-      return updateTodosAndOriginalTodos(state, updatedOriginalTodos, state.filterValue);
-    }
     case TodoEditingConstants.SET_CURRENT_TODO: {
       return {
         ...state,
@@ -174,6 +150,13 @@ export const todoReducer = (state = initialTodoState, action: TodoActionTypes | 
     }
 
     case TodoManagementActions.CREATE_TODO: {
+      return {
+        ...state,
+        todos: [action.payload, ...state.todos],
+      };
+    }
+
+    case TodoEditingConstants.EDIT_TODO: {
       return {
         ...state,
         todos: [action.payload, ...state.todos],

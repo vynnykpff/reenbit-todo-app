@@ -8,7 +8,7 @@ import { Modal } from "@/components/ui/Modal/Modal.tsx";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
 import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
-import { editTodo } from "@/store/actions/todoActionCreators.ts";
+import { editTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
 import { getExpirationDateFormat } from "@/utils/getExpirationDateFormat.ts";
 import { setSelectedTodoTitle } from "@/utils/setSelectedTodoTitle.ts";
 import { setSelectedDate } from "@/utils/setSelectedDate.ts";
@@ -29,16 +29,20 @@ type FormData = {
 export const TodoEditModal = () => {
   const [modalActive, setModalActive] = useModalState("editTodoModal");
   const { todo } = useAppSelector(state => state.todoReducer);
+  const { user } = useAppSelector(state => state.authReducer);
   const dispatch = useAppDispatch();
+  const token = localStorage.getItem("access-token")!;
   const [expirationDate, setExpirationDate] = useState<Date | null>(null);
 
-  const handleSubmit = (data: FormData) => {
+  const handleSubmit = async (data: FormData) => {
     setModalActive(false);
     const { todoTitle, expirationDate } = data;
     const { todoId, createdDate } = todo;
     const formattedExpirationDate =
       isValid(expirationDate) && expirationDate !== null ? setExpirationDateFormat(expirationDate) : todo.expirationDate;
-    dispatch(editTodo({ todoTitle, expirationDate: formattedExpirationDate, createdDate, todoId }));
+
+    await dispatch(editTodosThunk({ todoTitle, expirationDate: formattedExpirationDate, createdDate, todoId }));
+    void dispatch(getTodosThunk({ token, userId: user?._id! }));
   };
 
   return (

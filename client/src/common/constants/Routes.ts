@@ -3,5 +3,6 @@ export const enum Routes {
   LOGIN = "/login",
   TODOS = "/todos",
   CREATE_TODO = "/todos/create",
+  EDIT_TODO = "/todos/edit",
   ALL = "*",
 }

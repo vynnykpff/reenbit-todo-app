@@ -7,10 +7,11 @@ import {
 
 export type TodoActions = {
   todoId: string;
+  _id?: string;
   todoTitle: string;
   createdDate: string;
   expirationDate: string;
-  isCompleted: boolean;
+  isCompleted?: boolean;
   userId?: string;
 };
 

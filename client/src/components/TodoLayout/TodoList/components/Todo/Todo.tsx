@@ -15,7 +15,7 @@ import { BsDashLg } from "react-icons/bs";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import styles from "./Todo.module.scss";
 
-export const Todo: FC<TodoProps> = ({ todoTitle, createdDate, expirationDate, todoId, isCompleted }) => {
+export const Todo: FC<TodoProps> = ({ todoTitle, createdDate, expirationDate, _id: todoId = "", isCompleted }) => {
   const [isShowInfo, setIsShowInfo] = useState(false);
   const setEditModalActive = useModalState("editTodoModal")[1];
   const setConfirmModalActive = useModalState("confirmModal")[1];

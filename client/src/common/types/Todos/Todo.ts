@@ -21,7 +21,7 @@ export type TodoState = {
 export const initialTodoState: TodoState = {
   todos: [],
   todoTitle: "",
-  todo: { todoId: "", todoTitle: "", createdDate: "", isCompleted: false, expirationDate: "", userId: "" },
+  todo: { todoId: "", todoTitle: "", createdDate: "", isCompleted: false, expirationDate: "", userId: "", _id: "" },
   originalTodos: [],
   filterValue: TodoCurrentFilter.ALL,
   searchedTodos: [],
