@@ -1,5 +1,4 @@
 import {
-  TodoAsyncActions,
   TodoConstants,
   TodoEditingConstants,
   TodoFilteringConstants,
@@ -7,16 +6,12 @@ import {
 } from "@/common/constants/TodoConstants/TodoManagementActions.ts";
 
 export type TodoActions = {
+  todoId: string;
   todoTitle: string;
   createdDate: string;
   expirationDate: string;
   isCompleted: boolean;
-  _id: string;
-};
-
-type AddTodoAction = {
-  type: typeof TodoConstants.ADD_TODO;
-  payload: TodoActions;
+  userId?: string;
 };
 
 type SetTodoTitleAction = {
@@ -29,14 +24,14 @@ type SetTodoTitleAction = {
 type SetTodoCompletedAction = {
   type: typeof TodoEditingConstants.SET_COMPLETED_TODO;
   payload: {
-    todoId: TodoActions["_id"];
+    todoId: TodoActions["todoId"];
   };
 };
 
 type DeleteTodoAction = {
   type: typeof TodoConstants.DELETE_TODO;
   payload: {
-    todoId: TodoActions["_id"];
+    todoId: TodoActions["todoId"];
   };
 };
 
@@ -44,7 +39,7 @@ export type EditTodo = {
   todoTitle: TodoActions["todoTitle"];
   createdDate: TodoActions["createdDate"];
   expirationDate: TodoActions["expirationDate"];
-  _id: TodoActions["_id"];
+  todoId: TodoActions["todoId"];
 };
 
 type EditTodoAction = {
@@ -78,26 +73,11 @@ type SetSearchValueAction = {
   payload: TodoActions["todoTitle"];
 };
 
-type TodosPendingAction = {
-  type: typeof TodoAsyncActions.TODO_PENDING;
-};
-
-type TodosSuccessAction = {
-  type: typeof TodoAsyncActions.TODO_SUCCESS;
-  payload: TodoActions[];
-};
-
-type TodosErrorAction = {
-  type: typeof TodoAsyncActions.TODO_ERROR;
-  payload: string | null;
-};
-
 type ResetTodosAction = {
   type: typeof TodoManagementActions.RESET_TODOS;
 };
 
 export type TodoActionTypes =
-  | AddTodoAction
   | SetTodoTitleAction
   | SetTodoCompletedAction
   | DeleteTodoAction
@@ -107,7 +87,4 @@ export type TodoActionTypes =
   | DeleteCompletedTodoAction
   | SearchTodosAction
   | SetSearchValueAction
-  | TodosPendingAction
-  | TodosSuccessAction
-  | TodosErrorAction
   | ResetTodosAction;

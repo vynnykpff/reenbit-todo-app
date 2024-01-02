@@ -1,13 +1,6 @@
 import { TodoConstants, TodoEditingConstants, TodoFilteringConstants } from "@/common/constants/TodoConstants/TodoManagementActions.ts";
 import { EditTodo, TodoActionTypes, TodoActions } from "@/common/types/Todos/TodoActions.ts";
 
-export const addTodo = (todo: TodoActions): TodoActionTypes => ({
-  type: TodoConstants.ADD_TODO,
-  payload: {
-    ...todo,
-  },
-});
-
 export const setTodoTitle = (todoTitle: TodoActions["todoTitle"]): TodoActionTypes => ({
   type: TodoEditingConstants.SET_TODO_TITLE,
   payload: {
@@ -15,14 +8,14 @@ export const setTodoTitle = (todoTitle: TodoActions["todoTitle"]): TodoActionTyp
   },
 });
 
-export const updateStatusTodo = (todoId: TodoActions["_id"]): TodoActionTypes => ({
+export const updateStatusTodo = (todoId: TodoActions["todoId"]): TodoActionTypes => ({
   type: TodoEditingConstants.SET_COMPLETED_TODO,
   payload: {
     todoId,
   },
 });
 
-export const deleteTodo = (todoId: TodoActions["_id"]): TodoActionTypes => ({
+export const deleteTodo = (todoId: TodoActions["todoId"]): TodoActionTypes => ({
   type: TodoConstants.DELETE_TODO,
   payload: {
     todoId,
