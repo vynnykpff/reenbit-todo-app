@@ -3,7 +3,6 @@ import { Document, InferSchemaType, Schema, model } from "mongoose";
 const { String } = Schema.Types;
 
 const todoSchemaFields = {
-  todoId: { type: String, required: true, unique: false },
   userId: { type: String, required: true },
   todoTitle: { type: String, required: true },
   createdDate: { type: String, required: true },
