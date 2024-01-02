@@ -8,6 +8,7 @@ import {
   ServerExceptionStatusCodes,
   ServerSuccessStatusCodes,
   TodoExceptionMessage,
+  TodoSuccessMessage,
 } from "@constants";
 
 const { PARAMETERS_MISSING } = AuthExceptionMessage;
@@ -96,6 +97,39 @@ export const editTodo: RequestHandler = async (req, res, next) => {
     };
 
     res.status(ServerSuccessStatusCodes.OK).json({ ...todo });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteTodo: RequestHandler = async (req, res, next) => {
+  const { todoId } = req.body;
+
+  try {
+    if (!todoId) {
+      return makeError({ res, statusCode: AuthExceptionStatusCode.BAD_REQUEST, exceptionMessage: PARAMETERS_MISSING });
+    }
+
+    await TodoModel.findByIdAndDelete(todoId);
+
+    res.status(ServerSuccessStatusCodes.OK).json({ message: TodoSuccessMessage.TODO_DELETED });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteAllTodos: RequestHandler = async (req, res, next) => {
+  const { userId } = req.body;
+
+  try {
+    if (!userId) {
+      return makeError({ res, statusCode: AuthExceptionStatusCode.BAD_REQUEST, exceptionMessage: PARAMETERS_MISSING });
+    }
+
+    await TodoModel.find({ userId });
+    await TodoModel.deleteMany({ userId });
+
+    res.status(ServerSuccessStatusCodes.OK).json(TodoSuccessMessage.TODO_DELETED);
   } catch (error) {
     next(error);
   }
