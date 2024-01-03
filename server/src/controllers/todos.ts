@@ -128,3 +128,19 @@ export const deleteAllTodos: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+export const searchTodo: RequestHandler = async (req, res, next) => {
+  const { title } = req.query;
+
+  try {
+    if (!title || typeof title !== "string") {
+      return makeError({ res, statusCode: AuthExceptionStatusCode.BAD_REQUEST, exceptionMessage: PARAMETERS_MISSING });
+    }
+
+    const todos = await TodoModel.find({ todoTitle: { $regex: new RegExp(title, "i") } });
+
+    res.status(ServerSuccessStatusCodes.OK).json({ todos });
+  } catch (error) {
+    next(error);
+  }
+};

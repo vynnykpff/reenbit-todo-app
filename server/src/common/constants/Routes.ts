@@ -9,6 +9,7 @@ export const enum TodosRoutes {
   EDIT_TODO = "/edit",
   DELETE_TODO = "/delete",
   DELETE_ALL_TODOS = "/delete-all",
+  SEARCH_TODO = "/search",
 }
 
 export const API_USERS_PATH = "/api/users";
