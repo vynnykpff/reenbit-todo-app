@@ -7,7 +7,7 @@ import {
 } from "@/common/constants/TodoConstants/TodoManagementActions.ts";
 
 export type TodoActions = {
-  todoTitle: string;
+  title: string;
   createdDate: string;
   expirationDate: string;
   isCompleted: boolean;
@@ -22,7 +22,7 @@ type AddTodoAction = {
 type SetTodoTitleAction = {
   type: typeof TodoEditingConstants.SET_TODO_TITLE;
   payload: {
-    todoTitle: TodoActions["todoTitle"];
+    todoTitle: TodoActions["title"];
   };
 };
 
@@ -41,7 +41,7 @@ type DeleteTodoAction = {
 };
 
 export type EditTodo = {
-  todoTitle: TodoActions["todoTitle"];
+  todoTitle: TodoActions["title"];
   createdDate: TodoActions["createdDate"];
   expirationDate: TodoActions["expirationDate"];
   _id: TodoActions["_id"];
@@ -75,7 +75,7 @@ type SearchTodosAction = {
 
 type SetSearchValueAction = {
   type: typeof TodoFilteringConstants.SEARCH_VALUE;
-  payload: TodoActions["todoTitle"];
+  payload: TodoActions["title"];
 };
 
 type TodosPendingAction = {

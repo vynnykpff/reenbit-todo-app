@@ -4,7 +4,7 @@ const { String } = Schema.Types;
 
 const todoSchemaFields = {
   userId: { type: String, required: true, unique: false },
-  todoTitle: { type: String, required: true },
+  title: { type: String, required: true },
   createdDate: { type: String, required: true },
   expirationDate: { type: String, required: true },
   isCompleted: { type: Boolean, required: true },

@@ -8,7 +8,7 @@ export const addTodo = (todo: TodoActions): TodoActionTypes => ({
   },
 });
 
-export const setTodoTitle = (todoTitle: TodoActions["todoTitle"]): TodoActionTypes => ({
+export const setTodoTitle = (todoTitle: TodoActions["title"]): TodoActionTypes => ({
   type: TodoEditingConstants.SET_TODO_TITLE,
   payload: {
     todoTitle,
@@ -54,7 +54,7 @@ export const deleteCompletedTodos = (): TodoActionTypes => ({
   type: TodoConstants.DELETE_COMPLETED_TODOS,
 });
 
-export const setSearchValue = (todo: TodoActions["todoTitle"]): TodoActionTypes => ({
+export const setSearchValue = (todo: TodoActions["title"]): TodoActionTypes => ({
   type: TodoFilteringConstants.SEARCH_VALUE,
   payload: todo,
 });

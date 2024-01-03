@@ -10,7 +10,7 @@ import { TodoActionTypes, TodoActions } from "@/common/types/Todos/TodoActions.t
 
 type TodoState = {
   todos: TodoActions[];
-  todoTitle: string;
+  title: string;
   todo: TodoActions;
   originalTodos: TodoActions[];
   filterValue: typeof TodoCurrentFilter.ALL;
@@ -22,8 +22,8 @@ type TodoState = {
 
 const initialState: TodoState = {
   todos: [],
-  todoTitle: "",
-  todo: { _id: "", todoTitle: "", createdDate: "", isCompleted: false, expirationDate: "" },
+  title: "",
+  todo: { _id: "", title: "", createdDate: "", isCompleted: false, expirationDate: "" },
   originalTodos: [],
   filterValue: TodoCurrentFilter.ALL,
   searchedTodos: [],
@@ -61,7 +61,7 @@ const updateTodosAndOriginalTodos = (
 };
 
 const getSearchedTodos = (todos: TodoActions[], searchValue: string) => {
-  return todos.filter(todo => todo.todoTitle.toLowerCase().includes(searchValue.toLowerCase()));
+  return todos.filter(todo => todo.title.toLowerCase().includes(searchValue.toLowerCase()));
 };
 
 export const todoReducer = (state = initialState, action: TodoActionTypes): TodoState => {

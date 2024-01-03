@@ -20,7 +20,7 @@ import styles from "./TodoCreate.module.scss";
 const SEND_KEY = "Enter";
 
 export const TodoCreate = () => {
-  const { todoTitle } = useAppSelector(state => state.todoReducer);
+  const { title } = useAppSelector(state => state.todoReducer);
   const dispatch = useAppDispatch();
 
   const setTitleStoreValue = (value: string) => {
@@ -34,14 +34,14 @@ export const TodoCreate = () => {
       return;
     }
 
-    if (!todoTitle.trim().length) {
+    if (!title.trim().length) {
       return dispatch(setNotification({ title: TodoNotificationMessages.EMPTY_TITLE, type: NotificationType.ERROR }));
     }
     dispatch(
       addTodo({
         createdDate: setExpirationDateFormat(new Date()),
         expirationDate: getNextDate(new Date()),
-        todoTitle,
+        title,
         isCompleted: false,
         _id: uuidv4(),
       }),
@@ -54,7 +54,7 @@ export const TodoCreate = () => {
 
     if (inputValue.trim().length >= TodoValidateData.MAX_TITLE_LENGTH) {
       dispatch(setNotification({ title: TodoNotificationMessages.MAX_LENGTH, type: NotificationType.ERROR }));
-      return setTitleStoreValue(todoTitle.replace(inputValue, ""));
+      return setTitleStoreValue(title.replace(inputValue, ""));
     }
     setTitleStoreValue(isValidField(inputValue));
   };
@@ -64,7 +64,7 @@ export const TodoCreate = () => {
       <Input
         onKeyDown={handleCreateTodo}
         onChange={handleChangeInput}
-        value={todoTitle}
+        value={title}
         className={styles.createTodoInput}
         placeholder="Enter new todo"
       />

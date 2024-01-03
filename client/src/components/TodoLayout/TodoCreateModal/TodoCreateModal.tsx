@@ -27,7 +27,7 @@ export const TodoCreateModal = () => {
 
   const [expirationDate, setExpirationDate] = useState<Date | null>(null);
 
-  const { todoTitle } = useAppSelector(state => state.todoReducer);
+  const { title } = useAppSelector(state => state.todoReducer);
   const dispatch = useAppDispatch();
 
   const handleCloseModal = () => {
@@ -51,7 +51,7 @@ export const TodoCreateModal = () => {
         addTodo({
           createdDate: setExpirationDateFormat(new Date()),
           expirationDate: setExpirationDateFormat(expirationDate),
-          todoTitle,
+          title,
           isCompleted: false,
           _id: uuidv4(),
         }),
@@ -71,7 +71,7 @@ export const TodoCreateModal = () => {
       <form onSubmit={e => e.preventDefault()} className={styles.modalForm}>
         <Formik
           initialValues={{
-            todoTitle,
+            title: title,
             expirationDate: "",
           }}
           validationSchema={TodoScheme}
@@ -82,13 +82,13 @@ export const TodoCreateModal = () => {
               <div className={styles.modalFieldsWrapper}>
                 <label className={styles.modalLabel} htmlFor={TodoValidateFields.TODO_TITLE}>
                   <span className={styles.requiredSymbol}>*</span> Title:
-                  <span className={styles.modalError}>{errors.todoTitle}</span>
+                  <span className={styles.modalError}>{errors.title}</span>
                 </label>
                 <Input
-                  className={cn(styles.modalField, errors.todoTitle ? styles.modalFieldError : styles.modalField)}
+                  className={cn(styles.modalField, errors.title ? styles.modalFieldError : styles.modalField)}
                   placeholder="Enter new todo"
                   onChange={e => setChangedTodoTitle(e, setFieldValue, TodoValidateFields.TODO_TITLE)}
-                  value={values.todoTitle}
+                  value={values.title}
                   id={TodoValidateFields.TODO_TITLE}
                 />
 

@@ -46,7 +46,7 @@ export const TodoEditModal = () => {
       <form onSubmit={e => e.preventDefault()} className={styles.modalForm}>
         <Formik
           initialValues={{
-            todoTitle: todo.todoTitle,
+            todoTitle: todo.title,
             expirationDate: todo.expirationDate ? new Date(todo.expirationDate) : null,
           }}
           validationSchema={TodoScheme}
