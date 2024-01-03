@@ -14,14 +14,8 @@ import {
 const { PARAMETERS_MISSING } = AuthExceptionMessage;
 
 export const getAllTodos: RequestHandler = async (req, res, next) => {
-  const { userId } = req.query;
   try {
-    getAuthenticatedUser(req, res, next);
-
-    if (!userId) {
-      return makeError({ res, statusCode: AuthExceptionStatusCode.BAD_REQUEST, exceptionMessage: PARAMETERS_MISSING });
-    }
-
+    const userId = await getAuthenticatedUser(req, res, next);
     const todos = await TodoModel.find({ userId }).select({ userId: EXCEPTION_VALUE });
 
     res.status(ServerSuccessStatusCodes.OK).json({ todos });
@@ -103,7 +97,7 @@ export const editTodo: RequestHandler = async (req, res, next) => {
 };
 
 export const deleteTodo: RequestHandler = async (req, res, next) => {
-  const { todoId } = req.body;
+  const { todoId } = req.query;
 
   try {
     if (!todoId) {
@@ -119,15 +113,15 @@ export const deleteTodo: RequestHandler = async (req, res, next) => {
 };
 
 export const deleteAllTodos: RequestHandler = async (req, res, next) => {
-  const { userId } = req.body;
-
   try {
+    const userId = await getAuthenticatedUser(req, res, next);
+
     if (!userId) {
       return makeError({ res, statusCode: AuthExceptionStatusCode.BAD_REQUEST, exceptionMessage: PARAMETERS_MISSING });
     }
 
     await TodoModel.find({ userId });
-    await TodoModel.deleteMany({ userId });
+    await TodoModel.deleteMany({ userId, isCompleted: true });
 
     res.status(ServerSuccessStatusCodes.OK).json(TodoSuccessMessage.TODO_DELETED);
   } catch (error) {

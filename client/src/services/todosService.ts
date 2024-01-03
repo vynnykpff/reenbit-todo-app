@@ -24,4 +24,14 @@ export class TodosService {
     const response = await api.patch<TodoActions>(Routes.EDIT_TODO, { ...params });
     return response.data;
   }
+
+  public static async deleteTodo(todoId: string): Promise<string> {
+    const response = await api.delete<string>(`${Routes.DELETE_TODO}?todoId=${todoId}`);
+    return response.data;
+  }
+
+  public static async deleteAllTodos(token: string): Promise<string> {
+    const response = await api.delete<string>(Routes.DELETE_ALL_TODOS, { headers: { Authorization: `Bearer ${token}` } });
+    return response.data;
+  }
 }

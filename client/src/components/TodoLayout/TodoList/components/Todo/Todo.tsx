@@ -3,9 +3,11 @@ import { TodoConfirmMessages, TodoNotificationMessages } from "@/common/constant
 import { TodoActions as TodoProps } from "@/common/types/Todos/TodoActions.ts";
 import { Input } from "@/components/ui/Input/Input.tsx";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
+import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
 import { setNotification } from "@/store/actions/notificationActionCreators.ts";
-import { deleteTodo, setCurrentTodo, updateStatusTodo } from "@/store/actions/todoActionCreators.ts";
+import { setCurrentTodo } from "@/store/actions/todoActionCreators.ts";
+import { deleteTodoThunk, editTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
 import { checkOnCurrentExpirationDate } from "@/utils/checkOnCurrentExpirationDate.ts";
 import cn from "classnames";
 import { FC, useState } from "react";
@@ -15,20 +17,24 @@ import { BsDashLg } from "react-icons/bs";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import styles from "./Todo.module.scss";
 
-export const Todo: FC<TodoProps> = ({ todoTitle, createdDate, expirationDate, _id: todoId = "", isCompleted }) => {
+export const Todo: FC<TodoProps> = ({ todoTitle = "", createdDate = "", expirationDate = "", _id: todoId = "", isCompleted = false }) => {
   const [isShowInfo, setIsShowInfo] = useState(false);
+  const { user } = useAppSelector(state => state.authReducer);
+  const token = localStorage.getItem("access-token") ?? "";
   const setEditModalActive = useModalState("editTodoModal")[1];
   const setConfirmModalActive = useModalState("confirmModal")[1];
   const dispatch = useAppDispatch();
 
-  const handleChangeStatusTodo = () => {
-    dispatch(updateStatusTodo(todoId));
+  const handleChangeStatusTodo = async () => {
+    await dispatch(editTodosThunk({ todoId, isCompleted: !isCompleted, createdDate, expirationDate, todoTitle }));
+    void dispatch(getTodosThunk({ token, userId: user?._id! }));
   };
 
   const handleClickDeleteTodo = () => {
     setConfirmModalActive(true, {
-      confirmCallback: () => {
-        dispatch(deleteTodo(todoId));
+      confirmCallback: async () => {
+        await dispatch(deleteTodoThunk(todoId));
+        void dispatch(getTodosThunk({ token, userId: user?._id! }));
         dispatch(setNotification({ title: TodoNotificationMessages.DELETE_TODO, type: NotificationType.SUCCESS }));
       },
       message: TodoConfirmMessages.DELETE_TODO,

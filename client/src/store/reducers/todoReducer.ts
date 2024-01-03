@@ -73,10 +73,6 @@ export const todoReducer = (state = initialTodoState, action: TodoActionTypes | 
         searchValue: "",
       };
     }
-    case TodoConstants.DELETE_TODO: {
-      const filteredTodos = state.originalTodos.filter(todo => todo.todoId !== action.payload.todoId);
-      return updateTodosAndOriginalTodos(state, filteredTodos, state.filterValue);
-    }
 
     case TodoEditingConstants.SET_CURRENT_TODO: {
       return {
