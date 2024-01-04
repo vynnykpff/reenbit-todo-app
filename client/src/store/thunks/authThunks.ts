@@ -29,34 +29,3 @@ export function loginThunk({ email, password }: UserPayload) {
     localStorage.setItem("access-token", response.accessToken);
   };
 }
-
-export function checkOnValidTokenThunk(token: string) {
-  return async function (dispatch: Dispatch<AuthActionTypes>) {
-    dispatch({
-      type: AuthActions.AUTH_PENDING,
-      payload: true,
-    });
-
-    const response = await AuthService.getAuthenticatedUser(token);
-
-    if (!response) {
-      localStorage.removeItem("access-token");
-
-      dispatch({
-        type: AuthActions.RESET_USER,
-        payload: null,
-      });
-
-      dispatch({
-        type: AuthActions.AUTH_ERROR,
-        payload: response,
-      });
-      return;
-    }
-
-    dispatch({
-      type: AuthActions.AUTH_PENDING,
-      payload: false,
-    });
-  };
-}

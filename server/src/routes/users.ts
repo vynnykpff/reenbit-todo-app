@@ -1,11 +1,9 @@
 import express from "express";
-import { requiresAuth } from "@middlewares";
-import { getAuthenticatedUser, login } from "@controllers";
-import { Routes } from "@constants";
+import { login } from "@controllers";
+import { AuthRoutes } from "@constants";
 
 const router = express.Router();
 
-router.get(Routes.HOME, requiresAuth, getAuthenticatedUser);
-router.post(Routes.LOGIN, login);
+router.post(AuthRoutes.LOGIN, login);
 
 export const UserRouter = router;

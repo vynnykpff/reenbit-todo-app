@@ -3,17 +3,18 @@ import { UserRequestId } from "@types";
 import { getUserToken, verifyAccessToken } from "@utils";
 import { AuthExceptionMessage, AuthExceptionStatusCode } from "@constants";
 
-type RequestData = UserRequestId & Request;
+export type RequestData = UserRequestId & Request;
 
 export const requiresAuth: RequestHandler = (req: RequestData, res, next) => {
-  const token = getUserToken(req);
+  const rawAccessToken = req.headers.authorization!;
+  const accessToken = getUserToken(rawAccessToken);
 
-  if (!token) {
+  if (!accessToken) {
     return res.status(AuthExceptionStatusCode.UNAUTHORIZED).json(AuthExceptionMessage.UNAUTHORIZED);
   }
 
   try {
-    req.userId = verifyAccessToken(token);
+    req.userId = verifyAccessToken({ res, accessToken });
     next();
   } catch {
     return res.status(AuthExceptionStatusCode.UNAUTHORIZED).json(AuthExceptionMessage.UNAUTHORIZED);

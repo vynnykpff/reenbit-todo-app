@@ -10,3 +10,5 @@ export enum UserSuccessMessage {
 export enum UserExceptionStatusCode {
   UNPROCESSABLE = 422,
 }
+
+export const EXCEPTION_VALUE = 0;

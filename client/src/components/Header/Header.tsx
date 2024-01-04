@@ -1,4 +1,6 @@
 import { useNavigate } from "react-router-dom";
+import { TodoManagementActions } from "@/common/constants/TodoConstants/TodoManagementActions.ts";
+import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
 import { Routes } from "@/common/constants/Routes.ts";
 import { Button } from "@/components/ui/Button/Button.tsx";
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher/ThemeSwitcher.tsx";
@@ -7,9 +9,11 @@ import styles from "./Header.module.scss";
 
 export const Header = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const handleLogout = () => {
     localStorage.removeItem("access-token");
+    dispatch({ type: TodoManagementActions.RESET_TODOS });
     navigate(Routes.LOGIN);
   };
 

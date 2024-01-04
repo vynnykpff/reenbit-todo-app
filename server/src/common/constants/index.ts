@@ -1,3 +1,3 @@
 export * from "./Exceptions";
-export * from "./Routes";
+export * from "./AuthRoutes";
 export * from "./Validation";

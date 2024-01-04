@@ -1,6 +1,6 @@
 import { NotificationType } from "@/common/constants/NotificationConstants.ts";
 import { TodoConfirmMessages, TodoNotificationMessages } from "@/common/constants/TodoConstants/TodoValidation.ts";
-import { Todo as TodoProps } from "@/common/types/Todo.ts";
+import { TodoActions as TodoProps } from "@/common/types/Todos/TodoActions.ts";
 import { Input } from "@/components/ui/Input/Input.tsx";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
@@ -15,20 +15,20 @@ import { BsDashLg } from "react-icons/bs";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import styles from "./Todo.module.scss";
 
-export const Todo: FC<TodoProps> = ({ todoTitle, createdDate, expirationDate, todoId, isCompleted }) => {
+export const Todo: FC<TodoProps> = ({ title, createdDate, expirationDate, _id: userId, isCompleted }) => {
   const [isShowInfo, setIsShowInfo] = useState(false);
   const setEditModalActive = useModalState("editTodoModal")[1];
   const setConfirmModalActive = useModalState("confirmModal")[1];
   const dispatch = useAppDispatch();
 
   const handleChangeStatusTodo = () => {
-    dispatch(updateStatusTodo(todoId));
+    dispatch(updateStatusTodo(userId));
   };
 
   const handleClickDeleteTodo = () => {
     setConfirmModalActive(true, {
       confirmCallback: () => {
-        dispatch(deleteTodo(todoId));
+        dispatch(deleteTodo(userId));
         dispatch(setNotification({ title: TodoNotificationMessages.DELETE_TODO, type: NotificationType.SUCCESS }));
       },
       message: TodoConfirmMessages.DELETE_TODO,
@@ -38,7 +38,7 @@ export const Todo: FC<TodoProps> = ({ todoTitle, createdDate, expirationDate, to
   const handleClickEditTodo = () => {
     if (!isCompleted) {
       setEditModalActive(true);
-      dispatch(setCurrentTodo({ todoId, todoTitle, expirationDate, createdDate, isCompleted }));
+      dispatch(setCurrentTodo({ _id: userId, title, expirationDate, createdDate, isCompleted }));
     }
   };
 
@@ -50,7 +50,7 @@ export const Todo: FC<TodoProps> = ({ todoTitle, createdDate, expirationDate, to
             <Input className={styles.todoInput} type="checkbox" checked={isCompleted} onChange={handleChangeStatusTodo} />
             <span className={styles.todoCheckbox}></span>
           </label>
-          <p className={cn(styles.todoTitle, isCompleted && styles.todoCompleted)}>{todoTitle}</p>
+          <p className={cn(styles.todoTitle, isCompleted && styles.todoCompleted)}>{title}</p>
         </div>
         {isShowInfo && (
           <ul className={styles.todoDateContainer}>
