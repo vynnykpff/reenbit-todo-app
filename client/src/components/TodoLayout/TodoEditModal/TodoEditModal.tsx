@@ -35,14 +35,14 @@ export const TodoEditModal = () => {
   const handleSubmit = (data: FormData) => {
     setModalActive(false);
     const { todoTitle, expirationDate } = data;
-    const { _id: userId, createdDate } = todo;
+    const { _id, createdDate } = todo;
     const formattedExpirationDate =
       isValid(expirationDate) && expirationDate !== null ? setExpirationDateFormat(expirationDate) : todo.expirationDate;
-    dispatch(editTodo({ todoTitle, expirationDate: formattedExpirationDate, createdDate, _id: userId }));
+    dispatch(editTodo({ todoTitle, expirationDate: formattedExpirationDate, createdDate, _id }));
   };
 
   return (
-    <Modal className={styles.modalContainer} setModalActive={setModalActive} modalActive={modalActive} title="Edit TodoActions">
+    <Modal className={styles.modalContainer} setModalActive={setModalActive} modalActive={modalActive} title="Edit Todo">
       <form onSubmit={e => e.preventDefault()} className={styles.modalForm}>
         <Formik
           initialValues={{
@@ -55,16 +55,16 @@ export const TodoEditModal = () => {
           {({ handleSubmit, values, errors, setFieldValue }) => (
             <>
               <div className={styles.modalFieldsWrapper}>
-                <label className={styles.modalLabel} htmlFor={TodoValidateFields.TODO_TITLE}>
+                <label className={styles.modalLabel} htmlFor={TodoValidateFields.TITLE}>
                   <span className={styles.requiredSymbol}>*</span> Title:
                   <span className={styles.modalError}>{errors.todoTitle}</span>
                 </label>
                 <Input
                   className={cn(styles.modalField, errors.todoTitle ? styles.modalFieldError : styles.modalField)}
                   placeholder="Enter new todo"
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => setSelectedTodoTitle(e, setFieldValue, TodoValidateFields.TODO_TITLE)}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setSelectedTodoTitle(e, setFieldValue, TodoValidateFields.TITLE)}
                   value={values.todoTitle}
-                  id={TodoValidateFields.TODO_TITLE}
+                  id={TodoValidateFields.TITLE}
                 />
 
                 <label className={styles.modalLabel} htmlFor={TodoValidateFields.CREATED_DATE}>

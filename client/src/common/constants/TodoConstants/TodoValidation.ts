@@ -1,5 +1,5 @@
 export const enum TodoValidateFields {
-  TODO_TITLE = "todoTitle",
+  TITLE = "title",
   CREATED_DATE = "createdDate",
   EXPIRATION_DATE = "expirationDate",
 }

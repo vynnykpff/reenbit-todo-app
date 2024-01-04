@@ -15,20 +15,20 @@ import { BsDashLg } from "react-icons/bs";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import styles from "./Todo.module.scss";
 
-export const Todo: FC<TodoProps> = ({ title, createdDate, expirationDate, _id: userId, isCompleted }) => {
+export const Todo: FC<TodoProps> = ({ title, createdDate, expirationDate, _id, isCompleted }) => {
   const [isShowInfo, setIsShowInfo] = useState(false);
   const setEditModalActive = useModalState("editTodoModal")[1];
   const setConfirmModalActive = useModalState("confirmModal")[1];
   const dispatch = useAppDispatch();
 
   const handleChangeStatusTodo = () => {
-    dispatch(updateStatusTodo(userId));
+    dispatch(updateStatusTodo(_id));
   };
 
   const handleClickDeleteTodo = () => {
     setConfirmModalActive(true, {
       confirmCallback: () => {
-        dispatch(deleteTodo(userId));
+        dispatch(deleteTodo(_id));
         dispatch(setNotification({ title: TodoNotificationMessages.DELETE_TODO, type: NotificationType.SUCCESS }));
       },
       message: TodoConfirmMessages.DELETE_TODO,
@@ -38,7 +38,7 @@ export const Todo: FC<TodoProps> = ({ title, createdDate, expirationDate, _id: u
   const handleClickEditTodo = () => {
     if (!isCompleted) {
       setEditModalActive(true);
-      dispatch(setCurrentTodo({ _id: userId, title, expirationDate, createdDate, isCompleted }));
+      dispatch(setCurrentTodo({ _id, title, expirationDate, createdDate, isCompleted }));
     }
   };
 

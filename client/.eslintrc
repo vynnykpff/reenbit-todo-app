@@ -100,17 +100,6 @@
       {
         "format": [
           "UPPER_CASE",
-          "camelCase",
-          "PascalCase"
-        ],
-        "modifiers": [
-          "const"
-        ],
-        "selector": "variable"
-      },
-      {
-        "format": [
-          "UPPER_CASE",
           "PascalCase"
         ],
         "selector": "enum"
@@ -128,9 +117,7 @@
         ],
         "selector": [
           "classMethod",
-          "classProperty",
-          "parameter",
-          "variable"
+          "classProperty"
         ]
       },
       {

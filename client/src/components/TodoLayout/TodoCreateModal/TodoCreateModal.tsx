@@ -9,7 +9,9 @@ import { Modal } from "@/components/ui/Modal/Modal.tsx";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
 import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
-import { addTodo, setTodoTitle } from "@/store/actions/todoActionCreators.ts";
+import { setTodoTitle } from "@/store/actions/todoActionCreators.ts";
+import { createTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
+import { getNextDate } from "@/utils/getNextDate.ts";
 import { setSelectedTodoTitle } from "@/utils/setSelectedTodoTitle.ts";
 import { setSelectedDate } from "@/utils/setSelectedDate.ts";
 import { setExpirationDateFormat } from "@/utils/setExpirationDateFormat.ts";
@@ -19,16 +21,15 @@ import { Formik } from "formik";
 import { FormEvent, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { v4 as uuidv4 } from "uuid";
 import styles from "@/styles/ModalCommom.module.scss";
 
 export const TodoCreateModal = () => {
   const [modalActive, setModalActive] = useModalState("createTodoModal");
-
   const [expirationDate, setExpirationDate] = useState<Date | null>(null);
-
+  const { user } = useAppSelector(state => state.authReducer);
   const { title } = useAppSelector(state => state.todoReducer);
   const dispatch = useAppDispatch();
+  const token = localStorage.getItem("access-token") ?? "";
 
   const handleCloseModal = () => {
     setModalActive(false);
@@ -44,18 +45,21 @@ export const TodoCreateModal = () => {
     dispatch(setTodoTitle(newTodoValue));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setModalActive(false);
     if (expirationDate) {
-      dispatch(
-        addTodo({
+      const value = title.trim();
+      await dispatch(
+        createTodosThunk({
           createdDate: setExpirationDateFormat(new Date()),
-          expirationDate: setExpirationDateFormat(expirationDate),
-          title,
+          expirationDate: getNextDate(new Date()),
+          title: value,
           isCompleted: false,
-          _id: uuidv4(),
+          userId: user?._id!,
         }),
       );
+
+      await dispatch(getTodosThunk(token));
       dispatch(setTodoTitle(""));
     }
   };
@@ -67,11 +71,11 @@ export const TodoCreateModal = () => {
   };
 
   return (
-    <Modal className={styles.modalContainer} setModalActive={setModalActive} modalActive={modalActive} title="Create TodoActions">
+    <Modal className={styles.modalContainer} setModalActive={setModalActive} modalActive={modalActive} title="Create Todo">
       <form onSubmit={e => e.preventDefault()} className={styles.modalForm}>
         <Formik
           initialValues={{
-            title: title,
+            title,
             expirationDate: "",
           }}
           validationSchema={TodoScheme}
@@ -80,16 +84,16 @@ export const TodoCreateModal = () => {
           {({ handleSubmit, values, errors, setFieldValue }) => (
             <>
               <div className={styles.modalFieldsWrapper}>
-                <label className={styles.modalLabel} htmlFor={TodoValidateFields.TODO_TITLE}>
+                <label className={styles.modalLabel} htmlFor={TodoValidateFields.TITLE}>
                   <span className={styles.requiredSymbol}>*</span> Title:
                   <span className={styles.modalError}>{errors.title}</span>
                 </label>
                 <Input
                   className={cn(styles.modalField, errors.title ? styles.modalFieldError : styles.modalField)}
                   placeholder="Enter new todo"
-                  onChange={e => setChangedTodoTitle(e, setFieldValue, TodoValidateFields.TODO_TITLE)}
+                  onChange={e => setChangedTodoTitle(e, setFieldValue, TodoValidateFields.TITLE)}
                   value={values.title}
-                  id={TodoValidateFields.TODO_TITLE}
+                  id={TodoValidateFields.TITLE}
                 />
 
                 <label className={styles.modalLabel} htmlFor={TodoValidateFields.CREATED_DATE}>

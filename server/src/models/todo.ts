@@ -1,9 +1,10 @@
+import { TodoModelFields } from "@types";
 import { Document, InferSchemaType, Schema, model } from "mongoose";
 
 const { String } = Schema.Types;
 
-const todoSchemaFields = {
-  userId: { type: String, required: true, unique: false },
+const todoSchemaFields: TodoModelFields = {
+  userId: { type: String, required: true },
   title: { type: String, required: true },
   createdDate: { type: String, required: true },
   expirationDate: { type: String, required: true },

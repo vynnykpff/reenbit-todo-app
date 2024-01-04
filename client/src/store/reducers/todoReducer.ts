@@ -6,31 +6,9 @@ import {
   TodoFilteringConstants,
   TodoManagementActions,
 } from "@/common/constants/TodoConstants/TodoManagementActions.ts";
+import { TodoState, initialTodoState } from "@/common/types/Todos/Todo.ts";
 import { TodoActionTypes, TodoActions } from "@/common/types/Todos/TodoActions.ts";
-
-type TodoState = {
-  todos: TodoActions[];
-  title: string;
-  todo: TodoActions;
-  originalTodos: TodoActions[];
-  filterValue: typeof TodoCurrentFilter.ALL;
-  searchedTodos: TodoActions[];
-  searchValue: string;
-  isPending: boolean;
-  error: string | null;
-};
-
-const initialState: TodoState = {
-  todos: [],
-  title: "",
-  todo: { _id: "", title: "", createdDate: "", isCompleted: false, expirationDate: "" },
-  originalTodos: [],
-  filterValue: TodoCurrentFilter.ALL,
-  searchedTodos: [],
-  searchValue: "",
-  isPending: false,
-  error: null,
-};
+import { AsyncTodosActions } from "@/common/types/Todos/TodoAsyncActions.ts";
 
 const filterTodos = (todos: TodoActions[], filter: string): TodoActions[] => {
   switch (filter) {
@@ -61,25 +39,22 @@ const updateTodosAndOriginalTodos = (
 };
 
 const getSearchedTodos = (todos: TodoActions[], searchValue: string) => {
-  return todos.filter(todo => todo.title.toLowerCase().includes(searchValue.toLowerCase()));
+  return todos?.filter(todo => todo.title?.toLowerCase().includes(searchValue?.toLowerCase()));
 };
 
-export const todoReducer = (state = initialState, action: TodoActionTypes): TodoState => {
+export const todoReducer = (state = initialTodoState, action: TodoActionTypes | AsyncTodosActions): TodoState => {
   switch (action.type) {
-    case TodoConstants.ADD_TODO: {
-      const newTodo = action.payload;
-      const updatedOriginalTodos = [newTodo, ...state.originalTodos];
-      return updateTodosAndOriginalTodos(state, updatedOriginalTodos, TodoCurrentFilter.ALL);
-    }
     case TodoEditingConstants.SET_TODO_TITLE:
       return {
         ...state,
-        ...action.payload,
+        title: action.payload,
       };
+
     case TodoEditingConstants.SET_COMPLETED_TODO: {
-      const { todoId } = action.payload;
+      const id = action.payload;
+
       const updatedTodos = state.todos.map(todo =>
-        todo._id === todoId
+        todo._id === id
           ? {
               ...todo,
               isCompleted: !todo.isCompleted,
@@ -87,7 +62,12 @@ export const todoReducer = (state = initialState, action: TodoActionTypes): Todo
           : todo,
       );
       const updatedOriginalTodos = state.originalTodos.map(todo =>
-        todo._id === todoId ? { ...todo, isCompleted: !todo.isCompleted } : todo,
+        todo._id === id
+          ? {
+              ...todo,
+              isCompleted: !todo.isCompleted,
+            }
+          : todo,
       );
 
       const filteredTodos = filterTodos(updatedTodos, state.filterValue);
@@ -101,14 +81,14 @@ export const todoReducer = (state = initialState, action: TodoActionTypes): Todo
       };
     }
     case TodoConstants.DELETE_TODO: {
-      const filteredTodos = state.originalTodos.filter(todo => todo._id !== action.payload.todoId);
+      const filteredTodos = state.originalTodos.filter(todo => todo._id !== action.payload);
       return updateTodosAndOriginalTodos(state, filteredTodos, state.filterValue);
     }
 
     case TodoEditingConstants.EDIT_TODO: {
-      const { _id: userId, todoTitle, createdDate, expirationDate } = action.payload;
+      const { _id, todoTitle, createdDate, expirationDate } = action.payload;
 
-      const updatedTodoIndex = state.originalTodos.findIndex(todo => todo._id === userId);
+      const updatedTodoIndex = state.originalTodos.findIndex(todo => todo._id === _id);
 
       if (updatedTodoIndex === -1) {
         return state;
@@ -170,14 +150,11 @@ export const todoReducer = (state = initialState, action: TodoActionTypes): Todo
     }
 
     case TodoAsyncActions.TODO_SUCCESS: {
-      const uniqTodos = state.originalTodos.filter(todo => action.payload.filter(item => item._id !== todo._id));
-
-      if (!uniqTodos.length && action.payload.length) {
-        const updatedOriginalTodos = [...action.payload, ...state.originalTodos];
-        return updateTodosAndOriginalTodos(state, updatedOriginalTodos, TodoCurrentFilter.ALL);
-      }
-
-      return updateTodosAndOriginalTodos(state, uniqTodos, TodoCurrentFilter.ALL);
+      return {
+        ...state,
+        isPending: false,
+        error: null,
+      };
     }
 
     case TodoAsyncActions.TODO_ERROR: {
@@ -188,8 +165,26 @@ export const todoReducer = (state = initialState, action: TodoActionTypes): Todo
       };
     }
 
+    case TodoManagementActions.GET_TODOS: {
+      const reversedTodos = action.payload.slice().reverse();
+
+      return {
+        ...state,
+        searchedTodos: reversedTodos,
+        todos: reversedTodos,
+        originalTodos: reversedTodos,
+      };
+    }
+
     case TodoManagementActions.RESET_TODOS: {
-      return initialState;
+      return initialTodoState;
+    }
+
+    case TodoManagementActions.CREATE_TODO: {
+      return {
+        ...state,
+        todos: [action.payload, ...state.todos],
+      };
     }
 
     default:
