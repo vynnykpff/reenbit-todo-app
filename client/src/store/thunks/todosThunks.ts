@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { Dispatch } from "react";
 import { TodoAsyncActions, TodoManagementActions } from "@/common/constants/TodoConstants/TodoManagementActions.ts";
 import { TodoActionTypes, TodoActions } from "@/common/types/Todos/TodoActions.ts";
@@ -11,11 +12,22 @@ export function getTodosThunk(token: string) {
         type: TodoAsyncActions.TODO_PENDING,
       });
 
-      const response = await TodosService.getTodos(token);
+      const rawResponse = await TodosService.getTodos(token);
+
+      const response = rawResponse.todos.map(todo => {
+        const formattedCreatedDate = format(new Date(todo.createdDate), "dd.MM.yyyy HH:mm");
+        const formattedExpirationDate = format(new Date(todo.expirationDate), "dd.MM.yyyy HH:mm");
+
+        return {
+          ...todo,
+          createdDate: formattedCreatedDate,
+          expirationDate: formattedExpirationDate,
+        };
+      });
 
       dispatch({
         type: TodoManagementActions.GET_TODOS,
-        payload: response.todos,
+        payload: response,
       });
 
       dispatch({
