@@ -33,11 +33,13 @@ export const TodoCreate = () => {
   const setModalActive = useModalState("createTodoModal")[1];
 
   const handleCreateTodo = async (e: KeyboardEvent<HTMLInputElement>) => {
+    const title = todoTitle.trim();
+
     if (e.code !== SEND_KEY) {
       return;
     }
 
-    if (!todoTitle.trim().length) {
+    if (!title.length) {
       return dispatch(setNotification({ title: TodoNotificationMessages.EMPTY_TITLE, type: NotificationType.ERROR }));
     }
 
@@ -45,7 +47,7 @@ export const TodoCreate = () => {
       createTodosThunk({
         createdDate: setExpirationDateFormat(new Date()),
         expirationDate: getNextDate(new Date()),
-        todoTitle,
+        todoTitle: title,
         isCompleted: false,
         todoId: uuidv4(),
         userId: user?._id!,

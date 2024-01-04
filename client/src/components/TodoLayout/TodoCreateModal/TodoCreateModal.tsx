@@ -49,11 +49,12 @@ export const TodoCreateModal = () => {
   const handleSubmit = async () => {
     setModalActive(false);
     if (expirationDate) {
+      const title = todoTitle.trim();
       await dispatch(
         createTodosThunk({
           createdDate: setExpirationDateFormat(new Date()),
           expirationDate: getNextDate(new Date()),
-          todoTitle,
+          todoTitle: title,
           isCompleted: false,
           todoId: uuidv4(),
           userId: user?._id!,
