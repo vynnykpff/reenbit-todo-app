@@ -21,16 +21,15 @@ import { Formik } from "formik";
 import { FormEvent, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { v4 as uuidv4 } from "uuid";
 import styles from "@/styles/ModalCommom.module.scss";
 
 export const TodoCreateModal = () => {
   const [modalActive, setModalActive] = useModalState("createTodoModal");
-  const { user } = useAppSelector(state => state.authReducer);
   const [expirationDate, setExpirationDate] = useState<Date | null>(null);
-  const token = localStorage.getItem("access-token")!;
-  const { todoTitle } = useAppSelector(state => state.todoReducer);
+  const { user } = useAppSelector(state => state.authReducer);
+  const { title } = useAppSelector(state => state.todoReducer);
   const dispatch = useAppDispatch();
+  const token = localStorage.getItem("access-token") ?? "";
 
   const handleCloseModal = () => {
     setModalActive(false);
@@ -49,19 +48,18 @@ export const TodoCreateModal = () => {
   const handleSubmit = async () => {
     setModalActive(false);
     if (expirationDate) {
-      const title = todoTitle.trim();
+      const value = title.trim();
       await dispatch(
         createTodosThunk({
           createdDate: setExpirationDateFormat(new Date()),
           expirationDate: getNextDate(new Date()),
-          todoTitle: title,
+          title: value,
           isCompleted: false,
-          todoId: uuidv4(),
           userId: user?._id!,
         }),
       );
 
-      await dispatch(getTodosThunk({ token, userId: user?._id! }));
+      await dispatch(getTodosThunk(token));
       dispatch(setTodoTitle(""));
     }
   };
@@ -77,7 +75,7 @@ export const TodoCreateModal = () => {
       <form onSubmit={e => e.preventDefault()} className={styles.modalForm}>
         <Formik
           initialValues={{
-            todoTitle,
+            title,
             expirationDate: "",
           }}
           validationSchema={TodoScheme}
@@ -86,16 +84,16 @@ export const TodoCreateModal = () => {
           {({ handleSubmit, values, errors, setFieldValue }) => (
             <>
               <div className={styles.modalFieldsWrapper}>
-                <label className={styles.modalLabel} htmlFor={TodoValidateFields.TODO_TITLE}>
+                <label className={styles.modalLabel} htmlFor={TodoValidateFields.TITLE}>
                   <span className={styles.requiredSymbol}>*</span> Title:
-                  <span className={styles.modalError}>{errors.todoTitle}</span>
+                  <span className={styles.modalError}>{errors.title}</span>
                 </label>
                 <Input
-                  className={cn(styles.modalField, errors.todoTitle ? styles.modalFieldError : styles.modalField)}
+                  className={cn(styles.modalField, errors.title ? styles.modalFieldError : styles.modalField)}
                   placeholder="Enter new todo"
-                  onChange={e => setChangedTodoTitle(e, setFieldValue, TodoValidateFields.TODO_TITLE)}
-                  value={values.todoTitle}
-                  id={TodoValidateFields.TODO_TITLE}
+                  onChange={e => setChangedTodoTitle(e, setFieldValue, TodoValidateFields.TITLE)}
+                  value={values.title}
+                  id={TodoValidateFields.TITLE}
                 />
 
                 <label className={styles.modalLabel} htmlFor={TodoValidateFields.CREATED_DATE}>
