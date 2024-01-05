@@ -1,4 +1,4 @@
-import { RequestHandler } from "express";
+import { NextFunction, Request, Response } from "express";
 import { UserModel } from "@models";
 import { getUserToken, verifyAccessToken } from "@utils";
 import { ServerExceptionStatusCodes, UserExceptionMessage, UserValidationField } from "@constants";
@@ -6,7 +6,7 @@ import { ServerExceptionStatusCodes, UserExceptionMessage, UserValidationField }
 const { EMAIL } = UserValidationField;
 const { USER_NOT_FOUND } = UserExceptionMessage;
 
-export const getAuthenticatedUser: RequestHandler = async (req, res, next) => {
+export const getAuthenticatedUser = async (req: Request, res: Response, next: NextFunction) => {
   const rawAccessToken = req.headers.authorization!;
   const accessToken = getUserToken(rawAccessToken);
 
@@ -17,6 +17,8 @@ export const getAuthenticatedUser: RequestHandler = async (req, res, next) => {
     if (!user) {
       return res.status(ServerExceptionStatusCodes.NOT_FOUND).json(USER_NOT_FOUND);
     }
+
+    return userId!;
   } catch (error) {
     next(error);
   }

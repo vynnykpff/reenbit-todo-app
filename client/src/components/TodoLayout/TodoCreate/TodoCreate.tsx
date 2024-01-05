@@ -15,13 +15,12 @@ import { getNextDate } from "@/utils/getNextDate.ts";
 import { setExpirationDateFormat } from "@/utils/setExpirationDateFormat.ts";
 import { ChangeEvent, KeyboardEvent } from "react";
 import { BsPlusLg } from "react-icons/bs";
-import { v4 as uuidv4 } from "uuid";
 import styles from "./TodoCreate.module.scss";
 
 const SEND_KEY = "Enter";
 
 export const TodoCreate = () => {
-  const { todoTitle } = useAppSelector(state => state.todoReducer);
+  const { title } = useAppSelector(state => state.todoReducer);
   const { user } = useAppSelector(state => state.authReducer);
   const dispatch = useAppDispatch();
   const token = localStorage.getItem("access-token")!;
@@ -33,11 +32,13 @@ export const TodoCreate = () => {
   const setModalActive = useModalState("createTodoModal")[1];
 
   const handleCreateTodo = async (e: KeyboardEvent<HTMLInputElement>) => {
+    const value = title.trim();
+
     if (e.code !== SEND_KEY) {
       return;
     }
 
-    if (!todoTitle.trim().length) {
+    if (!title.trim().length) {
       return dispatch(setNotification({ title: TodoNotificationMessages.EMPTY_TITLE, type: NotificationType.ERROR }));
     }
 
@@ -45,14 +46,13 @@ export const TodoCreate = () => {
       createTodosThunk({
         createdDate: setExpirationDateFormat(new Date()),
         expirationDate: getNextDate(new Date()),
-        todoTitle,
+        title: value,
         isCompleted: false,
-        todoId: uuidv4(),
         userId: user?._id!,
       }),
     );
 
-    await dispatch(getTodosThunk({ token, userId: user?._id! }));
+    await dispatch(getTodosThunk(token));
     setTitleStoreValue("");
   };
 
@@ -61,7 +61,7 @@ export const TodoCreate = () => {
 
     if (inputValue.trim().length >= TodoValidateData.MAX_TITLE_LENGTH) {
       dispatch(setNotification({ title: TodoNotificationMessages.MAX_LENGTH, type: NotificationType.ERROR }));
-      return setTitleStoreValue(todoTitle.replace(inputValue, ""));
+      return setTitleStoreValue(title.replace(inputValue, ""));
     }
     setTitleStoreValue(isValidField(inputValue));
   };
@@ -71,7 +71,7 @@ export const TodoCreate = () => {
       <Input
         onKeyDown={handleCreateTodo}
         onChange={handleChangeInput}
-        value={todoTitle}
+        value={title}
         className={styles.createTodoInput}
         placeholder="Enter new todo"
       />
