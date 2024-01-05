@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/Input/Input.tsx";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
 import { setNotification } from "@/store/actions/notificationActionCreators.ts";
-import { deleteTodo, setCurrentTodo, updateStatusTodo } from "@/store/actions/todoActionCreators.ts";
+import { deleteTodo, setCurrentTodo } from "@/store/actions/todoActionCreators.ts";
+import { editTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
 import { checkOnCurrentExpirationDate } from "@/utils/checkOnCurrentExpirationDate.ts";
 import cn from "classnames";
 import { FC, useState } from "react";
@@ -19,10 +20,13 @@ export const Todo: FC<TodoProps> = ({ title, createdDate, expirationDate, _id, i
   const [isShowInfo, setIsShowInfo] = useState(false);
   const setEditModalActive = useModalState("editTodoModal")[1];
   const setConfirmModalActive = useModalState("confirmModal")[1];
+
+  const token = localStorage.getItem("access-token") ?? "";
   const dispatch = useAppDispatch();
 
-  const handleChangeStatusTodo = () => {
-    dispatch(updateStatusTodo(_id));
+  const handleChangeStatusTodo = async () => {
+    await dispatch(editTodosThunk({ _id, title, expirationDate, createdDate, isCompleted: !isCompleted }));
+    void dispatch(getTodosThunk(token));
   };
 
   const handleClickDeleteTodo = () => {
