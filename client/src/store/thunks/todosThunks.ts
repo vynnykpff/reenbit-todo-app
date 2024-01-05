@@ -1,5 +1,5 @@
-import { format } from "date-fns";
 import { Dispatch } from "react";
+import { format } from "date-fns";
 import { TodoAsyncActions, TodoManagementActions } from "@/common/constants/TodoConstants/TodoManagementActions.ts";
 import { TodoActionTypes, TodoActions } from "@/common/types/Todos/TodoActions.ts";
 import { AsyncTodosActions } from "@/common/types/Todos/TodoAsyncActions.ts";
@@ -52,6 +52,24 @@ export function createTodosThunk(params: TodoActions) {
         type: TodoManagementActions.CREATE_TODO,
         payload: response,
       });
+
+      dispatch({
+        type: TodoAsyncActions.TODO_SUCCESS,
+      });
+    } catch (error) {
+      dispatch({ type: TodoManagementActions.RESET_TODOS });
+    }
+  };
+}
+
+export function editTodosThunk(params: TodoActions) {
+  return async function (dispatch: Dispatch<TodoActionTypes | AsyncTodosActions>) {
+    try {
+      dispatch({
+        type: TodoAsyncActions.TODO_PENDING,
+      });
+
+      await TodosService.editTodo({ ...params });
 
       dispatch({
         type: TodoAsyncActions.TODO_SUCCESS,

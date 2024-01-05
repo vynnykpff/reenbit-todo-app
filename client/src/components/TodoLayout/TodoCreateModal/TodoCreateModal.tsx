@@ -1,3 +1,7 @@
+import { FormEvent, useState } from "react";
+import DatePicker from "react-datepicker";
+import { Formik } from "formik";
+import cn from "classnames";
 import { TodoTimeConstants } from "@/common/constants/TodoConstants/TodoTimeConstants.ts";
 import { TodoValidateFields } from "@/common/constants/TodoConstants/TodoValidation.ts";
 import { TodoValidateData } from "@/common/constants/TodoConstants/TodoValidationData.ts";
@@ -12,14 +16,11 @@ import { useModalState } from "@/hooks/useModalState.ts";
 import { setTodoTitle } from "@/store/actions/todoActionCreators.ts";
 import { createTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
 import { getNextDate } from "@/utils/getNextDate.ts";
+import { DATE_FORMAT, setDateFormat } from "@/utils/setDateFormat.ts";
 import { setSelectedTodoTitle } from "@/utils/setSelectedTodoTitle.ts";
 import { setSelectedDate } from "@/utils/setSelectedDate.ts";
 import { setExpirationDateFormat } from "@/utils/setExpirationDateFormat.ts";
 import { setMaxTimeToDate, setMinTimeToDate } from "@/utils/setTimeToDate.ts";
-import cn from "classnames";
-import { Formik } from "formik";
-import { FormEvent, useState } from "react";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styles from "@/styles/ModalCommom.module.scss";
 
@@ -65,7 +66,7 @@ export const TodoCreateModal = () => {
   };
 
   const handleChangeDatePicker = (date: Date, setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void) => {
-    if (setExpirationDateFormat(date).length === TodoValidateData.MAX_DATE_LENGTH) {
+    if (setDateFormat(date).length === TodoValidateData.MAX_DATE_LENGTH) {
       return setSelectedDate(date, setFieldValue, setExpirationDate);
     }
   };
@@ -95,17 +96,15 @@ export const TodoCreateModal = () => {
                   value={values.title}
                   id={TodoValidateFields.TITLE}
                 />
-
                 <label className={styles.modalLabel} htmlFor={TodoValidateFields.CREATED_DATE}>
                   Created date:
                 </label>
                 <Input
                   className={cn(styles.modalField, styles.disabledModalField)}
-                  value={setExpirationDateFormat(new Date())}
+                  value={setDateFormat(new Date())}
                   disabled
                   id={TodoValidateFields.CREATED_DATE}
                 />
-
                 <label className={styles.modalLabel} htmlFor={TodoValidateFields.EXPIRATION_DATE}>
                   <span className={styles.requiredSymbol}>*</span> Expiration date:
                   <span className={styles.modalError}>{errors.expirationDate}</span>
@@ -118,7 +117,7 @@ export const TodoCreateModal = () => {
                   todayButton="Today"
                   timeFormat="HH:mm"
                   timeIntervals={TodoTimeConstants.TIME_INTERVAL}
-                  dateFormat="dd.MM.yyyy HH:mm"
+                  dateFormat={DATE_FORMAT}
                   id={TodoValidateFields.EXPIRATION_DATE}
                   placeholderText="Select expiration date"
                   minDate={new Date()}
@@ -126,7 +125,6 @@ export const TodoCreateModal = () => {
                   maxTime={setMaxTimeToDate(new Date())}
                 />
               </div>
-
               <div className={styles.footerModal}>
                 <Button
                   onClick={handleCloseModal}

@@ -30,7 +30,7 @@ type DeleteTodoAction = {
 };
 
 export type EditTodo = {
-  todoTitle: TodoActions["title"];
+  title: TodoActions["title"];
   createdDate: TodoActions["createdDate"];
   expirationDate: TodoActions["expirationDate"];
   _id: TodoActions["_id"];

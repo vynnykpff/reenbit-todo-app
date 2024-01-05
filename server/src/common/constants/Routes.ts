@@ -6,6 +6,7 @@ export const enum AuthRoutes {
 export const enum TodosRoutes {
   GET_TODOS = "/todos",
   CREATE_TODO = "/create",
+  EDIT_TODO = "/edit",
 }
 
 export const API_USERS_PATH = "/api/users";

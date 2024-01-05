@@ -3,6 +3,7 @@ import { Schema } from "mongoose";
 type TodoModelField = {
   type: typeof Schema.Types.String | BooleanConstructor;
   required: boolean;
+  unique?: boolean;
 };
 
 export type TodoModelFields = {
@@ -11,4 +12,5 @@ export type TodoModelFields = {
   createdDate: TodoModelField;
   expirationDate: TodoModelField;
   isCompleted: TodoModelField;
+  _id?: TodoModelField;
 };
