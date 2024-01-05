@@ -8,7 +8,9 @@ import { setNotification } from "@/store/actions/notificationActionCreators.ts";
 import { deleteTodo, setCurrentTodo } from "@/store/actions/todoActionCreators.ts";
 import { editTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
 import { checkOnCurrentExpirationDate } from "@/utils/checkOnCurrentExpirationDate.ts";
+import { DATE_FORMAT } from "@/utils/setDateFormat.ts";
 import cn from "classnames";
+import { parse } from "date-fns";
 import { FC, useState } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { BiTrash } from "react-icons/bi";
@@ -25,7 +27,8 @@ export const Todo: FC<TodoProps> = ({ title, createdDate, expirationDate, _id, i
   const dispatch = useAppDispatch();
 
   const handleChangeStatusTodo = async () => {
-    await dispatch(editTodosThunk({ _id, title, expirationDate, createdDate, isCompleted: !isCompleted }));
+    const parsedDate = parse(expirationDate, DATE_FORMAT, new Date()).toISOString();
+    await dispatch(editTodosThunk({ _id, title, expirationDate: parsedDate, createdDate, isCompleted: !isCompleted }));
     void dispatch(getTodosThunk(token));
   };
 

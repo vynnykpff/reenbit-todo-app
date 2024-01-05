@@ -10,6 +10,7 @@ import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
 import { editTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
 import { getExpirationDateFormat } from "@/utils/getExpirationDateFormat.ts";
+import { DATE_FORMAT } from "@/utils/setDateFormat.ts";
 import { setSelectedTodoTitle } from "@/utils/setSelectedTodoTitle.ts";
 import { setSelectedDate } from "@/utils/setSelectedDate.ts";
 import { setExpirationDateFormat } from "@/utils/setExpirationDateFormat.ts";
@@ -91,7 +92,7 @@ export const TodoEditModal = () => {
                   todayButton="Today"
                   timeFormat="HH:mm"
                   timeIntervals={TodoTimeConstants.TIME_INTERVAL}
-                  dateFormat="dd.MM.yyyy HH:mm"
+                  dateFormat={DATE_FORMAT}
                   id={TodoValidateFields.EXPIRATION_DATE}
                   placeholderText="Select expiration date"
                   minDate={new Date()}
