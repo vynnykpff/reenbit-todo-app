@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/Input/Input.tsx";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
 import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useDebounce } from "@/hooks/useDebounce.ts";
-import { setSearchValue } from "@/store/actions/todoActionCreators.ts";
+import { getTodosThunk, searchTodoThunk } from "@/store/thunks/todosThunks.ts";
 import cn from "classnames";
 import { ChangeEvent, useEffect, useState } from "react";
 import { IoIosClose } from "react-icons/io";
@@ -13,6 +13,8 @@ export const TodoSearch = () => {
   const { filterValue, searchValue } = useAppSelector(state => state.todoReducer);
   const debouncedValue = useDebounce<string>(value, 500);
   const dispatch = useAppDispatch();
+  const { user } = useAppSelector(state => state.authReducer);
+  const token = localStorage.getItem("access-token") ?? "";
 
   useEffect(() => {
     if (value.length && !searchValue.length) {
@@ -21,7 +23,12 @@ export const TodoSearch = () => {
   }, [filterValue, searchValue]);
 
   useEffect(() => {
-    dispatch(setSearchValue(value));
+    if (value.length) {
+      void dispatch(searchTodoThunk(value));
+      return;
+    }
+
+    void dispatch(getTodosThunk({ token, userId: user?._id! }));
   }, [debouncedValue]);
 
   const handleChangeSearchValue = (event: ChangeEvent<HTMLInputElement>) => {
@@ -29,9 +36,8 @@ export const TodoSearch = () => {
   };
 
   const handleClearSearchValue = () => {
-    if (searchValue.length) {
-      dispatch(setSearchValue(""));
-    }
+    setValue("");
+    void dispatch(getTodosThunk({ token, userId: user?._id! }));
   };
 
   return (

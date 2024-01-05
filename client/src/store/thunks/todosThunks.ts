@@ -3,6 +3,7 @@ import {
   TodoAsyncActions,
   TodoConstants,
   TodoEditingActions,
+  TodoFilteringActions,
   TodoManagementActions,
 } from "@/common/constants/TodoConstants/TodoManagementActions.ts";
 import { GetTodoParams } from "@/common/types/Todos/Todo.ts";
@@ -114,6 +115,29 @@ export function deleteAllTodosThunk(token: string) {
       dispatch({
         type: TodoConstants.DELETE_TODO,
         payload: response,
+      });
+
+      dispatch({
+        type: TodoAsyncActions.TODO_SUCCESS,
+      });
+    } catch (error) {
+      dispatch({ type: TodoManagementActions.RESET_TODOS });
+    }
+  };
+}
+
+export function searchTodoThunk(title: string) {
+  return async function (dispatch: Dispatch<TodoActionTypes | AsyncTodosActions>) {
+    try {
+      dispatch({
+        type: TodoAsyncActions.TODO_PENDING,
+      });
+
+      const response = await TodosService.searchTodo(title);
+
+      dispatch({
+        type: TodoFilteringActions.SEARCH_TODO,
+        payload: response.todos,
       });
 
       dispatch({

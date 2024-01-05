@@ -3,6 +3,7 @@ import {
   TodoAsyncActions,
   TodoConstants,
   TodoEditingConstants,
+  TodoFilteringActions,
   TodoFilteringConstants,
   TodoManagementActions,
 } from "@/common/constants/TodoConstants/TodoManagementActions.ts";
@@ -96,15 +97,6 @@ export const todoReducer = (state = initialTodoState, action: TodoActionTypes | 
       const filteredCompletedTodos = state.originalTodos.filter(todo => !todo.isCompleted);
       return updateTodosAndOriginalTodos(state, filteredCompletedTodos, TodoCurrentFilter.ALL);
     }
-    case TodoFilteringConstants.SEARCH_VALUE: {
-      const searchValue = action.payload;
-
-      return {
-        ...state,
-        searchValue,
-        searchedTodos: getSearchedTodos(state.todos, searchValue),
-      };
-    }
 
     case TodoAsyncActions.TODO_PENDING: {
       return {
@@ -156,6 +148,13 @@ export const todoReducer = (state = initialTodoState, action: TodoActionTypes | 
       return {
         ...state,
         todos: [action.payload, ...state.todos],
+      };
+    }
+
+    case TodoFilteringActions.SEARCH_TODO: {
+      return {
+        ...state,
+        searchedTodos: action.payload,
       };
     }
 

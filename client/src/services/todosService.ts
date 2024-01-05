@@ -34,4 +34,9 @@ export class TodosService {
     const response = await api.delete<string>(Routes.DELETE_ALL_TODOS, { headers: { Authorization: `Bearer ${token}` } });
     return response.data;
   }
+
+  public static async searchTodo(title: string): Promise<TodosResponse> {
+    const response = await api.get<TodosResponse>(`${Routes.SEARCH_TODO}?title=${title}`);
+    return response.data;
+  }
 }
