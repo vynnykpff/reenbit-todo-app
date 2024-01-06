@@ -1,11 +1,11 @@
 import { RequestHandler } from "express";
 import { TodoModelFields } from "@types";
 import { TodoModel } from "@models";
-import { getAuthenticatedUser, makeError } from "@utils";
+import { getAuthenticatedUser, getFiltrationTodos, makeError } from "@utils";
 import {
   AuthExceptionMessage,
   AuthExceptionStatusCode,
-  EXCEPTION_VALUE,
+  FiltrationTodosConstants,
   ServerExceptionStatusCodes,
   ServerSuccessStatusCodes,
   TodoExceptionMessage,
@@ -16,8 +16,11 @@ const { PARAMETERS_MISSING } = AuthExceptionMessage;
 
 export const getAllTodos: RequestHandler = async (req, res, next) => {
   try {
-    const userId = await getAuthenticatedUser(req, res, next);
-    const todos = await TodoModel.find({ userId }).select({ userId: EXCEPTION_VALUE });
+    const { filter } = req.query;
+
+    const userId = (await getAuthenticatedUser(req, res, next)) as string;
+
+    const todos = await getFiltrationTodos({ userId, filter: filter as FiltrationTodosConstants });
 
     res.status(ServerSuccessStatusCodes.OK).json({ todos });
   } catch (error) {
