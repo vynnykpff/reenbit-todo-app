@@ -13,7 +13,6 @@ export const TodoSearch = () => {
   const { filterValue, searchValue } = useAppSelector(state => state.todoReducer);
   const debouncedValue = useDebounce<string>(value, 500);
   const dispatch = useAppDispatch();
-  const { user } = useAppSelector(state => state.authReducer);
   const token = localStorage.getItem("access-token") ?? "";
 
   useEffect(() => {
@@ -28,7 +27,7 @@ export const TodoSearch = () => {
       return;
     }
 
-    void dispatch(getTodosThunk({ token, userId: user?._id! }));
+    void dispatch(getTodosThunk(token));
   }, [debouncedValue]);
 
   const handleChangeSearchValue = (event: ChangeEvent<HTMLInputElement>) => {
@@ -37,7 +36,7 @@ export const TodoSearch = () => {
 
   const handleClearSearchValue = () => {
     setValue("");
-    void dispatch(getTodosThunk({ token, userId: user?._id! }));
+    void dispatch(getTodosThunk(token));
   };
 
   return (

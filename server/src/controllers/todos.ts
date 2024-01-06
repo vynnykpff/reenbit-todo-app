@@ -1,4 +1,5 @@
 import { RequestHandler } from "express";
+import { TodoModelFields } from "@types";
 import { TodoModel } from "@models";
 import { getAuthenticatedUser, makeError } from "@utils";
 import {
@@ -25,25 +26,21 @@ export const getAllTodos: RequestHandler = async (req, res, next) => {
 };
 
 export const createTodo: RequestHandler = async (req, res, next) => {
-  const { todoId, userId, todoTitle, createdDate, expirationDate, isCompleted } = req.body;
-
+  const { userId, title, createdDate, expirationDate, isCompleted } = req.body as TodoModelFields;
   try {
-    if (!todoId || !todoTitle || !createdDate || !expirationDate) {
+    if (!title || !createdDate || !expirationDate) {
       return makeError({ res, statusCode: AuthExceptionStatusCode.BAD_REQUEST, exceptionMessage: PARAMETERS_MISSING });
     }
-
-    const newTodo = new TodoModel({ todoId, userId, todoTitle, createdDate, expirationDate, isCompleted });
-
+    const newTodo = new TodoModel({ userId, title, createdDate, expirationDate, isCompleted });
     await newTodo.save();
 
     const todo = {
-      todoId: newTodo._id,
-      todoTitle: newTodo.todoTitle,
+      _id: newTodo._id,
+      title: newTodo.title,
       createdDate: newTodo.createdDate,
       expirationDate: newTodo.expirationDate,
       isCompleted: newTodo.isCompleted,
     };
-
     res.status(ServerSuccessStatusCodes.CREATED).json({ ...todo });
   } catch (error) {
     next(error);
@@ -51,17 +48,17 @@ export const createTodo: RequestHandler = async (req, res, next) => {
 };
 
 export const editTodo: RequestHandler = async (req, res, next) => {
-  const { todoId, todoTitle, expirationDate, isCompleted } = req.body;
+  const { _id, title, expirationDate, isCompleted } = req.body as TodoModelFields;
 
   try {
-    if (!todoId) {
+    if (!_id) {
       return makeError({ res, statusCode: AuthExceptionStatusCode.BAD_REQUEST, exceptionMessage: PARAMETERS_MISSING });
     }
 
-    const updateFields: Record<string, any> = { todoId };
+    const updateFields: Record<string, any> = { _id };
 
-    if (todoTitle !== undefined) {
-      updateFields.todoTitle = todoTitle;
+    if (title !== undefined) {
+      updateFields.title = title;
     }
 
     if (expirationDate !== undefined) {
@@ -76,15 +73,15 @@ export const editTodo: RequestHandler = async (req, res, next) => {
       return makeError({ res, statusCode: AuthExceptionStatusCode.BAD_REQUEST, exceptionMessage: AuthExceptionMessage.PARAMETERS_MISSING });
     }
 
-    const updatedTodo = await TodoModel.findByIdAndUpdate(todoId, updateFields, { new: true });
+    const updatedTodo = await TodoModel.findByIdAndUpdate(_id, updateFields, { new: true });
 
     if (!updatedTodo) {
       return makeError({ res, statusCode: ServerExceptionStatusCodes.NOT_FOUND, exceptionMessage: TodoExceptionMessage.TODO_NOT_FOUND });
     }
 
     const todo = {
-      todoId,
-      todoTitle: updatedTodo.todoTitle,
+      _id,
+      title: updatedTodo.title,
       createdDate: updatedTodo.createdDate,
       expirationDate: updatedTodo.expirationDate,
       isCompleted: updatedTodo.isCompleted,
@@ -137,7 +134,7 @@ export const searchTodo: RequestHandler = async (req, res, next) => {
       return makeError({ res, statusCode: AuthExceptionStatusCode.BAD_REQUEST, exceptionMessage: PARAMETERS_MISSING });
     }
 
-    const todos = await TodoModel.find({ todoTitle: { $regex: new RegExp(title, "i") } });
+    const todos = await TodoModel.find({ title: { $regex: new RegExp(title, "i") } });
 
     res.status(ServerSuccessStatusCodes.OK).json({ todos });
   } catch (error) {
