@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import { TodoModelFields } from "@types";
 import { TodoModel } from "@models";
-import { getAuthenticatedUser, getFiltrationTodos, makeError } from "@utils";
+import { getAuthenticatedUser, getFiltrationTodos, getSearchedValue, makeError } from "@utils";
 import {
   AuthExceptionMessage,
   AuthExceptionStatusCode,
@@ -130,14 +130,14 @@ export const deleteAllTodos: RequestHandler = async (req, res, next) => {
 };
 
 export const searchTodo: RequestHandler = async (req, res, next) => {
-  const { title } = req.query;
+  const { title, filter } = req.query;
 
   try {
-    if (!title || typeof title !== "string") {
+    if (!title || typeof title !== "string" || !filter) {
       return makeError({ res, statusCode: AuthExceptionStatusCode.BAD_REQUEST, exceptionMessage: PARAMETERS_MISSING });
     }
 
-    const todos = await TodoModel.find({ title: { $regex: new RegExp(title, "i") } });
+    const todos = await getSearchedValue({ filter: filter as FiltrationTodosConstants, title });
 
     res.status(ServerSuccessStatusCodes.OK).json({ todos });
   } catch (error) {

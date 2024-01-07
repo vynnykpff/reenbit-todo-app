@@ -1,3 +1,4 @@
+import { TodoCurrentFilter } from "@/common/constants/TodoConstants/TodoFilters.ts";
 import { FormEvent, useState } from "react";
 import DatePicker from "react-datepicker";
 import { Formik } from "formik";
@@ -14,8 +15,7 @@ import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
 import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
 import { setTodoTitle } from "@/store/actions/todoActionCreators.ts";
-import { createTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
-import { getNextDate } from "@/utils/getNextDate.ts";
+import { createTodosThunk, getFilteredTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
 import { DATE_FORMAT, setDateFormat } from "@/utils/setDateFormat.ts";
 import { setSelectedTodoTitle } from "@/utils/setSelectedTodoTitle.ts";
 import { setSelectedDate } from "@/utils/setSelectedDate.ts";
@@ -24,11 +24,16 @@ import { setMaxTimeToDate, setMinTimeToDate } from "@/utils/setTimeToDate.ts";
 import "react-datepicker/dist/react-datepicker.css";
 import styles from "@/styles/ModalCommom.module.scss";
 
+type TodoCreateDateParams = {
+  title: string;
+  expirationDate: Date | string;
+};
+
 export const TodoCreateModal = () => {
   const [modalActive, setModalActive] = useModalState("createTodoModal");
   const [expirationDate, setExpirationDate] = useState<Date | null>(null);
   const { user } = useAppSelector(state => state.authReducer);
-  const { title } = useAppSelector(state => state.todoReducer);
+  const { title, filterValue } = useAppSelector(state => state.todoReducer);
   const dispatch = useAppDispatch();
   const token = localStorage.getItem("access-token") ?? "";
   const handleCloseModal = () => {
@@ -43,20 +48,23 @@ export const TodoCreateModal = () => {
     const newTodoValue = setSelectedTodoTitle(e, setFieldValue, field);
     dispatch(setTodoTitle(newTodoValue));
   };
-  const handleSubmit = async () => {
+
+  const handleSubmit = async (data: TodoCreateDateParams) => {
     setModalActive(false);
     if (expirationDate) {
       const value = title.trim();
       await dispatch(
         createTodosThunk({
           createdDate: setExpirationDateFormat(new Date()),
-          expirationDate: getNextDate(new Date()),
+          expirationDate: setExpirationDateFormat(data.expirationDate as Date),
           title: value,
           isCompleted: false,
           userId: user?._id!,
         }),
       );
-      await dispatch(getTodosThunk(token));
+
+      void dispatch(getTodosThunk({ token, filter: TodoCurrentFilter.ALL }));
+      void dispatch(getFilteredTodosThunk({ token, filter: filterValue }));
       dispatch(setTodoTitle(""));
     }
   };

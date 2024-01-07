@@ -4,6 +4,7 @@ export enum TodoManagementActions {
   DELETE_COMPLETED_TODOS = "DELETE_COMPLETED_TODOS",
   RESET_TODOS = "RESET_TODOS",
   GET_TODOS = "GET_TODOS",
+  GET_FILTERED_TODOS = "GET_FILTERED_TODOS",
 }
 
 export const TodoConstants = {

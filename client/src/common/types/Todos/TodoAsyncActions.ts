@@ -19,9 +19,20 @@ type GetTodosAction = {
   payload: TodoActions[];
 };
 
+type GetFilteredTodosAction = {
+  type: typeof TodoManagementActions.GET_FILTERED_TODOS;
+  payload: TodoActions[];
+};
+
 type CreateTodoAction = {
   type: typeof TodoManagementActions.CREATE_TODO;
   payload: TodoActions;
 };
 
-export type AsyncTodosActions = TodosPendingAction | TodosSuccessAction | TodosErrorAction | GetTodosAction | CreateTodoAction;
+export type AsyncTodosActions =
+  | TodosPendingAction
+  | TodosSuccessAction
+  | TodosErrorAction
+  | GetTodosAction
+  | CreateTodoAction
+  | GetFilteredTodosAction;

@@ -15,7 +15,5 @@ export const setCurrentTodo = (todo: TodoActions): TodoActionTypes => ({
 
 export const setFiltrationValue = (filter: string): TodoActionTypes => ({
   type: TodoFilteringConstants.SET_FILTRATION_VALUE,
-  payload: {
-    filter,
-  },
+  payload: filter,
 });

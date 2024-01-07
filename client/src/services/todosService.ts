@@ -1,5 +1,6 @@
-import { TodoActions } from "@/common/types/Todos/TodoActions.ts";
 import { api } from "@/services/api.ts";
+import { GetTodosParams, SearchTodoParams } from "@/common/types/Todos/Todo.ts";
+import { TodoActions } from "@/common/types/Todos/TodoActions.ts";
 import { ApiEndpoints } from "@/services/ApiEndpoints.ts";
 
 type TodosResponse = {
@@ -7,8 +8,9 @@ type TodosResponse = {
 };
 
 export class TodosService {
-  public static async getTodos(token: string): Promise<TodosResponse> {
-    const response = await api.get<TodosResponse>(ApiEndpoints.TODOS, {
+  public static async getTodos({ token, filter }: GetTodosParams): Promise<TodosResponse> {
+    const todoFilter = filter.toLowerCase();
+    const response = await api.get<TodosResponse>(`${ApiEndpoints.TODOS}?filter=${todoFilter}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -34,8 +36,10 @@ export class TodosService {
     return response.data;
   }
 
-  public static async searchTodo(title: string): Promise<TodosResponse> {
-    const response = await api.get<TodosResponse>(`${ApiEndpoints.SEARCH_TODO}?title=${title}`);
+  public static async searchTodo({ title, filter }: SearchTodoParams): Promise<TodosResponse> {
+    const todoFilter = filter.toLowerCase();
+
+    const response = await api.get<TodosResponse>(`${ApiEndpoints.SEARCH_TODO}?title=${title}&filter=${todoFilter}`);
     return response.data;
   }
 }

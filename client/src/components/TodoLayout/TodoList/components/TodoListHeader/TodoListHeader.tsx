@@ -7,31 +7,26 @@ import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
 import { setNotification } from "@/store/actions/notificationActionCreators.ts";
 import { setFiltrationValue } from "@/store/actions/todoActionCreators.ts";
-import { deleteAllTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
+import { deleteCompletedTodosThunk, getFilteredTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
+import { getCompletedTodos } from "@/utils/getCompletedTodos.ts";
 import cn from "classnames";
 import styles from "./TodoListHeader.module.scss";
 import { useAppSelector } from "@/hooks/useAppSelector.ts";
-import { useEffect, useState } from "react";
 import filteredStyles from "@/components/TodoLayout/TodoList/components/TodoFiltered/TodoFiltered.module.scss";
 
 export const TodoListHeader = () => {
-  const { originalTodos } = useAppSelector(state => state.todoReducer);
-  const [completedTodo, setCompletedTodo] = useState(0);
   const token = localStorage.getItem("access-token") ?? "";
+  const { todos } = useAppSelector(state => state.todoReducer);
   const setConfirmModalActive = useModalState("confirmModal")[1];
   const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    const completedTodos = originalTodos.filter(todo => todo.isCompleted);
-    setCompletedTodo(completedTodos.length);
-  }, [originalTodos]);
 
   const handleDeleteCompletedTodos = () => {
     setConfirmModalActive(true, {
       confirmCallback: async () => {
         dispatch(setNotification({ title: TodoNotificationMessages.DELETE_COMPLETED_TODOS, type: NotificationType.SUCCESS }));
-        await dispatch(deleteAllTodosThunk(token));
-        void dispatch(getTodosThunk(token));
+        await dispatch(deleteCompletedTodosThunk(token));
+        void dispatch(getTodosThunk({ token, filter: TodoCurrentFilter.ALL }));
+        void dispatch(getFilteredTodosThunk({ token, filter: TodoCurrentFilter.ALL }));
         dispatch(setFiltrationValue(TodoCurrentFilter.ALL));
       },
       message: TodoConfirmMessages.DELETE_COMPLETED_TODOS,
@@ -44,17 +39,17 @@ export const TodoListHeader = () => {
         <div className={styles.todoListContentContainer}>
           <p className={styles.todoListTitle}>
             Tasks created
-            <span className={styles.todoListCounter}>{originalTodos.length}</span>
+            <span className={styles.todoListCounter}>{todos.length}</span>
           </p>
           <p className={cn(styles.todoListTitle, styles.completedTodosTitle)}>
             Completed
             <span className={styles.todoListCounter}>
-              {completedTodo} of {originalTodos.length}
+              {getCompletedTodos(todos).length} of {todos.length}
             </span>
           </p>
         </div>
         <Button
-          disabled={!originalTodos.filter(todo => todo.isCompleted).length}
+          disabled={!getCompletedTodos(todos).length}
           onClick={handleDeleteCompletedTodos}
           className={cn(filteredStyles.filteredTodoButton, styles.clearCompletedTodosButton)}
         >

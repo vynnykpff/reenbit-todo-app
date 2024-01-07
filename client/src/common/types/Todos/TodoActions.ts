@@ -48,9 +48,7 @@ type SetCurrentTodoAction = {
 
 type SetFiltrationValueAction = {
   type: typeof TodoFilteringConstants.SET_FILTRATION_VALUE;
-  payload: {
-    filter: string;
-  };
+  payload: string;
 };
 
 type DeleteCompletedTodoAction = {
@@ -71,6 +69,11 @@ type ResetTodosAction = {
   type: typeof TodoManagementActions.RESET_TODOS;
 };
 
+type GetFilteredTodos = {
+  type: typeof TodoManagementActions.GET_FILTERED_TODOS;
+  payload: TodoActions[];
+};
+
 export type TodoActionTypes =
   | SetTodoTitleAction
   | SetTodoCompletedAction
@@ -81,4 +84,5 @@ export type TodoActionTypes =
   | DeleteCompletedTodoAction
   | SearchTodosAction
   | SetSearchValueAction
+  | GetFilteredTodos
   | ResetTodosAction;

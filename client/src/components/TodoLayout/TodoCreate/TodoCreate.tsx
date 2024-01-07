@@ -1,4 +1,5 @@
 import { NotificationType } from "@/common/constants/NotificationConstants.ts";
+import { TodoCurrentFilter } from "@/common/constants/TodoConstants/TodoFilters.ts";
 import { TodoNotificationMessages } from "@/common/constants/TodoConstants/TodoValidation.ts";
 import { TodoValidateData } from "@/common/constants/TodoConstants/TodoValidationData.ts";
 import { ButtonType } from "@/common/constants/UIConstants.ts";
@@ -9,7 +10,7 @@ import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
 import { setNotification } from "@/store/actions/notificationActionCreators.ts";
 import { setTodoTitle } from "@/store/actions/todoActionCreators.ts";
-import { createTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
+import { createTodosThunk, getFilteredTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
 import { isValidField } from "@/utils/isValidField.ts";
 import { getNextDate } from "@/utils/getNextDate.ts";
 import { setExpirationDateFormat } from "@/utils/setExpirationDateFormat.ts";
@@ -20,7 +21,7 @@ import styles from "./TodoCreate.module.scss";
 const SEND_KEY = "Enter";
 
 export const TodoCreate = () => {
-  const { title } = useAppSelector(state => state.todoReducer);
+  const { title, filterValue } = useAppSelector(state => state.todoReducer);
   const { user } = useAppSelector(state => state.authReducer);
   const dispatch = useAppDispatch();
   const token = localStorage.getItem("access-token")!;
@@ -52,7 +53,8 @@ export const TodoCreate = () => {
       }),
     );
 
-    await dispatch(getTodosThunk(token));
+    void dispatch(getTodosThunk({ token, filter: TodoCurrentFilter.ALL }));
+    void dispatch(getFilteredTodosThunk({ token, filter: filterValue }));
     setTitleStoreValue("");
   };
 

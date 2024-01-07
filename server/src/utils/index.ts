@@ -4,3 +4,4 @@ export { verifyAccessToken } from "./verifyAccessToken";
 export { makeError } from "./makeError";
 export { getAuthenticatedUser } from "./getAuthenticatedUser";
 export { getFiltrationTodos } from "./getFiltrationTodos";
+export { getSearchedValue } from "./getSearchedValue";

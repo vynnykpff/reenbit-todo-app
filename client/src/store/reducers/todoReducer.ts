@@ -1,47 +1,14 @@
-import { TodoCurrentFilter } from "@/common/constants/TodoConstants/TodoFilters.ts";
 import {
   TodoAsyncActions,
-  TodoConstants,
   TodoEditingConstants,
   TodoFilteringActions,
   TodoFilteringConstants,
   TodoManagementActions,
 } from "@/common/constants/TodoConstants/TodoManagementActions.ts";
 import { TodoState, initialTodoState } from "@/common/types/Todos/Todo.ts";
-import { TodoActionTypes, TodoActions } from "@/common/types/Todos/TodoActions.ts";
+import { TodoActionTypes } from "@/common/types/Todos/TodoActions.ts";
 import { AsyncTodosActions } from "@/common/types/Todos/TodoAsyncActions.ts";
-
-const filterTodos = (todos: TodoActions[], filter: string): TodoActions[] => {
-  switch (filter) {
-    case TodoCurrentFilter.ACTIVE:
-      return todos.filter(todo => !todo.isCompleted);
-    case TodoCurrentFilter.COMPLETED:
-      return todos.filter(todo => todo.isCompleted);
-    default:
-      return todos;
-  }
-};
-
-const updateTodosAndOriginalTodos = (
-  state: TodoState,
-  updatedTodos: TodoActions[],
-  filterValue: typeof TodoCurrentFilter.ALL,
-): TodoState => {
-  const filteredTodos = filterTodos(updatedTodos, filterValue);
-  return {
-    ...state,
-    todos: filteredTodos,
-    searchedTodos: filteredTodos,
-    originalTodos: updatedTodos,
-    filterValue,
-    isPending: false,
-    searchValue: "",
-  };
-};
-
-const getSearchedTodos = (todos: TodoActions[], searchValue: string) => {
-  return todos?.filter(todo => todo.title?.toLowerCase().includes(searchValue?.toLowerCase()));
-};
+import { getReversedTodos } from "@/utils/getReversedTodos.ts";
 
 export const todoReducer = (state = initialTodoState, action: TodoActionTypes | AsyncTodosActions): TodoState => {
   switch (action.type) {
@@ -51,34 +18,10 @@ export const todoReducer = (state = initialTodoState, action: TodoActionTypes | 
         title: action.payload,
       };
 
-    case TodoEditingConstants.SET_COMPLETED_TODO: {
-      const id = action.payload;
-
-      const updatedTodos = state.todos.map(todo =>
-        todo._id === id
-          ? {
-              ...todo,
-              isCompleted: !todo.isCompleted,
-            }
-          : todo,
-      );
-      const updatedOriginalTodos = state.originalTodos.map(todo =>
-        todo._id === id
-          ? {
-              ...todo,
-              isCompleted: !todo.isCompleted,
-            }
-          : todo,
-      );
-
-      const filteredTodos = filterTodos(updatedTodos, state.filterValue);
-
+    case TodoFilteringConstants.SET_FILTRATION_VALUE: {
       return {
         ...state,
-        todos: filteredTodos,
-        searchedTodos: filteredTodos,
-        originalTodos: updatedOriginalTodos,
-        searchValue: "",
+        filterValue: action.payload,
       };
     }
 
@@ -87,22 +30,6 @@ export const todoReducer = (state = initialTodoState, action: TodoActionTypes | 
         ...state,
         todo: action.payload,
       };
-    }
-    case TodoFilteringConstants.SET_FILTRATION_VALUE: {
-      const { filter } = action.payload;
-      const filteredTodos = filterTodos(state.originalTodos, filter);
-      const updatedTodos = filter === TodoCurrentFilter.ALL ? state.originalTodos : filteredTodos;
-
-      return {
-        ...state,
-        filterValue: filter,
-        todos: updatedTodos,
-        searchedTodos: getSearchedTodos(filteredTodos, state.searchValue),
-      };
-    }
-    case TodoConstants.DELETE_COMPLETED_TODOS: {
-      const filteredCompletedTodos = state.originalTodos.filter(todo => !todo.isCompleted);
-      return updateTodosAndOriginalTodos(state, filteredCompletedTodos, TodoCurrentFilter.ALL);
     }
 
     case TodoAsyncActions.TODO_PENDING: {
@@ -130,18 +57,21 @@ export const todoReducer = (state = initialTodoState, action: TodoActionTypes | 
     }
 
     case TodoManagementActions.GET_TODOS: {
-      const reversedTodos = action.payload.slice().reverse();
+      const reversedTodos = getReversedTodos(action.payload);
 
       return {
         ...state,
-        searchedTodos: reversedTodos,
         todos: reversedTodos,
-        originalTodos: reversedTodos,
       };
     }
 
-    case TodoManagementActions.RESET_TODOS: {
-      return initialTodoState;
+    case TodoManagementActions.GET_FILTERED_TODOS: {
+      const reversedTodos = getReversedTodos(action.payload);
+
+      return {
+        ...state,
+        filteredTodos: reversedTodos,
+      };
     }
 
     case TodoManagementActions.CREATE_TODO: {
@@ -154,8 +84,12 @@ export const todoReducer = (state = initialTodoState, action: TodoActionTypes | 
     case TodoFilteringActions.SEARCH_TODO: {
       return {
         ...state,
-        searchedTodos: action.payload,
+        filteredTodos: action.payload,
       };
+    }
+
+    case TodoManagementActions.RESET_TODOS: {
+      return initialTodoState;
     }
 
     default:
