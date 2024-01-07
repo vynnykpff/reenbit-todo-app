@@ -1,5 +1,6 @@
+import { SearchTodoParams, TodoDeleteParams, TodoParams } from "@/common/types/Todos/TodosService.ts";
 import { Dispatch } from "react";
-import { GetTodosParams, SearchTodoParams } from "@/common/types/Todos/Todo.ts";
+import { GetTodosParams } from "@/common/types/Todos/Todo.ts";
 import { setFormattedDates } from "@/utils/setDateFormat.ts";
 import {
   TodoAsyncActions,
@@ -7,7 +8,7 @@ import {
   TodoFilteringActions,
   TodoManagementActions,
 } from "@/common/constants/TodoConstants/TodoManagementActions.ts";
-import { TodoActionTypes, TodoActions } from "@/common/types/Todos/TodoActions.ts";
+import { TodoActionTypes } from "@/common/types/Todos/TodoActions.ts";
 import { AsyncTodosActions } from "@/common/types/Todos/TodoAsyncActions.ts";
 import { TodosService } from "@/services/todosService.ts";
 
@@ -61,7 +62,7 @@ export function getFilteredTodosThunk({ token, filter }: GetTodosParams) {
   };
 }
 
-export function createTodosThunk(params: TodoActions) {
+export function createTodosThunk(params: TodoParams) {
   return async function (dispatch: Dispatch<TodoActionTypes | AsyncTodosActions>) {
     try {
       dispatch({
@@ -81,7 +82,7 @@ export function createTodosThunk(params: TodoActions) {
   };
 }
 
-export function editTodosThunk(params: TodoActions) {
+export function editTodosThunk(params: TodoParams) {
   return async function (dispatch: Dispatch<TodoActionTypes | AsyncTodosActions>) {
     try {
       dispatch({
@@ -99,14 +100,14 @@ export function editTodosThunk(params: TodoActions) {
   };
 }
 
-export function deleteTodoThunk(todoId: string) {
+export function deleteTodoThunk({ todoId, token }: TodoDeleteParams) {
   return async function (dispatch: Dispatch<TodoActionTypes | AsyncTodosActions>) {
     try {
       dispatch({
         type: TodoAsyncActions.TODO_PENDING,
       });
 
-      const response = await TodosService.deleteTodo(todoId);
+      const response = await TodosService.deleteTodo({ token, todoId });
 
       dispatch({
         type: TodoConstants.DELETE_TODO,
@@ -145,14 +146,14 @@ export function deleteCompletedTodosThunk(token: string) {
   };
 }
 
-export function searchTodoThunk({ filter, title }: SearchTodoParams) {
+export function searchTodoThunk({ filter, title, token }: SearchTodoParams) {
   return async function (dispatch: Dispatch<TodoActionTypes | AsyncTodosActions>) {
     try {
       dispatch({
         type: TodoAsyncActions.TODO_PENDING,
       });
 
-      const rawResponse = await TodosService.searchTodo({ title, filter });
+      const rawResponse = await TodosService.searchTodo({ title, filter, token });
 
       dispatch({
         type: TodoFilteringActions.SEARCH_TODO,

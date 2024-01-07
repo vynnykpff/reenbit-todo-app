@@ -31,8 +31,3 @@ export const initialTodoState: TodoState = {
   isPending: false,
   error: null,
 };
-
-export type SearchTodoParams = {
-  title: string;
-  filter: string;
-};

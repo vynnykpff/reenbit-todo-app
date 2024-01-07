@@ -31,6 +31,8 @@ export const getAllTodos: RequestHandler = async (req, res, next) => {
 export const createTodo: RequestHandler = async (req, res, next) => {
   const { userId, title, createdDate, expirationDate, isCompleted } = req.body as TodoModelFields;
   try {
+    await getAuthenticatedUser(req, res, next);
+
     if (!title || !createdDate || !expirationDate) {
       return makeError({ res, statusCode: AuthExceptionStatusCode.BAD_REQUEST, exceptionMessage: PARAMETERS_MISSING });
     }
@@ -54,6 +56,8 @@ export const editTodo: RequestHandler = async (req, res, next) => {
   const { _id, title, expirationDate, isCompleted } = req.body as TodoModelFields;
 
   try {
+    await getAuthenticatedUser(req, res, next);
+
     if (!_id) {
       return makeError({ res, statusCode: AuthExceptionStatusCode.BAD_REQUEST, exceptionMessage: PARAMETERS_MISSING });
     }
@@ -100,6 +104,8 @@ export const deleteTodo: RequestHandler = async (req, res, next) => {
   const { todoId } = req.query;
 
   try {
+    await getAuthenticatedUser(req, res, next);
+
     if (!todoId) {
       return makeError({ res, statusCode: AuthExceptionStatusCode.BAD_REQUEST, exceptionMessage: PARAMETERS_MISSING });
     }
@@ -114,6 +120,8 @@ export const deleteTodo: RequestHandler = async (req, res, next) => {
 
 export const deleteAllTodos: RequestHandler = async (req, res, next) => {
   try {
+    await getAuthenticatedUser(req, res, next);
+
     const userId = await getAuthenticatedUser(req, res, next);
 
     if (!userId) {
@@ -133,6 +141,8 @@ export const searchTodo: RequestHandler = async (req, res, next) => {
   const { title, filter } = req.query;
 
   try {
+    await getAuthenticatedUser(req, res, next);
+
     if (!title || typeof title !== "string" || !filter) {
       return makeError({ res, statusCode: AuthExceptionStatusCode.BAD_REQUEST, exceptionMessage: PARAMETERS_MISSING });
     }

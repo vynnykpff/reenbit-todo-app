@@ -60,6 +60,7 @@ export const TodoCreateModal = () => {
           title: value,
           isCompleted: false,
           userId: user?._id!,
+          token,
         }),
       );
 

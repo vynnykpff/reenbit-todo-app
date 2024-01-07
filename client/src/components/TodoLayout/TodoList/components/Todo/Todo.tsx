@@ -30,7 +30,16 @@ export const Todo: FC<TodoProps> = ({ title, createdDate, expirationDate, _id = 
 
   const handleChangeStatusTodo = async () => {
     const parsedDate = parse(expirationDate, DATE_FORMAT, new Date()).toISOString();
-    await dispatch(editTodosThunk({ _id, title, expirationDate: parsedDate, createdDate, isCompleted: !isCompleted }));
+    await dispatch(
+      editTodosThunk({
+        _id,
+        title,
+        expirationDate: parsedDate,
+        createdDate,
+        isCompleted: !isCompleted,
+        token,
+      }),
+    );
     void dispatch(getTodosThunk({ token, filter: TodoCurrentFilter.ALL }));
     void dispatch(getFilteredTodosThunk({ token, filter: filterValue }));
   };
@@ -38,7 +47,7 @@ export const Todo: FC<TodoProps> = ({ title, createdDate, expirationDate, _id = 
   const handleClickDeleteTodo = () => {
     setConfirmModalActive(true, {
       confirmCallback: async () => {
-        await dispatch(deleteTodoThunk(_id));
+        await dispatch(deleteTodoThunk({ todoId: _id, token }));
         void dispatch(getTodosThunk({ token, filter: TodoCurrentFilter.ALL }));
         void dispatch(getFilteredTodosThunk({ token, filter: TodoCurrentFilter.ALL }));
         dispatch(setFiltrationValue(TodoCurrentFilter.ALL));

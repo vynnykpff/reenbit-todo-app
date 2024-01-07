@@ -23,7 +23,7 @@ export const TodoSearch = () => {
 
   useChangeEffect(() => {
     if (value.length) {
-      void dispatch(searchTodoThunk({ title: value, filter: filterValue }));
+      void dispatch(searchTodoThunk({ title: value, filter: filterValue, token }));
       return;
     }
 
