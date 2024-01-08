@@ -38,9 +38,11 @@ export const TodoEditModal = () => {
     setModalActive(false);
     const { title, expirationDate } = data;
     const { _id, createdDate, isCompleted } = todo;
+    const value = title.trim();
+
     const formattedExpirationDate =
       isValid(expirationDate) && expirationDate !== null ? setExpirationDateFormat(expirationDate) : todo.expirationDate;
-    await dispatch(editTodosThunk({ title, expirationDate: formattedExpirationDate, createdDate, _id, isCompleted }));
+    await dispatch(editTodosThunk({ title: value, expirationDate: formattedExpirationDate, createdDate, _id, isCompleted }));
     void dispatch(getTodosThunk(token));
   };
 
