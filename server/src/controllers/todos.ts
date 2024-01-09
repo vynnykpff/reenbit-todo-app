@@ -1,8 +1,15 @@
+import { TodoModelFields } from "@types";
 import { RequestHandler } from "express";
 import { TodoModel } from "@models";
 import { getAuthenticatedUser, makeError } from "@utils";
-import { TodoModelFields } from "@types";
-import { AuthExceptionMessage, AuthExceptionStatusCode, EXCEPTION_VALUE, ServerSuccessStatusCodes } from "@constants";
+import {
+  AuthExceptionMessage,
+  AuthExceptionStatusCode,
+  EXCEPTION_VALUE,
+  ServerExceptionStatusCodes,
+  ServerSuccessStatusCodes,
+  TodoExceptionMessage,
+} from "@constants";
 
 const { PARAMETERS_MISSING } = AuthExceptionMessage;
 
@@ -37,6 +44,52 @@ export const createTodo: RequestHandler = async (req, res, next) => {
     };
 
     res.status(ServerSuccessStatusCodes.CREATED).json({ ...todo });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const editTodo: RequestHandler = async (req, res, next) => {
+  const { _id, title, expirationDate, isCompleted } = req.body as TodoModelFields;
+
+  try {
+    if (!_id) {
+      return makeError({ res, statusCode: AuthExceptionStatusCode.BAD_REQUEST, exceptionMessage: PARAMETERS_MISSING });
+    }
+
+    const updateFields: Record<string, any> = { _id };
+
+    if (title !== undefined) {
+      updateFields.title = title;
+    }
+
+    if (expirationDate !== undefined) {
+      updateFields.expirationDate = expirationDate;
+    }
+
+    if (isCompleted !== undefined) {
+      updateFields.isCompleted = isCompleted;
+    }
+
+    if (!Object.keys(updateFields).length) {
+      return makeError({ res, statusCode: AuthExceptionStatusCode.BAD_REQUEST, exceptionMessage: AuthExceptionMessage.PARAMETERS_MISSING });
+    }
+
+    const updatedTodo = await TodoModel.findByIdAndUpdate(_id, updateFields, { new: true });
+
+    if (!updatedTodo) {
+      return makeError({ res, statusCode: ServerExceptionStatusCodes.NOT_FOUND, exceptionMessage: TodoExceptionMessage.TODO_NOT_FOUND });
+    }
+
+    const todo = {
+      _id,
+      title: updatedTodo.title,
+      createdDate: updatedTodo.createdDate,
+      expirationDate: updatedTodo.expirationDate,
+      isCompleted: updatedTodo.isCompleted,
+    };
+
+    res.status(ServerSuccessStatusCodes.OK).json({ ...todo });
   } catch (error) {
     next(error);
   }
