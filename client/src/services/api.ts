@@ -4,7 +4,7 @@ import { Routes } from "@/common/constants/Routes.ts";
 import { DEFAULT_ERROR_MESSAGE } from "@/common/constants/ErrorMessages.ts";
 
 export const api = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://reenbit-todo-app.onrender.com/api",
 });
 
 api.interceptors.response.use(
