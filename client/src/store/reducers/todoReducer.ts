@@ -39,7 +39,7 @@ const updateTodosAndOriginalTodos = (
 };
 
 const getSearchedTodos = (todos: TodoActions[], searchValue: string) => {
-  return todos?.filter(todo => todo.todoTitle?.toLowerCase().includes(searchValue?.toLowerCase()));
+  return todos?.filter(todo => todo.title?.toLowerCase().includes(searchValue?.toLowerCase()));
 };
 
 export const todoReducer = (state = initialTodoState, action: TodoActionTypes | AsyncTodosActions): TodoState => {
@@ -47,12 +47,13 @@ export const todoReducer = (state = initialTodoState, action: TodoActionTypes | 
     case TodoEditingConstants.SET_TODO_TITLE:
       return {
         ...state,
-        ...action.payload,
+        title: action.payload,
       };
     case TodoEditingConstants.SET_COMPLETED_TODO: {
-      const { todoId } = action.payload;
+      const id = action.payload;
+
       const updatedTodos = state.todos.map(todo =>
-        todo.todoId === todoId
+        todo._id === id
           ? {
               ...todo,
               isCompleted: !todo.isCompleted,
@@ -60,7 +61,12 @@ export const todoReducer = (state = initialTodoState, action: TodoActionTypes | 
           : todo,
       );
       const updatedOriginalTodos = state.originalTodos.map(todo =>
-        todo.todoId === todoId ? { ...todo, isCompleted: !todo.isCompleted } : todo,
+        todo._id === id
+          ? {
+              ...todo,
+              isCompleted: !todo.isCompleted,
+            }
+          : todo,
       );
 
       const filteredTodos = filterTodos(updatedTodos, state.filterValue);
@@ -146,13 +152,6 @@ export const todoReducer = (state = initialTodoState, action: TodoActionTypes | 
     }
 
     case TodoManagementActions.CREATE_TODO: {
-      return {
-        ...state,
-        todos: [action.payload, ...state.todos],
-      };
-    }
-
-    case TodoEditingConstants.EDIT_TODO: {
       return {
         ...state,
         todos: [action.payload, ...state.todos],

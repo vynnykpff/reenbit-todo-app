@@ -10,6 +10,7 @@ import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
 import { editTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
 import { getExpirationDateFormat } from "@/utils/getExpirationDateFormat.ts";
+import { DATE_FORMAT } from "@/utils/setDateFormat.ts";
 import { setSelectedTodoTitle } from "@/utils/setSelectedTodoTitle.ts";
 import { setSelectedDate } from "@/utils/setSelectedDate.ts";
 import { setExpirationDateFormat } from "@/utils/setExpirationDateFormat.ts";
@@ -22,27 +23,27 @@ import DatePicker from "react-datepicker";
 import styles from "@/styles/ModalCommom.module.scss";
 
 type FormData = {
-  todoTitle: string;
+  title: string;
   expirationDate: Date | null;
 };
 
 export const TodoEditModal = () => {
   const [modalActive, setModalActive] = useModalState("editTodoModal");
   const { todo } = useAppSelector(state => state.todoReducer);
-  const { user } = useAppSelector(state => state.authReducer);
   const dispatch = useAppDispatch();
   const token = localStorage.getItem("access-token")!;
   const [expirationDate, setExpirationDate] = useState<Date | null>(null);
 
   const handleSubmit = async (data: FormData) => {
     setModalActive(false);
-    const { todoTitle, expirationDate } = data;
-    const { todoId, createdDate } = todo;
+    const { title, expirationDate } = data;
+    const { _id, createdDate, isCompleted } = todo;
+    const value = title.trim();
+
     const formattedExpirationDate =
       isValid(expirationDate) && expirationDate !== null ? setExpirationDateFormat(expirationDate) : todo.expirationDate;
-
-    await dispatch(editTodosThunk({ todoTitle, expirationDate: formattedExpirationDate, createdDate, todoId }));
-    void dispatch(getTodosThunk({ token, userId: user?._id! }));
+    await dispatch(editTodosThunk({ title: value, expirationDate: formattedExpirationDate, createdDate, _id, isCompleted }));
+    void dispatch(getTodosThunk(token));
   };
 
   return (
@@ -50,7 +51,7 @@ export const TodoEditModal = () => {
       <form onSubmit={e => e.preventDefault()} className={styles.modalForm}>
         <Formik
           initialValues={{
-            todoTitle: todo.todoTitle,
+            title: todo.title,
             expirationDate: todo.expirationDate ? new Date(todo.expirationDate) : null,
           }}
           validationSchema={TodoScheme}
@@ -59,16 +60,16 @@ export const TodoEditModal = () => {
           {({ handleSubmit, values, errors, setFieldValue }) => (
             <>
               <div className={styles.modalFieldsWrapper}>
-                <label className={styles.modalLabel} htmlFor={TodoValidateFields.TODO_TITLE}>
+                <label className={styles.modalLabel} htmlFor={TodoValidateFields.TITLE}>
                   <span className={styles.requiredSymbol}>*</span> Title:
-                  <span className={styles.modalError}>{errors.todoTitle}</span>
+                  <span className={styles.modalError}>{errors.title}</span>
                 </label>
                 <Input
-                  className={cn(styles.modalField, errors.todoTitle ? styles.modalFieldError : styles.modalField)}
+                  className={cn(styles.modalField, errors.title ? styles.modalFieldError : styles.modalField)}
                   placeholder="Enter new todo"
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => setSelectedTodoTitle(e, setFieldValue, TodoValidateFields.TODO_TITLE)}
-                  value={values.todoTitle}
-                  id={TodoValidateFields.TODO_TITLE}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setSelectedTodoTitle(e, setFieldValue, TodoValidateFields.TITLE)}
+                  value={values.title}
+                  id={TodoValidateFields.TITLE}
                 />
 
                 <label className={styles.modalLabel} htmlFor={TodoValidateFields.CREATED_DATE}>
@@ -93,7 +94,7 @@ export const TodoEditModal = () => {
                   todayButton="Today"
                   timeFormat="HH:mm"
                   timeIntervals={TodoTimeConstants.TIME_INTERVAL}
-                  dateFormat="dd.MM.yyyy HH:mm"
+                  dateFormat={DATE_FORMAT}
                   id={TodoValidateFields.EXPIRATION_DATE}
                   placeholderText="Select expiration date"
                   minDate={new Date()}

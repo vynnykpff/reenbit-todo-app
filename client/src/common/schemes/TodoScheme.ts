@@ -3,7 +3,7 @@ import { TodoValidateData } from "@/common/constants/TodoConstants/TodoValidatio
 import * as Yup from "yup";
 
 export const TodoScheme = Yup.object().shape({
-  todoTitle: Yup.string()
+  title: Yup.string()
     .max(TodoValidateData.MAX_TITLE_LENGTH, TodoNotificationMessages.MAX_LENGTH)
     .min(TodoValidateData.MIN_TITLE_LENGTH, TodoNotificationMessages.EMPTY_TITLE)
     .required(TodoNotificationMessages.REQUIRED_FIELD),

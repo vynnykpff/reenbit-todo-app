@@ -1,27 +1,33 @@
 import { Dispatch } from "react";
-import {
-  TodoAsyncActions,
-  TodoConstants,
-  TodoEditingActions,
-  TodoManagementActions,
-} from "@/common/constants/TodoConstants/TodoManagementActions.ts";
-import { GetTodoParams } from "@/common/types/Todos/Todo.ts";
+import { format } from "date-fns";
+import { TodoAsyncActions, TodoConstants, TodoManagementActions } from "@/common/constants/TodoConstants/TodoManagementActions.ts";
 import { TodoActionTypes, TodoActions } from "@/common/types/Todos/TodoActions.ts";
 import { AsyncTodosActions } from "@/common/types/Todos/TodoAsyncActions.ts";
 import { TodosService } from "@/services/todosService.ts";
 
-export function getTodosThunk({ token, userId }: GetTodoParams) {
+export function getTodosThunk(token: string) {
   return async function (dispatch: Dispatch<TodoActionTypes | AsyncTodosActions>) {
     try {
       dispatch({
         type: TodoAsyncActions.TODO_PENDING,
       });
 
-      const response = await TodosService.getTodos({ token, userId });
+      const rawResponse = await TodosService.getTodos(token);
+
+      const response = rawResponse.todos.map(todo => {
+        const formattedCreatedDate = format(new Date(todo.createdDate), "dd.MM.yyyy HH:mm");
+        const formattedExpirationDate = format(new Date(todo.expirationDate), "dd.MM.yyyy HH:mm");
+
+        return {
+          ...todo,
+          createdDate: formattedCreatedDate,
+          expirationDate: formattedExpirationDate,
+        };
+      });
 
       dispatch({
         type: TodoManagementActions.GET_TODOS,
-        payload: response.todos,
+        payload: response,
       });
 
       dispatch({
@@ -63,12 +69,7 @@ export function editTodosThunk(params: TodoActions) {
         type: TodoAsyncActions.TODO_PENDING,
       });
 
-      const response = await TodosService.editTodo({ ...params });
-
-      dispatch({
-        type: TodoEditingActions.EDIT_TODO,
-        payload: response,
-      });
+      await TodosService.editTodo({ ...params });
 
       dispatch({
         type: TodoAsyncActions.TODO_SUCCESS,

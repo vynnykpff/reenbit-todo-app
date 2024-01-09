@@ -31,7 +31,7 @@ export const TodoListHeader = () => {
       confirmCallback: async () => {
         dispatch(setNotification({ title: TodoNotificationMessages.DELETE_COMPLETED_TODOS, type: NotificationType.SUCCESS }));
         await dispatch(deleteAllTodosThunk(token));
-        void dispatch(getTodosThunk({ token, userId: "" }));
+        void dispatch(getTodosThunk(token));
         dispatch(setFiltrationValue(TodoCurrentFilter.ALL));
       },
       message: TodoConfirmMessages.DELETE_COMPLETED_TODOS,
