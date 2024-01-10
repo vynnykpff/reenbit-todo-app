@@ -5,8 +5,8 @@ import { Input } from "@/components/ui/Input/Input.tsx";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
 import { setNotification } from "@/store/actions/notificationActionCreators.ts";
-import { deleteTodo, setCurrentTodo } from "@/store/actions/todoActionCreators.ts";
-import { editTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
+import { setCurrentTodo } from "@/store/actions/todoActionCreators.ts";
+import { deleteTodoThunk, editTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
 import { checkOnCurrentExpirationDate } from "@/utils/checkOnCurrentExpirationDate.ts";
 import { DATE_FORMAT } from "@/utils/setDateFormat.ts";
 import cn from "classnames";
@@ -18,24 +18,23 @@ import { BsDashLg } from "react-icons/bs";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import styles from "./Todo.module.scss";
 
-export const Todo: FC<TodoProps> = ({ title, createdDate, expirationDate, _id, isCompleted }) => {
+export const Todo: FC<TodoProps> = ({ title, createdDate, expirationDate, _id = "", isCompleted }) => {
   const [isShowInfo, setIsShowInfo] = useState(false);
   const setEditModalActive = useModalState("editTodoModal")[1];
   const setConfirmModalActive = useModalState("confirmModal")[1];
-
-  const token = localStorage.getItem("access-token") ?? "";
   const dispatch = useAppDispatch();
 
   const handleChangeStatusTodo = async () => {
     const parsedDate = parse(expirationDate, DATE_FORMAT, new Date()).toISOString();
     await dispatch(editTodosThunk({ _id, title, expirationDate: parsedDate, createdDate, isCompleted: !isCompleted }));
-    void dispatch(getTodosThunk(token));
+    void dispatch(getTodosThunk());
   };
 
   const handleClickDeleteTodo = () => {
     setConfirmModalActive(true, {
-      confirmCallback: () => {
-        dispatch(deleteTodo(_id));
+      confirmCallback: async () => {
+        await dispatch(deleteTodoThunk(_id));
+        void dispatch(getTodosThunk());
         dispatch(setNotification({ title: TodoNotificationMessages.DELETE_TODO, type: NotificationType.SUCCESS }));
       },
       message: TodoConfirmMessages.DELETE_TODO,

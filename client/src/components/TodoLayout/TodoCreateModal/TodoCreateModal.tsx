@@ -30,7 +30,6 @@ export const TodoCreateModal = () => {
   const { user } = useAppSelector(state => state.authReducer);
   const { title } = useAppSelector(state => state.todoReducer);
   const dispatch = useAppDispatch();
-  const token = localStorage.getItem("access-token") ?? "";
 
   const handleCloseModal = () => {
     setModalActive(false);
@@ -60,7 +59,7 @@ export const TodoCreateModal = () => {
         }),
       );
 
-      await dispatch(getTodosThunk(token));
+      await dispatch(getTodosThunk());
       dispatch(setTodoTitle(""));
     }
   };

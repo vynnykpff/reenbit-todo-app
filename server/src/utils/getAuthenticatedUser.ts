@@ -13,7 +13,6 @@ export const getAuthenticatedUser = async (req: Request, res: Response, next: Ne
   try {
     const userId = verifyAccessToken({ res, accessToken });
     const user = await UserModel.findById(userId).select(`+${EMAIL}`).exec();
-
     if (!user) {
       return res.status(ServerExceptionStatusCodes.NOT_FOUND).json(USER_NOT_FOUND);
     }

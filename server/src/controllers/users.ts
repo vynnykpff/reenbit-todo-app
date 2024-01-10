@@ -43,7 +43,7 @@ export const login: RequestHandler = async (req, res, next) => {
     delete userCredential.password;
 
     const accessToken = jwt.sign({ userId: user._id }, JWT_ACCESS_SECRET, { expiresIn: EXPIRATION_TIME });
-    res.status(ServerSuccessStatusCodes.CREATED).json({ user: userCredential, accessToken });
+    res.status(ServerSuccessStatusCodes.OK).json({ user: userCredential, accessToken });
   } catch (error) {
     next(error);
   }

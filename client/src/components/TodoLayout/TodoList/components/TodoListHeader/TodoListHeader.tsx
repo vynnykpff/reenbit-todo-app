@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/Button/Button.tsx";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
 import { setNotification } from "@/store/actions/notificationActionCreators.ts";
-import { deleteCompletedTodos, setFiltrationValue } from "@/store/actions/todoActionCreators.ts";
+import { setFiltrationValue } from "@/store/actions/todoActionCreators.ts";
+import { deleteAllTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
 import cn from "classnames";
 import styles from "./TodoListHeader.module.scss";
 import { useAppSelector } from "@/hooks/useAppSelector.ts";
@@ -26,9 +27,10 @@ export const TodoListHeader = () => {
 
   const handleDeleteCompletedTodos = () => {
     setConfirmModalActive(true, {
-      confirmCallback: () => {
+      confirmCallback: async () => {
         dispatch(setNotification({ title: TodoNotificationMessages.DELETE_COMPLETED_TODOS, type: NotificationType.SUCCESS }));
-        dispatch(deleteCompletedTodos());
+        await dispatch(deleteAllTodosThunk());
+        void dispatch(getTodosThunk());
         dispatch(setFiltrationValue(TodoCurrentFilter.ALL));
       },
       message: TodoConfirmMessages.DELETE_COMPLETED_TODOS,

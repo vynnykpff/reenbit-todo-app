@@ -26,7 +26,7 @@ type SetTodoCompletedAction = {
 
 type DeleteTodoAction = {
   type: typeof TodoConstants.DELETE_TODO;
-  payload: TodoActions["_id"];
+  payload: string;
 };
 
 export type EditTodo = {

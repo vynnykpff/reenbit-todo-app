@@ -23,7 +23,6 @@ export const TodoCreate = () => {
   const { title } = useAppSelector(state => state.todoReducer);
   const { user } = useAppSelector(state => state.authReducer);
   const dispatch = useAppDispatch();
-  const token = localStorage.getItem("access-token")!;
 
   const setTitleStoreValue = (value: string) => {
     dispatch(setTodoTitle(value));
@@ -52,7 +51,7 @@ export const TodoCreate = () => {
       }),
     );
 
-    await dispatch(getTodosThunk(token));
+    await dispatch(getTodosThunk());
     setTitleStoreValue("");
   };
 

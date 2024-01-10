@@ -11,7 +11,7 @@ export const updateStatusTodo = (_id: TodoActions["_id"]): TodoActionTypes => ({
   payload: _id,
 });
 
-export const deleteTodo = (_id: TodoActions["_id"]): TodoActionTypes => ({
+export const deleteTodo = (_id: string): TodoActionTypes => ({
   type: TodoConstants.DELETE_TODO,
   payload: _id,
 });
