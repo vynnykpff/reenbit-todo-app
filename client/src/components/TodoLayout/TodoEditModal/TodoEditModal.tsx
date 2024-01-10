@@ -31,7 +31,6 @@ export const TodoEditModal = () => {
   const [modalActive, setModalActive] = useModalState("editTodoModal");
   const { todo } = useAppSelector(state => state.todoReducer);
   const dispatch = useAppDispatch();
-  const token = localStorage.getItem("access-token")!;
   const [expirationDate, setExpirationDate] = useState<Date | null>(null);
 
   const handleSubmit = async (data: FormData) => {
@@ -43,7 +42,7 @@ export const TodoEditModal = () => {
     const formattedExpirationDate =
       isValid(expirationDate) && expirationDate !== null ? setExpirationDateFormat(expirationDate) : todo.expirationDate;
     await dispatch(editTodosThunk({ title: value, expirationDate: formattedExpirationDate, createdDate, _id, isCompleted }));
-    void dispatch(getTodosThunk(token));
+    void dispatch(getTodosThunk());
   };
 
   return (

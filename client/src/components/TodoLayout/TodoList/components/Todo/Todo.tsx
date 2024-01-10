@@ -20,7 +20,6 @@ import styles from "./Todo.module.scss";
 
 export const Todo: FC<TodoProps> = ({ title, createdDate, expirationDate, _id = "", isCompleted }) => {
   const [isShowInfo, setIsShowInfo] = useState(false);
-  const token = localStorage.getItem("access-token") ?? "";
   const setEditModalActive = useModalState("editTodoModal")[1];
   const setConfirmModalActive = useModalState("confirmModal")[1];
   const dispatch = useAppDispatch();
@@ -28,14 +27,14 @@ export const Todo: FC<TodoProps> = ({ title, createdDate, expirationDate, _id = 
   const handleChangeStatusTodo = async () => {
     const parsedDate = parse(expirationDate, DATE_FORMAT, new Date()).toISOString();
     await dispatch(editTodosThunk({ _id, title, expirationDate: parsedDate, createdDate, isCompleted: !isCompleted }));
-    void dispatch(getTodosThunk(token));
+    void dispatch(getTodosThunk());
   };
 
   const handleClickDeleteTodo = () => {
     setConfirmModalActive(true, {
       confirmCallback: async () => {
         await dispatch(deleteTodoThunk(_id));
-        void dispatch(getTodosThunk(token));
+        void dispatch(getTodosThunk());
         dispatch(setNotification({ title: TodoNotificationMessages.DELETE_TODO, type: NotificationType.SUCCESS }));
       },
       message: TodoConfirmMessages.DELETE_TODO,

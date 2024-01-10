@@ -17,7 +17,6 @@ import filteredStyles from "@/components/TodoLayout/TodoList/components/TodoFilt
 export const TodoListHeader = () => {
   const { originalTodos } = useAppSelector(state => state.todoReducer);
   const [completedTodo, setCompletedTodo] = useState(0);
-  const token = localStorage.getItem("access-token") ?? "";
   const setConfirmModalActive = useModalState("confirmModal")[1];
   const dispatch = useAppDispatch();
 
@@ -30,8 +29,8 @@ export const TodoListHeader = () => {
     setConfirmModalActive(true, {
       confirmCallback: async () => {
         dispatch(setNotification({ title: TodoNotificationMessages.DELETE_COMPLETED_TODOS, type: NotificationType.SUCCESS }));
-        await dispatch(deleteAllTodosThunk(token));
-        void dispatch(getTodosThunk(token));
+        await dispatch(deleteAllTodosThunk());
+        void dispatch(getTodosThunk());
         dispatch(setFiltrationValue(TodoCurrentFilter.ALL));
       },
       message: TodoConfirmMessages.DELETE_COMPLETED_TODOS,
