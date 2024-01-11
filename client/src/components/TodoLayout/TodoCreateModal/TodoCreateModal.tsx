@@ -1,7 +1,3 @@
-import { FormEvent, useState } from "react";
-import DatePicker from "react-datepicker";
-import { Formik } from "formik";
-import cn from "classnames";
 import { TodoTimeConstants } from "@/common/constants/TodoConstants/TodoTimeConstants.ts";
 import { TodoValidateFields } from "@/common/constants/TodoConstants/TodoValidation.ts";
 import { TodoValidateData } from "@/common/constants/TodoConstants/TodoValidationData.ts";
@@ -15,12 +11,15 @@ import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
 import { setTodoTitle } from "@/store/actions/todoActionCreators.ts";
 import { createTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
-import { getNextDate } from "@/utils/getNextDate.ts";
 import { DATE_FORMAT, setDateFormat } from "@/utils/setDateFormat.ts";
 import { setSelectedTodoTitle } from "@/utils/setSelectedTodoTitle.ts";
 import { setSelectedDate } from "@/utils/setSelectedDate.ts";
 import { setExpirationDateFormat } from "@/utils/setExpirationDateFormat.ts";
 import { setMaxTimeToDate, setMinTimeToDate } from "@/utils/setTimeToDate.ts";
+import cn from "classnames";
+import { Formik } from "formik";
+import { FormEvent, useState } from "react";
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styles from "@/styles/ModalCommom.module.scss";
 
@@ -30,11 +29,12 @@ export const TodoCreateModal = () => {
   const { user } = useAppSelector(state => state.authReducer);
   const { title } = useAppSelector(state => state.todoReducer);
   const dispatch = useAppDispatch();
-  const token = localStorage.getItem("access-token") ?? "";
+
   const handleCloseModal = () => {
     setModalActive(false);
     dispatch(setTodoTitle(""));
   };
+
   const setChangedTodoTitle = (
     e: FormEvent<HTMLInputElement>,
     setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void,
@@ -43,6 +43,7 @@ export const TodoCreateModal = () => {
     const newTodoValue = setSelectedTodoTitle(e, setFieldValue, field);
     dispatch(setTodoTitle(newTodoValue));
   };
+
   const handleSubmit = async () => {
     setModalActive(false);
     if (expirationDate) {
@@ -50,13 +51,14 @@ export const TodoCreateModal = () => {
       await dispatch(
         createTodosThunk({
           createdDate: setExpirationDateFormat(new Date()),
-          expirationDate: getNextDate(new Date()),
+          expirationDate: setExpirationDateFormat(expirationDate),
           title: value,
           isCompleted: false,
           userId: user?._id!,
         }),
       );
-      await dispatch(getTodosThunk(token));
+
+      await dispatch(getTodosThunk());
       dispatch(setTodoTitle(""));
     }
   };
@@ -66,6 +68,7 @@ export const TodoCreateModal = () => {
       return setSelectedDate(date, setFieldValue, setExpirationDate);
     }
   };
+
   return (
     <Modal className={styles.modalContainer} setModalActive={setModalActive} modalActive={modalActive} title="Create Todo">
       <form onSubmit={e => e.preventDefault()} className={styles.modalForm}>
@@ -91,6 +94,7 @@ export const TodoCreateModal = () => {
                   value={values.title}
                   id={TodoValidateFields.TITLE}
                 />
+
                 <label className={styles.modalLabel} htmlFor={TodoValidateFields.CREATED_DATE}>
                   Created date:
                 </label>

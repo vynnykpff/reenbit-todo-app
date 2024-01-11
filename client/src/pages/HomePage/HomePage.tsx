@@ -17,7 +17,7 @@ const HomePage: FC = () => {
       return;
     }
 
-    void dispatch(getTodosThunk(token));
+    void dispatch(getTodosThunk());
   }, []);
 
   if (!token) {

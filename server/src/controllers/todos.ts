@@ -10,14 +10,24 @@ import {
   ServerSuccessStatusCodes,
   TodoExceptionMessage,
   TodoSuccessMessage,
+  TodosPaths,
 } from "@constants";
 
 const { PARAMETERS_MISSING } = AuthExceptionMessage;
+const { DELETE_COMPLETED_TODOS } = TodosPaths;
 
 export const getAllTodos: RequestHandler = async (req, res, next) => {
   try {
+    const { search } = req.query;
     const userId = await getAuthenticatedUser(req, res, next);
-    const todos = await TodoModel.find({ userId }).select({ userId: EXCEPTION_VALUE });
+
+    let todos = [];
+
+    if (search && typeof search === "string") {
+      todos = await TodoModel.find({ userId, title: { $regex: new RegExp(search, "i") } });
+    } else {
+      todos = await TodoModel.find({ userId }).select({ userId: EXCEPTION_VALUE });
+    }
 
     res.status(ServerSuccessStatusCodes.OK).json({ todos });
   } catch (error) {
@@ -27,10 +37,12 @@ export const getAllTodos: RequestHandler = async (req, res, next) => {
 
 export const createTodo: RequestHandler = async (req, res, next) => {
   const { userId, title, createdDate, expirationDate, isCompleted } = req.body as TodoModelFields;
+
   try {
     if (!title || !createdDate || !expirationDate) {
       return makeError({ res, statusCode: AuthExceptionStatusCode.BAD_REQUEST, exceptionMessage: PARAMETERS_MISSING });
     }
+
     const newTodo = new TodoModel({ userId, title, createdDate, expirationDate, isCompleted });
     await newTodo.save();
 
@@ -41,6 +53,7 @@ export const createTodo: RequestHandler = async (req, res, next) => {
       expirationDate: newTodo.expirationDate,
       isCompleted: newTodo.isCompleted,
     };
+
     res.status(ServerSuccessStatusCodes.CREATED).json({ ...todo });
   } catch (error) {
     next(error);
@@ -48,14 +61,16 @@ export const createTodo: RequestHandler = async (req, res, next) => {
 };
 
 export const editTodo: RequestHandler = async (req, res, next) => {
-  const { _id, title, expirationDate, isCompleted } = req.body as TodoModelFields;
+  const { title, expirationDate, isCompleted } = req.body as TodoModelFields;
 
   try {
-    if (!_id) {
+    const { id } = req.params;
+
+    if (!id) {
       return makeError({ res, statusCode: AuthExceptionStatusCode.BAD_REQUEST, exceptionMessage: PARAMETERS_MISSING });
     }
 
-    const updateFields: Record<string, any> = { _id };
+    const updateFields: Record<string, any> = { id };
 
     if (title !== undefined) {
       updateFields.title = title;
@@ -70,17 +85,25 @@ export const editTodo: RequestHandler = async (req, res, next) => {
     }
 
     if (!Object.keys(updateFields).length) {
-      return makeError({ res, statusCode: AuthExceptionStatusCode.BAD_REQUEST, exceptionMessage: AuthExceptionMessage.PARAMETERS_MISSING });
+      return makeError({
+        res,
+        statusCode: AuthExceptionStatusCode.BAD_REQUEST,
+        exceptionMessage: AuthExceptionMessage.PARAMETERS_MISSING,
+      });
     }
 
-    const updatedTodo = await TodoModel.findByIdAndUpdate(_id, updateFields, { new: true });
+    const updatedTodo = await TodoModel.findByIdAndUpdate(id, updateFields, { new: true });
 
     if (!updatedTodo) {
-      return makeError({ res, statusCode: ServerExceptionStatusCodes.NOT_FOUND, exceptionMessage: TodoExceptionMessage.TODO_NOT_FOUND });
+      return makeError({
+        res,
+        statusCode: ServerExceptionStatusCodes.NOT_FOUND,
+        exceptionMessage: TodoExceptionMessage.TODO_NOT_FOUND,
+      });
     }
 
     const todo = {
-      _id,
+      _id: id,
       title: updatedTodo.title,
       createdDate: updatedTodo.createdDate,
       expirationDate: updatedTodo.expirationDate,
@@ -94,49 +117,21 @@ export const editTodo: RequestHandler = async (req, res, next) => {
 };
 
 export const deleteTodo: RequestHandler = async (req, res, next) => {
-  const { todoId } = req.query;
-
   try {
-    if (!todoId) {
-      return makeError({ res, statusCode: AuthExceptionStatusCode.BAD_REQUEST, exceptionMessage: PARAMETERS_MISSING });
-    }
-
-    await TodoModel.findByIdAndDelete(todoId);
-
-    res.status(ServerSuccessStatusCodes.OK).json({ message: TodoSuccessMessage.TODO_DELETED });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const deleteAllTodos: RequestHandler = async (req, res, next) => {
-  try {
+    const { id } = req.params;
     const userId = await getAuthenticatedUser(req, res, next);
 
-    if (!userId) {
+    if (!id) {
       return makeError({ res, statusCode: AuthExceptionStatusCode.BAD_REQUEST, exceptionMessage: PARAMETERS_MISSING });
     }
 
-    await TodoModel.find({ userId });
-    await TodoModel.deleteMany({ userId, isCompleted: true });
-
-    res.status(ServerSuccessStatusCodes.OK).json(TodoSuccessMessage.TODO_DELETED);
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const searchTodo: RequestHandler = async (req, res, next) => {
-  const { title } = req.query;
-
-  try {
-    if (!title || typeof title !== "string") {
-      return makeError({ res, statusCode: AuthExceptionStatusCode.BAD_REQUEST, exceptionMessage: PARAMETERS_MISSING });
+    if (id === (DELETE_COMPLETED_TODOS as string) && userId) {
+      await TodoModel.deleteMany({ userId, isCompleted: true });
+    } else {
+      await TodoModel.findByIdAndDelete(id);
     }
 
-    const todos = await TodoModel.find({ title: { $regex: new RegExp(title, "i") } });
-
-    res.status(ServerSuccessStatusCodes.OK).json({ todos });
+    res.status(ServerSuccessStatusCodes.OK).json({ message: TodoSuccessMessage.TODO_DELETED });
   } catch (error) {
     next(error);
   }

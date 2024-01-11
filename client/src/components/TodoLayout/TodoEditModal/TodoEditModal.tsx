@@ -31,17 +31,22 @@ export const TodoEditModal = () => {
   const [modalActive, setModalActive] = useModalState("editTodoModal");
   const { todo } = useAppSelector(state => state.todoReducer);
   const dispatch = useAppDispatch();
-  const token = localStorage.getItem("access-token")!;
   const [expirationDate, setExpirationDate] = useState<Date | null>(null);
 
   const handleSubmit = async (data: FormData) => {
     setModalActive(false);
     const { title, expirationDate } = data;
     const { _id, createdDate, isCompleted } = todo;
+    const value = title.trim();
+
     const formattedExpirationDate =
       isValid(expirationDate) && expirationDate !== null ? setExpirationDateFormat(expirationDate) : todo.expirationDate;
-    await dispatch(editTodosThunk({ title, expirationDate: formattedExpirationDate, createdDate, _id, isCompleted }));
-    void dispatch(getTodosThunk(token));
+
+    const createdDateFormat = setExpirationDateFormat(new Date(createdDate));
+    await dispatch(
+      editTodosThunk({ title: value, expirationDate: formattedExpirationDate, createdDate: createdDateFormat, _id, isCompleted }),
+    );
+    void dispatch(getTodosThunk());
   };
 
   return (
@@ -69,7 +74,6 @@ export const TodoEditModal = () => {
                   value={values.title}
                   id={TodoValidateFields.TITLE}
                 />
-
                 <label className={styles.modalLabel} htmlFor={TodoValidateFields.CREATED_DATE}>
                   Created date:
                 </label>

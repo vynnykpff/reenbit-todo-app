@@ -1,10 +1,18 @@
+import { AppPaths } from "@/services/Paths.ts";
 import axios, { AxiosError } from "axios";
 import { ApiError } from "@/common/constants/ApiError.ts";
 import { Routes } from "@/common/constants/Routes.ts";
 import { DEFAULT_ERROR_MESSAGE } from "@/common/constants/ErrorMessages.ts";
 
+const { BASE } = AppPaths;
+
 export const api = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: `https://reenbit-todo-app.onrender.com${BASE}`,
+});
+
+api.interceptors.request.use(config => {
+  config.headers.Authorization = `Bearer ${localStorage.getItem("access-token")}`;
+  return config;
 });
 
 api.interceptors.response.use(
