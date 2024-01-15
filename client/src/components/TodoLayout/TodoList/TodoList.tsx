@@ -6,7 +6,7 @@ import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import styles from "./TodoList.module.scss";
 
 export const TodoList = () => {
-  const { searchedTodos, filterValue, searchValue, isPending } = useAppSelector(state => state.todoReducer);
+  const { searchedTodos, todos, filterValue, searchValue, isPending } = useAppSelector(state => state.todoReducer);
 
   const setTodoEmptyMessage = () => {
     return searchValue.length ? `Nothing found in the filter: ${filterValue}` : filterValue;
@@ -22,7 +22,7 @@ export const TodoList = () => {
           {searchedTodos.length ? (
             searchedTodos.map(todo => <Todo key={todo._id} {...todo} />)
           ) : (
-            <TodoListEmpty title={setTodoEmptyMessage()} />
+            <TodoListEmpty title={setTodoEmptyMessage()} todos={todos} />
           )}
         </ul>
       )}

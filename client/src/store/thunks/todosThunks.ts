@@ -1,9 +1,15 @@
-import { Dispatch } from "react";
-import { format } from "date-fns";
-import { TodoAsyncActions, TodoConstants, TodoManagementActions } from "@/common/constants/TodoConstants/TodoManagementActions.ts";
+import {
+  TodoAsyncActions,
+  TodoConstants,
+  TodoFilteringActions,
+  TodoManagementActions,
+} from "@/common/constants/TodoConstants/TodoManagementActions.ts";
 import { TodoActionTypes, TodoActions } from "@/common/types/Todos/TodoActions.ts";
 import { AsyncTodosActions } from "@/common/types/Todos/TodoAsyncActions.ts";
 import { TodosService } from "@/services/todosService.ts";
+import { setFormattedDates } from "@/utils/setDateFormat.ts";
+import { format } from "date-fns";
+import { Dispatch } from "react";
 
 export function getTodosThunk() {
   return async function (dispatch: Dispatch<TodoActionTypes | AsyncTodosActions>) {
@@ -115,6 +121,29 @@ export function deleteAllTodosThunk() {
       dispatch({
         type: TodoConstants.DELETE_TODO,
         payload: response,
+      });
+
+      dispatch({
+        type: TodoAsyncActions.TODO_SUCCESS,
+      });
+    } catch (error) {
+      dispatch({ type: TodoManagementActions.RESET_TODOS });
+    }
+  };
+}
+
+export function searchTodoThunk(title: string) {
+  return async function (dispatch: Dispatch<TodoActionTypes | AsyncTodosActions>) {
+    try {
+      dispatch({
+        type: TodoAsyncActions.TODO_PENDING,
+      });
+
+      const rawResponse = await TodosService.searchTodo(title);
+
+      dispatch({
+        type: TodoFilteringActions.SEARCH_TODO,
+        payload: setFormattedDates(rawResponse.todos),
       });
 
       dispatch({

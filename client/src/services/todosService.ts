@@ -34,4 +34,9 @@ export class TodosService {
     const response = await api.delete<string>(`${TODOS}${DELETE_COMPLETED_TODOS}`);
     return response.data;
   }
+
+  public static async searchTodo(title: string): Promise<TodosResponse> {
+    const response = await api.get<TodosResponse>(`${TODOS}?search=${title}`);
+    return response.data;
+  }
 }

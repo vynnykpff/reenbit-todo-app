@@ -74,7 +74,6 @@ export const TodoEditModal = () => {
                   value={values.title}
                   id={TodoValidateFields.TITLE}
                 />
-
                 <label className={styles.modalLabel} htmlFor={TodoValidateFields.CREATED_DATE}>
                   Created date:
                 </label>
@@ -84,7 +83,6 @@ export const TodoEditModal = () => {
                   disabled
                   id={TodoValidateFields.CREATED_DATE}
                 />
-
                 <label className={styles.modalLabel} htmlFor={TodoValidateFields.EXPIRATION_DATE}>
                   <span className={styles.requiredSymbol}>*</span> Expiration date:
                   <span className={styles.modalError}>{errors.expirationDate}</span>
@@ -105,7 +103,6 @@ export const TodoEditModal = () => {
                   maxTime={setMaxTimeToDate(new Date())}
                 />
               </div>
-
               <div className={styles.footerModal}>
                 <Button
                   onClick={() => setModalActive(false)}

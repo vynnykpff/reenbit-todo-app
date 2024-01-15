@@ -1,7 +1,3 @@
-import { FormEvent, useState } from "react";
-import DatePicker from "react-datepicker";
-import { Formik } from "formik";
-import cn from "classnames";
 import { TodoTimeConstants } from "@/common/constants/TodoConstants/TodoTimeConstants.ts";
 import { TodoValidateFields } from "@/common/constants/TodoConstants/TodoValidation.ts";
 import { TodoValidateData } from "@/common/constants/TodoConstants/TodoValidationData.ts";
@@ -15,12 +11,15 @@ import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
 import { setTodoTitle } from "@/store/actions/todoActionCreators.ts";
 import { createTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
-import { getNextDate } from "@/utils/getNextDate.ts";
 import { DATE_FORMAT, setDateFormat } from "@/utils/setDateFormat.ts";
 import { setSelectedTodoTitle } from "@/utils/setSelectedTodoTitle.ts";
 import { setSelectedDate } from "@/utils/setSelectedDate.ts";
 import { setExpirationDateFormat } from "@/utils/setExpirationDateFormat.ts";
 import { setMaxTimeToDate, setMinTimeToDate } from "@/utils/setTimeToDate.ts";
+import cn from "classnames";
+import { Formik } from "formik";
+import { FormEvent, useState } from "react";
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styles from "@/styles/ModalCommom.module.scss";
 
@@ -52,7 +51,7 @@ export const TodoCreateModal = () => {
       await dispatch(
         createTodosThunk({
           createdDate: setExpirationDateFormat(new Date()),
-          expirationDate: getNextDate(new Date()),
+          expirationDate: setExpirationDateFormat(expirationDate),
           title: value,
           isCompleted: false,
           userId: user?._id!,
@@ -95,6 +94,7 @@ export const TodoCreateModal = () => {
                   value={values.title}
                   id={TodoValidateFields.TITLE}
                 />
+
                 <label className={styles.modalLabel} htmlFor={TodoValidateFields.CREATED_DATE}>
                   Created date:
                 </label>

@@ -1,5 +1,5 @@
-import { TodoModelFields } from "@types";
 import { RequestHandler } from "express";
+import { TodoModelFields } from "@types";
 import { TodoModel } from "@models";
 import { getAuthenticatedUser, makeError } from "@utils";
 import {
@@ -18,8 +18,16 @@ const { DELETE_COMPLETED_TODOS } = TodosPaths;
 
 export const getAllTodos: RequestHandler = async (req, res, next) => {
   try {
+    const { search } = req.query;
     const userId = await getAuthenticatedUser(req, res, next);
-    const todos = await TodoModel.find({ userId }).select({ userId: EXCEPTION_VALUE });
+
+    let todos = [];
+
+    if (search && typeof search === "string") {
+      todos = await TodoModel.find({ userId, title: { $regex: new RegExp(search, "i") } });
+    } else {
+      todos = await TodoModel.find({ userId }).select({ userId: EXCEPTION_VALUE });
+    }
 
     res.status(ServerSuccessStatusCodes.OK).json({ todos });
   } catch (error) {
@@ -77,13 +85,21 @@ export const editTodo: RequestHandler = async (req, res, next) => {
     }
 
     if (!Object.keys(updateFields).length) {
-      return makeError({ res, statusCode: AuthExceptionStatusCode.BAD_REQUEST, exceptionMessage: AuthExceptionMessage.PARAMETERS_MISSING });
+      return makeError({
+        res,
+        statusCode: AuthExceptionStatusCode.BAD_REQUEST,
+        exceptionMessage: AuthExceptionMessage.PARAMETERS_MISSING,
+      });
     }
 
     const updatedTodo = await TodoModel.findByIdAndUpdate(id, updateFields, { new: true });
 
     if (!updatedTodo) {
-      return makeError({ res, statusCode: ServerExceptionStatusCodes.NOT_FOUND, exceptionMessage: TodoExceptionMessage.TODO_NOT_FOUND });
+      return makeError({
+        res,
+        statusCode: ServerExceptionStatusCodes.NOT_FOUND,
+        exceptionMessage: TodoExceptionMessage.TODO_NOT_FOUND,
+      });
     }
 
     const todo = {
