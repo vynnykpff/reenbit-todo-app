@@ -3,7 +3,7 @@ import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
 import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useChangeEffect } from "@/hooks/useChangeEffect.ts";
 import { useDebounce } from "@/hooks/useDebounce.ts";
-import { getTodosThunk, searchTodoThunk } from "@/store/thunks/todosThunks.ts";
+import { searchTodoThunk } from "@/store/thunks/todosThunks.ts";
 import cn from "classnames";
 import { ChangeEvent, useEffect, useState } from "react";
 import { IoIosClose } from "react-icons/io";
@@ -21,15 +21,10 @@ export const TodoSearch = () => {
     if (value.length && !searchValue.length) {
       setValue("");
     }
-  }, [filterValue, searchValue]);
+  }, [filterValue]);
 
   useChangeEffect(() => {
-    if (value.length) {
-      void dispatch(searchTodoThunk(value));
-      return;
-    }
-
-    void dispatch(getTodosThunk());
+    void dispatch(searchTodoThunk(value));
   }, [debouncedValue]);
 
   const handleChangeSearchValue = (event: ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +33,6 @@ export const TodoSearch = () => {
 
   const handleClearSearchValue = () => {
     setValue("");
-    void dispatch(getTodosThunk());
   };
 
   return (
