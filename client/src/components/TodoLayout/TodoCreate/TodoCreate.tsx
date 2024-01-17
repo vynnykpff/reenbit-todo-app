@@ -10,7 +10,7 @@ import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
 import { setNotification } from "@/store/actions/notificationActionCreators.ts";
 import { setFiltrationValue, setTodoTitle } from "@/store/actions/todoActionCreators.ts";
-import { createTodosThunk, getFilteredTodosThunk } from "@/store/thunks/todosThunks.ts";
+import { createTodosThunk, searchTodoThunk } from "@/store/thunks/todosThunks.ts";
 import { getNextDate } from "@/utils/getNextDate.ts";
 import { isValidField } from "@/utils/isValidField.ts";
 import { setExpirationDateFormat } from "@/utils/setExpirationDateFormat.ts";
@@ -20,7 +20,7 @@ import styles from "./TodoCreate.module.scss";
 const SEND_KEY = "Enter";
 
 export const TodoCreate = () => {
-  const { title } = useAppSelector(state => state.todoReducer);
+  const { title, searchValue } = useAppSelector(state => state.todoReducer);
   const { user } = useAppSelector(state => state.authReducer);
   const dispatch = useAppDispatch();
 
@@ -46,7 +46,7 @@ export const TodoCreate = () => {
       }),
     );
 
-    void dispatch(getFilteredTodosThunk({ filter: TodoCurrentFilter.ALL }));
+    void dispatch(searchTodoThunk({ filter: TodoCurrentFilter.ALL, title: searchValue }));
     dispatch(setFiltrationValue(TodoCurrentFilter.ALL));
     setTitleStoreValue("");
   };

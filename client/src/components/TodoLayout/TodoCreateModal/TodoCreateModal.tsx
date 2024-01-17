@@ -11,7 +11,7 @@ import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
 import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
 import { setFiltrationValue, setTodoTitle } from "@/store/actions/todoActionCreators.ts";
-import { createTodosThunk, getFilteredTodosThunk } from "@/store/thunks/todosThunks.ts";
+import { createTodosThunk, searchTodoThunk } from "@/store/thunks/todosThunks.ts";
 import styles from "@/styles/ModalCommom.module.scss";
 import { DATE_FORMAT, setDateFormat } from "@/utils/setDateFormat.ts";
 import { setExpirationDateFormat } from "@/utils/setExpirationDateFormat.ts";
@@ -28,7 +28,7 @@ export const TodoCreateModal = () => {
   const [modalActive, setModalActive] = useModalState("createTodoModal");
   const [expirationDate, setExpirationDate] = useState<Date | null>(null);
   const { user } = useAppSelector(state => state.authReducer);
-  const { title } = useAppSelector(state => state.todoReducer);
+  const { title, searchValue } = useAppSelector(state => state.todoReducer);
   const dispatch = useAppDispatch();
 
   const handleCloseModal = () => {
@@ -59,7 +59,7 @@ export const TodoCreateModal = () => {
         }),
       );
 
-      void dispatch(getFilteredTodosThunk({ filter: TodoCurrentFilter.ALL }));
+      void dispatch(searchTodoThunk({ filter: TodoCurrentFilter.ALL, title: searchValue }));
       dispatch(setFiltrationValue(TodoCurrentFilter.ALL));
       dispatch(setTodoTitle(""));
     }
