@@ -10,7 +10,7 @@ import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
 import { editTodosThunk, getFilteredTodosThunk } from "@/store/thunks/todosThunks.ts";
 import styles from "@/styles/ModalCommom.module.scss";
-import { getExpirationDateFormat } from "@/utils/getExpirationDateFormat.ts";
+import { getDateFormat } from "@/utils/getDateFormat.ts";
 import { DATE_FORMAT } from "@/utils/setDateFormat.ts";
 import { setExpirationDateFormat } from "@/utils/setExpirationDateFormat.ts";
 import { setSelectedDate } from "@/utils/setSelectedDate.ts";
@@ -40,11 +40,16 @@ export const TodoEditModal = () => {
     const value = title.trim();
 
     const formattedExpirationDate =
-      isValid(expirationDate) && expirationDate !== null ? setExpirationDateFormat(expirationDate) : todo.expirationDate;
-    const createdDateFormat = setExpirationDateFormat(new Date(createdDate));
+      isValid(expirationDate) && expirationDate !== null
+        ? setExpirationDateFormat(expirationDate)
+        : setExpirationDateFormat(getDateFormat(todo.expirationDate));
+
+    const createdDateFormat = setExpirationDateFormat(getDateFormat(createdDate));
+
     await dispatch(
       editTodosThunk({ title: value, expirationDate: formattedExpirationDate, createdDate: createdDateFormat, _id, isCompleted }),
     );
+
     void dispatch(getFilteredTodosThunk({ filter: filterValue }));
   };
 
@@ -89,7 +94,7 @@ export const TodoEditModal = () => {
                 <DatePicker
                   className={cn(styles.modalField, errors.expirationDate ? styles.modalFieldError : styles.modalField)}
                   onChange={date => setSelectedDate(date, setFieldValue, setExpirationDate)}
-                  selected={expirationDate ?? getExpirationDateFormat(todo.expirationDate)}
+                  selected={expirationDate ?? getDateFormat(todo.expirationDate)}
                   showTimeSelect
                   todayButton="Today"
                   timeFormat="HH:mm"
@@ -98,7 +103,7 @@ export const TodoEditModal = () => {
                   id={TodoValidateFields.EXPIRATION_DATE}
                   placeholderText="Select expiration date"
                   minDate={new Date()}
-                  minTime={setMinTimeToDate(expirationDate ?? getExpirationDateFormat(todo.expirationDate))}
+                  minTime={setMinTimeToDate(expirationDate ?? getDateFormat(todo.expirationDate))}
                   maxTime={setMaxTimeToDate(new Date())}
                 />
               </div>

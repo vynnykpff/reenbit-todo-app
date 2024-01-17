@@ -11,31 +11,6 @@ import { TodoActionTypes, TodoActions } from "@/common/types/Todos/TodoActions.t
 import { AsyncTodosActions } from "@/common/types/Todos/TodoAsyncActions.ts";
 import { TodosService } from "@/services/todosService.ts";
 
-export function getTodosThunk() {
-  return async function (dispatch: Dispatch<TodoActionTypes | AsyncTodosActions>) {
-    try {
-      dispatch({
-        type: TodoAsyncActions.TODO_PENDING,
-      });
-
-      const rawResponse = await TodosService.getTodos({});
-
-      dispatch({
-        type: TodoManagementActions.GET_TODOS,
-        payload: setFormattedDates(rawResponse.todos),
-      });
-
-      dispatch({
-        type: TodoAsyncActions.TODO_SUCCESS,
-      });
-
-      return setFormattedDates(rawResponse.todos);
-    } catch (error) {
-      dispatch({ type: TodoManagementActions.RESET_TODOS });
-    }
-  };
-}
-
 export function getFilteredTodosThunk({ filter }: TodosParams) {
   return async function (dispatch: Dispatch<TodoActionTypes | AsyncTodosActions>) {
     try {
@@ -93,7 +68,9 @@ export function editTodosThunk(params: TodoActions) {
       dispatch({
         type: TodoAsyncActions.TODO_PENDING,
       });
+
       await TodosService.editTodo({ ...params });
+
       dispatch({
         type: TodoAsyncActions.TODO_SUCCESS,
       });
@@ -157,6 +134,7 @@ export function searchTodoThunk({ title, filter }: TodosParams) {
         type: TodoFilteringActions.SEARCH_TODO,
         payload: setFormattedDates(rawResponse.todos),
       });
+
       dispatch({
         type: TodoAsyncActions.TODO_SUCCESS,
       });

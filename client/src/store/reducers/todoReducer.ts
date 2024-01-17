@@ -97,9 +97,11 @@ export const todoReducer = (state = initialTodoState, action: TodoActionTypes | 
     }
 
     case TodoFilteringActions.SEARCH_TODO: {
+      const reversedTodos = getReversedTodos(action.payload);
+
       return {
         ...state,
-        todos: action.payload,
+        todos: reversedTodos,
       };
     }
 
