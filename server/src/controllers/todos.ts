@@ -1,11 +1,12 @@
 import { RequestHandler } from "express";
 import { TodoModelFields } from "@types";
 import { TodoModel } from "@models";
-import { getAuthenticatedUser, makeError } from "@utils";
+import { getAmountTodos, getAuthenticatedUser, getFiltrationTodos, makeError } from "@utils";
 import {
   AuthExceptionMessage,
   AuthExceptionStatusCode,
   EXCEPTION_VALUE,
+  FiltrationTodosConstants,
   ServerExceptionStatusCodes,
   ServerSuccessStatusCodes,
   TodoExceptionMessage,
@@ -18,8 +19,8 @@ const { DELETE_COMPLETED_TODOS } = TodosPaths;
 
 export const getAllTodos: RequestHandler = async (req, res, next) => {
   try {
-    const { search } = req.query;
-    const userId = await getAuthenticatedUser(req, res, next);
+    const { search, filter } = req.query;
+    const userId = (await getAuthenticatedUser(req, res, next)) as string;
 
     let todos = [];
 
@@ -29,7 +30,9 @@ export const getAllTodos: RequestHandler = async (req, res, next) => {
       todos = await TodoModel.find({ userId }).select({ userId: EXCEPTION_VALUE });
     }
 
-    res.status(ServerSuccessStatusCodes.OK).json({ todos });
+    const filteredTodos = await getFiltrationTodos({ filter: filter as FiltrationTodosConstants, todos });
+
+    res.status(ServerSuccessStatusCodes.OK).json({ todos: filteredTodos, amountTodos: { ...getAmountTodos(todos) } });
   } catch (error) {
     next(error);
   }
@@ -75,11 +78,9 @@ export const editTodo: RequestHandler = async (req, res, next) => {
     if (title !== undefined) {
       updateFields.title = title;
     }
-
     if (expirationDate !== undefined) {
       updateFields.expirationDate = expirationDate;
     }
-
     if (isCompleted !== undefined) {
       updateFields.isCompleted = isCompleted;
     }
@@ -109,7 +110,6 @@ export const editTodo: RequestHandler = async (req, res, next) => {
       expirationDate: updatedTodo.expirationDate,
       isCompleted: updatedTodo.isCompleted,
     };
-
     res.status(ServerSuccessStatusCodes.OK).json({ ...todo });
   } catch (error) {
     next(error);

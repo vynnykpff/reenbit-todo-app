@@ -1,17 +1,19 @@
+import { parse } from "date-fns";
+import { FC, useState } from "react";
+import cn from "classnames";
 import { NotificationType } from "@/common/constants/NotificationConstants.ts";
+import { TodoCurrentFilter } from "@/common/constants/TodoConstants/TodoFilters.ts";
 import { TodoConfirmMessages, TodoNotificationMessages } from "@/common/constants/TodoConstants/TodoValidation.ts";
 import { TodoActions as TodoProps } from "@/common/types/Todos/TodoActions.ts";
 import { Input } from "@/components/ui/Input/Input.tsx";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
+import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
 import { setNotification } from "@/store/actions/notificationActionCreators.ts";
-import { setCurrentTodo } from "@/store/actions/todoActionCreators.ts";
-import { deleteTodoThunk, editTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
+import { setCurrentTodo, setFiltrationValue } from "@/store/actions/todoActionCreators.ts";
+import { deleteTodoThunk, editTodosThunk, getFilteredTodosThunk } from "@/store/thunks/todosThunks.ts";
 import { checkOnCurrentExpirationDate } from "@/utils/checkOnCurrentExpirationDate.ts";
 import { DATE_FORMAT } from "@/utils/setDateFormat.ts";
-import cn from "classnames";
-import { parse } from "date-fns";
-import { FC, useState } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { BiTrash } from "react-icons/bi";
 import { BsDashLg } from "react-icons/bs";
@@ -19,6 +21,7 @@ import { HiOutlinePencilAlt } from "react-icons/hi";
 import styles from "./Todo.module.scss";
 
 export const Todo: FC<TodoProps> = ({ title, createdDate, expirationDate, _id = "", isCompleted }) => {
+  const { filterValue } = useAppSelector(state => state.todoReducer);
   const [isShowInfo, setIsShowInfo] = useState(false);
   const setEditModalActive = useModalState("editTodoModal")[1];
   const setConfirmModalActive = useModalState("confirmModal")[1];
@@ -27,27 +30,26 @@ export const Todo: FC<TodoProps> = ({ title, createdDate, expirationDate, _id = 
   const handleChangeStatusTodo = async () => {
     const parsedDate = parse(expirationDate, DATE_FORMAT, new Date()).toISOString();
     await dispatch(editTodosThunk({ _id, title, expirationDate: parsedDate, createdDate, isCompleted: !isCompleted }));
-    void dispatch(getTodosThunk());
+    void dispatch(getFilteredTodosThunk({ filter: filterValue }));
   };
 
   const handleClickDeleteTodo = () => {
     setConfirmModalActive(true, {
       confirmCallback: async () => {
         await dispatch(deleteTodoThunk(_id));
-        void dispatch(getTodosThunk());
+        void dispatch(getFilteredTodosThunk({ filter: TodoCurrentFilter.ALL }));
+        dispatch(setFiltrationValue(TodoCurrentFilter.ALL));
         dispatch(setNotification({ title: TodoNotificationMessages.DELETE_TODO, type: NotificationType.SUCCESS }));
       },
       message: TodoConfirmMessages.DELETE_TODO,
     });
   };
-
   const handleClickEditTodo = () => {
     if (!isCompleted) {
       setEditModalActive(true);
       dispatch(setCurrentTodo({ _id, title, expirationDate, createdDate, isCompleted }));
     }
   };
-
   return (
     <li className={cn(styles.todoContainer, !checkOnCurrentExpirationDate(expirationDate) && styles.expiredTodoContainer)}>
       <div>

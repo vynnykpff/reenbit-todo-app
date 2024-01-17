@@ -1,14 +1,23 @@
 import { TodoCurrentFilter } from "@/common/constants/TodoConstants/TodoFilters.ts";
 import { TodoActions } from "@/common/types/Todos/TodoActions.ts";
 
+export type TodosParams = {
+  title?: string;
+  filter?: string;
+};
+
+export type AmountTodos = {
+  total: number;
+  completed: number;
+};
+
 export type TodoState = {
   todos: TodoActions[];
+  amountTodos: AmountTodos;
+  searchValue: string;
   title: string;
   todo: TodoActions;
-  originalTodos: TodoActions[];
   filterValue: typeof TodoCurrentFilter.ALL;
-  searchedTodos: TodoActions[];
-  searchValue: string;
   isPending: boolean;
   error: string | null;
 };
@@ -16,10 +25,9 @@ export type TodoState = {
 export const initialTodoState: TodoState = {
   todos: [],
   title: "",
+  amountTodos: { total: 0, completed: 0 },
   todo: { _id: "", title: "", createdDate: "", isCompleted: false, expirationDate: "", userId: "" },
-  originalTodos: [],
   filterValue: TodoCurrentFilter.ALL,
-  searchedTodos: [],
   searchValue: "",
   isPending: false,
   error: null,

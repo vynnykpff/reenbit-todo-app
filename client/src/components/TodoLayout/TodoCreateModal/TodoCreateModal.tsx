@@ -1,3 +1,4 @@
+import { TodoCurrentFilter } from "@/common/constants/TodoConstants/TodoFilters.ts";
 import { TodoTimeConstants } from "@/common/constants/TodoConstants/TodoTimeConstants.ts";
 import { TodoValidateFields } from "@/common/constants/TodoConstants/TodoValidation.ts";
 import { TodoValidateData } from "@/common/constants/TodoConstants/TodoValidationData.ts";
@@ -9,25 +10,25 @@ import { Modal } from "@/components/ui/Modal/Modal.tsx";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
 import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
-import { setTodoTitle } from "@/store/actions/todoActionCreators.ts";
-import { createTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
+import { setFiltrationValue, setTodoTitle } from "@/store/actions/todoActionCreators.ts";
+import { createTodosThunk, searchTodoThunk } from "@/store/thunks/todosThunks.ts";
+import styles from "@/styles/ModalCommom.module.scss";
 import { DATE_FORMAT, setDateFormat } from "@/utils/setDateFormat.ts";
-import { setSelectedTodoTitle } from "@/utils/setSelectedTodoTitle.ts";
-import { setSelectedDate } from "@/utils/setSelectedDate.ts";
 import { setExpirationDateFormat } from "@/utils/setExpirationDateFormat.ts";
+import { setSelectedDate } from "@/utils/setSelectedDate.ts";
+import { setSelectedTodoTitle } from "@/utils/setSelectedTodoTitle.ts";
 import { setMaxTimeToDate, setMinTimeToDate } from "@/utils/setTimeToDate.ts";
+import "react-datepicker/dist/react-datepicker.css";
 import cn from "classnames";
 import { Formik } from "formik";
 import { FormEvent, useState } from "react";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import styles from "@/styles/ModalCommom.module.scss";
 
 export const TodoCreateModal = () => {
   const [modalActive, setModalActive] = useModalState("createTodoModal");
   const [expirationDate, setExpirationDate] = useState<Date | null>(null);
   const { user } = useAppSelector(state => state.authReducer);
-  const { title } = useAppSelector(state => state.todoReducer);
+  const { title, searchValue } = useAppSelector(state => state.todoReducer);
   const dispatch = useAppDispatch();
 
   const handleCloseModal = () => {
@@ -58,17 +59,16 @@ export const TodoCreateModal = () => {
         }),
       );
 
-      await dispatch(getTodosThunk());
+      void dispatch(searchTodoThunk({ filter: TodoCurrentFilter.ALL, title: searchValue }));
+      dispatch(setFiltrationValue(TodoCurrentFilter.ALL));
       dispatch(setTodoTitle(""));
     }
   };
-
   const handleChangeDatePicker = (date: Date, setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void) => {
     if (setDateFormat(date).length === TodoValidateData.MAX_DATE_LENGTH) {
       return setSelectedDate(date, setFieldValue, setExpirationDate);
     }
   };
-
   return (
     <Modal className={styles.modalContainer} setModalActive={setModalActive} modalActive={modalActive} title="Create Todo">
       <form onSubmit={e => e.preventDefault()} className={styles.modalForm}>
@@ -94,7 +94,6 @@ export const TodoCreateModal = () => {
                   value={values.title}
                   id={TodoValidateFields.TITLE}
                 />
-
                 <label className={styles.modalLabel} htmlFor={TodoValidateFields.CREATED_DATE}>
                   Created date:
                 </label>

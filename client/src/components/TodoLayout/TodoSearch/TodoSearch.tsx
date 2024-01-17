@@ -1,11 +1,11 @@
+import { ChangeEvent, useState } from "react";
+import { setSearchValue } from "@/store/actions/todoActionCreators.ts";
 import { Input } from "@/components/ui/Input/Input.tsx";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
 import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useChangeEffect } from "@/hooks/useChangeEffect.ts";
 import { useDebounce } from "@/hooks/useDebounce.ts";
-import { searchTodoThunk } from "@/store/thunks/todosThunks.ts";
-import cn from "classnames";
-import { ChangeEvent, useEffect, useState } from "react";
+import { getFilteredTodosThunk, searchTodoThunk } from "@/store/thunks/todosThunks.ts";
 import { IoIosClose } from "react-icons/io";
 import styles from "./TodoSearch.module.scss";
 
@@ -13,18 +13,19 @@ const SEARCH_DELAY = 500;
 
 export const TodoSearch = () => {
   const [value, setValue] = useState("");
-  const { filterValue, searchValue } = useAppSelector(state => state.todoReducer);
+  const { filterValue } = useAppSelector(state => state.todoReducer);
   const debouncedValue = useDebounce<string>(value, SEARCH_DELAY);
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (value.length && !searchValue.length) {
-      setValue("");
-    }
-  }, [filterValue]);
-
   useChangeEffect(() => {
-    void dispatch(searchTodoThunk(value));
+    if (value.length) {
+      dispatch(setSearchValue(value));
+      void dispatch(searchTodoThunk({ title: value, filter: filterValue }));
+      return;
+    }
+
+    void dispatch(getFilteredTodosThunk({ filter: filterValue }));
+    dispatch(setSearchValue(""));
   }, [debouncedValue]);
 
   const handleChangeSearchValue = (event: ChangeEvent<HTMLInputElement>) => {
@@ -32,15 +33,14 @@ export const TodoSearch = () => {
   };
 
   const handleClearSearchValue = () => {
-    setValue("");
+    if (value.length) {
+      setValue("");
+    }
   };
 
   return (
     <span className={styles.searchTodoContainer}>
-      <IoIosClose
-        onClick={handleClearSearchValue}
-        className={cn(styles.searchClearIcon, !searchValue.length && styles.searchClearIconDisabled)}
-      />
+      <IoIosClose onClick={handleClearSearchValue} className={styles.searchClearIcon} />
       <Input
         value={value}
         onChange={handleChangeSearchValue}

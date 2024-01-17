@@ -1,17 +1,37 @@
+import { AmountTodos, TodosParams } from "@/common/types/Todos/Todo.ts";
 import { api } from "@/services/api.ts";
 import { TodoActions } from "@/common/types/Todos/TodoActions.ts";
 import { AppPaths, TodosPaths } from "@/services/Paths.ts";
 
 type TodosResponse = {
   todos: TodoActions[];
+  amountTodos?: AmountTodos;
 };
 
 const { TODOS } = AppPaths;
 const { DELETE_COMPLETED_TODOS } = TodosPaths;
 
 export class TodosService {
-  public static async getTodos(): Promise<TodosResponse> {
-    const response = await api.get<TodosResponse>(TODOS);
+  private static buildTodosUrl({ filter, title }: TodosParams): string {
+    let url = TODOS as string;
+
+    if (filter) {
+      const todoFilter = filter.toLowerCase();
+      url += `?filter=${todoFilter}`;
+
+      if (title) {
+        url += `&search=${title}`;
+      }
+    } else if (title) {
+      url += `?search=${title}`;
+    }
+
+    return url;
+  }
+
+  public static async getTodos({ filter = "", title = "" }: TodosParams): Promise<TodosResponse> {
+    const url = this.buildTodosUrl({ filter, title });
+    const response = await api.get<TodosResponse>(url);
     return response.data;
   }
 
@@ -32,11 +52,6 @@ export class TodosService {
 
   public static async deleteAllTodos(): Promise<string> {
     const response = await api.delete<string>(`${TODOS}${DELETE_COMPLETED_TODOS}`);
-    return response.data;
-  }
-
-  public static async searchTodo(title: string): Promise<TodosResponse> {
-    const response = await api.get<TodosResponse>(`${TODOS}?search=${title}`);
     return response.data;
   }
 }

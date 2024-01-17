@@ -8,19 +8,19 @@ import { Modal } from "@/components/ui/Modal/Modal.tsx";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
 import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
-import { editTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
-import { getExpirationDateFormat } from "@/utils/getExpirationDateFormat.ts";
+import { editTodosThunk, getFilteredTodosThunk } from "@/store/thunks/todosThunks.ts";
+import styles from "@/styles/ModalCommom.module.scss";
+import { getDateFormat } from "@/utils/getDateFormat.ts";
 import { DATE_FORMAT } from "@/utils/setDateFormat.ts";
-import { setSelectedTodoTitle } from "@/utils/setSelectedTodoTitle.ts";
-import { setSelectedDate } from "@/utils/setSelectedDate.ts";
 import { setExpirationDateFormat } from "@/utils/setExpirationDateFormat.ts";
+import { setSelectedDate } from "@/utils/setSelectedDate.ts";
+import { setSelectedTodoTitle } from "@/utils/setSelectedTodoTitle.ts";
 import { setMaxTimeToDate, setMinTimeToDate } from "@/utils/setTimeToDate.ts";
 import cn from "classnames";
 import { isValid } from "date-fns";
 import { Formik } from "formik";
 import { ChangeEvent, useState } from "react";
 import DatePicker from "react-datepicker";
-import styles from "@/styles/ModalCommom.module.scss";
 
 type FormData = {
   title: string;
@@ -29,7 +29,7 @@ type FormData = {
 
 export const TodoEditModal = () => {
   const [modalActive, setModalActive] = useModalState("editTodoModal");
-  const { todo } = useAppSelector(state => state.todoReducer);
+  const { todo, filterValue } = useAppSelector(state => state.todoReducer);
   const dispatch = useAppDispatch();
   const [expirationDate, setExpirationDate] = useState<Date | null>(null);
 
@@ -40,13 +40,17 @@ export const TodoEditModal = () => {
     const value = title.trim();
 
     const formattedExpirationDate =
-      isValid(expirationDate) && expirationDate !== null ? setExpirationDateFormat(expirationDate) : todo.expirationDate;
+      isValid(expirationDate) && expirationDate !== null
+        ? setExpirationDateFormat(expirationDate)
+        : setExpirationDateFormat(getDateFormat(todo.expirationDate));
 
-    const createdDateFormat = setExpirationDateFormat(new Date(createdDate));
+    const createdDateFormat = setExpirationDateFormat(getDateFormat(createdDate));
+
     await dispatch(
       editTodosThunk({ title: value, expirationDate: formattedExpirationDate, createdDate: createdDateFormat, _id, isCompleted }),
     );
-    void dispatch(getTodosThunk());
+
+    void dispatch(getFilteredTodosThunk({ filter: filterValue }));
   };
 
   return (
@@ -90,7 +94,7 @@ export const TodoEditModal = () => {
                 <DatePicker
                   className={cn(styles.modalField, errors.expirationDate ? styles.modalFieldError : styles.modalField)}
                   onChange={date => setSelectedDate(date, setFieldValue, setExpirationDate)}
-                  selected={expirationDate ?? getExpirationDateFormat(todo.expirationDate)}
+                  selected={expirationDate ?? getDateFormat(todo.expirationDate)}
                   showTimeSelect
                   todayButton="Today"
                   timeFormat="HH:mm"
@@ -99,7 +103,7 @@ export const TodoEditModal = () => {
                   id={TodoValidateFields.EXPIRATION_DATE}
                   placeholderText="Select expiration date"
                   minDate={new Date()}
-                  minTime={setMinTimeToDate(expirationDate ?? getExpirationDateFormat(todo.expirationDate))}
+                  minTime={setMinTimeToDate(expirationDate ?? getDateFormat(todo.expirationDate))}
                   maxTime={setMaxTimeToDate(new Date())}
                 />
               </div>
