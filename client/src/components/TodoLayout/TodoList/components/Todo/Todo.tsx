@@ -44,14 +44,12 @@ export const Todo: FC<TodoProps> = ({ title, createdDate, expirationDate, _id = 
       message: TodoConfirmMessages.DELETE_TODO,
     });
   };
-
   const handleClickEditTodo = () => {
     if (!isCompleted) {
       setEditModalActive(true);
       dispatch(setCurrentTodo({ _id, title, expirationDate, createdDate, isCompleted }));
     }
   };
-
   return (
     <li className={cn(styles.todoContainer, !checkOnCurrentExpirationDate(expirationDate) && styles.expiredTodoContainer)}>
       <div>

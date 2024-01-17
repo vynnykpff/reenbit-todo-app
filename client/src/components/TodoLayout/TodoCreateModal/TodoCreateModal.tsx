@@ -64,7 +64,6 @@ export const TodoCreateModal = () => {
       dispatch(setTodoTitle(""));
     }
   };
-
   const handleChangeDatePicker = (date: Date, setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void) => {
     if (setDateFormat(date).length === TodoValidateData.MAX_DATE_LENGTH) {
       return setSelectedDate(date, setFieldValue, setExpirationDate);

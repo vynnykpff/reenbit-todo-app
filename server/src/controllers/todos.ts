@@ -78,11 +78,9 @@ export const editTodo: RequestHandler = async (req, res, next) => {
     if (title !== undefined) {
       updateFields.title = title;
     }
-
     if (expirationDate !== undefined) {
       updateFields.expirationDate = expirationDate;
     }
-
     if (isCompleted !== undefined) {
       updateFields.isCompleted = isCompleted;
     }
@@ -112,7 +110,6 @@ export const editTodo: RequestHandler = async (req, res, next) => {
       expirationDate: updatedTodo.expirationDate,
       isCompleted: updatedTodo.isCompleted,
     };
-
     res.status(ServerSuccessStatusCodes.OK).json({ ...todo });
   } catch (error) {
     next(error);

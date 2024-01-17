@@ -29,7 +29,6 @@ const HomePage: FC = () => {
   if (!token) {
     return null;
   }
-
   return (
     <>
       <Header />
@@ -37,5 +36,4 @@ const HomePage: FC = () => {
     </>
   );
 };
-
 export default HomePage;

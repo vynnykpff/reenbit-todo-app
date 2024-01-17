@@ -17,7 +17,6 @@ import { setExpirationDateFormat } from "@/utils/setExpirationDateFormat.ts";
 import { ChangeEvent, KeyboardEvent } from "react";
 import { BsPlusLg } from "react-icons/bs";
 import styles from "./TodoCreate.module.scss";
-
 const SEND_KEY = "Enter";
 
 export const TodoCreate = () => {
@@ -28,20 +27,15 @@ export const TodoCreate = () => {
   const setTitleStoreValue = (value: string) => {
     dispatch(setTodoTitle(value));
   };
-
   const setModalActive = useModalState("createTodoModal")[1];
-
   const handleCreateTodo = async (e: KeyboardEvent<HTMLInputElement>) => {
     const value = title.trim();
-
     if (e.code !== SEND_KEY) {
       return;
     }
-
     if (!title.trim().length) {
       return dispatch(setNotification({ title: TodoNotificationMessages.EMPTY_TITLE, type: NotificationType.ERROR }));
     }
-
     await dispatch(
       createTodosThunk({
         createdDate: setExpirationDateFormat(new Date()),
@@ -59,14 +53,12 @@ export const TodoCreate = () => {
 
   const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
-
     if (inputValue.trim().length >= TodoValidateData.MAX_TITLE_LENGTH) {
       dispatch(setNotification({ title: TodoNotificationMessages.MAX_LENGTH, type: NotificationType.ERROR }));
       return setTitleStoreValue(title.replace(inputValue, ""));
     }
     setTitleStoreValue(isValidField(inputValue));
   };
-
   return (
     <div className={styles.createTodoContainer}>
       <Input

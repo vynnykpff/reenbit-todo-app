@@ -65,7 +65,6 @@ export function getFilteredTodosThunk({ filter }: TodosParams) {
     }
   };
 }
-
 export function createTodosThunk(params: TodoActions) {
   return async function (dispatch: Dispatch<TodoActionTypes | AsyncTodosActions>) {
     try {
@@ -88,16 +87,13 @@ export function createTodosThunk(params: TodoActions) {
     }
   };
 }
-
 export function editTodosThunk(params: TodoActions) {
   return async function (dispatch: Dispatch<TodoActionTypes | AsyncTodosActions>) {
     try {
       dispatch({
         type: TodoAsyncActions.TODO_PENDING,
       });
-
       await TodosService.editTodo({ ...params });
-
       dispatch({
         type: TodoAsyncActions.TODO_SUCCESS,
       });
@@ -106,21 +102,17 @@ export function editTodosThunk(params: TodoActions) {
     }
   };
 }
-
 export function deleteTodoThunk(todoId: string) {
   return async function (dispatch: Dispatch<TodoActionTypes | AsyncTodosActions>) {
     try {
       dispatch({
         type: TodoAsyncActions.TODO_PENDING,
       });
-
       const response = await TodosService.deleteTodo(todoId);
-
       dispatch({
         type: TodoConstants.DELETE_TODO,
         payload: response,
       });
-
       dispatch({
         type: TodoAsyncActions.TODO_SUCCESS,
       });
@@ -143,7 +135,6 @@ export function deleteAllTodosThunk() {
         type: TodoConstants.DELETE_TODO,
         payload: response,
       });
-
       dispatch({
         type: TodoAsyncActions.TODO_SUCCESS,
       });
@@ -166,7 +157,6 @@ export function searchTodoThunk({ title, filter }: TodosParams) {
         type: TodoFilteringActions.SEARCH_TODO,
         payload: setFormattedDates(rawResponse.todos),
       });
-
       dispatch({
         type: TodoAsyncActions.TODO_SUCCESS,
       });
