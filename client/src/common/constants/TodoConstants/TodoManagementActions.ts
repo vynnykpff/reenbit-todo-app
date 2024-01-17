@@ -16,6 +16,7 @@ export enum TodoEditingActions {
   SET_TODO_TITLE = "SET_TODO_TITLE",
   SET_COMPLETED_TODO = "SET_COMPLETED_TODO",
   SET_CURRENT_TODO = "SET_CURRENT_TODO",
+  SET_SEARCH_VALUE = "SET_SEARCH_VALUE",
 }
 
 export const TodoEditingConstants = {
@@ -26,6 +27,7 @@ export enum TodoFilteringActions {
   SET_FILTRATION_VALUE = "SET_FILTRATION_VALUE",
   SEARCH_TODO = "SEARCH_TODO",
   SEARCH_VALUE = "SEARCH_VALUE",
+  SET_AMOUNT_TODOS = "SET_AMOUNT_TODOS",
 }
 
 export const TodoFilteringConstants = {

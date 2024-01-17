@@ -1,8 +1,4 @@
 import { TodoCurrentFilter } from "@/common/constants/TodoConstants/TodoFilters.ts";
-import { FormEvent, useState } from "react";
-import DatePicker from "react-datepicker";
-import { Formik } from "formik";
-import cn from "classnames";
 import { TodoTimeConstants } from "@/common/constants/TodoConstants/TodoTimeConstants.ts";
 import { TodoValidateFields } from "@/common/constants/TodoConstants/TodoValidation.ts";
 import { TodoValidateData } from "@/common/constants/TodoConstants/TodoValidationData.ts";
@@ -14,32 +10,32 @@ import { Modal } from "@/components/ui/Modal/Modal.tsx";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
 import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
-import { setTodoTitle } from "@/store/actions/todoActionCreators.ts";
-import { createTodosThunk, getFilteredTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
+import { setFiltrationValue, setTodoTitle } from "@/store/actions/todoActionCreators.ts";
+import { createTodosThunk, searchTodoThunk } from "@/store/thunks/todosThunks.ts";
+import styles from "@/styles/ModalCommom.module.scss";
 import { DATE_FORMAT, setDateFormat } from "@/utils/setDateFormat.ts";
-import { setSelectedTodoTitle } from "@/utils/setSelectedTodoTitle.ts";
-import { setSelectedDate } from "@/utils/setSelectedDate.ts";
 import { setExpirationDateFormat } from "@/utils/setExpirationDateFormat.ts";
+import { setSelectedDate } from "@/utils/setSelectedDate.ts";
+import { setSelectedTodoTitle } from "@/utils/setSelectedTodoTitle.ts";
 import { setMaxTimeToDate, setMinTimeToDate } from "@/utils/setTimeToDate.ts";
 import "react-datepicker/dist/react-datepicker.css";
-import styles from "@/styles/ModalCommom.module.scss";
-
-type TodoCreateDateParams = {
-  title: string;
-  expirationDate: Date | string;
-};
+import cn from "classnames";
+import { Formik } from "formik";
+import { FormEvent, useState } from "react";
+import DatePicker from "react-datepicker";
 
 export const TodoCreateModal = () => {
   const [modalActive, setModalActive] = useModalState("createTodoModal");
   const [expirationDate, setExpirationDate] = useState<Date | null>(null);
   const { user } = useAppSelector(state => state.authReducer);
-  const { title, filterValue } = useAppSelector(state => state.todoReducer);
+  const { title, searchValue } = useAppSelector(state => state.todoReducer);
   const dispatch = useAppDispatch();
-  const token = localStorage.getItem("access-token") ?? "";
+
   const handleCloseModal = () => {
     setModalActive(false);
     dispatch(setTodoTitle(""));
   };
+
   const setChangedTodoTitle = (
     e: FormEvent<HTMLInputElement>,
     setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void,
@@ -49,27 +45,25 @@ export const TodoCreateModal = () => {
     dispatch(setTodoTitle(newTodoValue));
   };
 
-  const handleSubmit = async (data: TodoCreateDateParams) => {
+  const handleSubmit = async () => {
     setModalActive(false);
     if (expirationDate) {
       const value = title.trim();
       await dispatch(
         createTodosThunk({
           createdDate: setExpirationDateFormat(new Date()),
-          expirationDate: setExpirationDateFormat(data.expirationDate as Date),
+          expirationDate: setExpirationDateFormat(expirationDate),
           title: value,
           isCompleted: false,
           userId: user?._id!,
-          token,
         }),
       );
 
-      void dispatch(getTodosThunk({ token, filter: TodoCurrentFilter.ALL }));
-      void dispatch(getFilteredTodosThunk({ token, filter: filterValue }));
+      void dispatch(searchTodoThunk({ filter: TodoCurrentFilter.ALL, title: searchValue }));
+      dispatch(setFiltrationValue(TodoCurrentFilter.ALL));
       dispatch(setTodoTitle(""));
     }
   };
-
   const handleChangeDatePicker = (date: Date, setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void) => {
     if (setDateFormat(date).length === TodoValidateData.MAX_DATE_LENGTH) {
       return setSelectedDate(date, setFieldValue, setExpirationDate);

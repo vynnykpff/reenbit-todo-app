@@ -1,6 +1,5 @@
-import { SearchTodoParams, TodoDeleteParams, TodoParams } from "@/common/types/Todos/TodosService.ts";
+import { TodosParams } from "@/common/types/Todos/Todo.ts";
 import { Dispatch } from "react";
-import { GetTodosParams } from "@/common/types/Todos/Todo.ts";
 import { setFormattedDates } from "@/utils/setDateFormat.ts";
 import {
   TodoAsyncActions,
@@ -8,43 +7,18 @@ import {
   TodoFilteringActions,
   TodoManagementActions,
 } from "@/common/constants/TodoConstants/TodoManagementActions.ts";
-import { TodoActionTypes } from "@/common/types/Todos/TodoActions.ts";
+import { TodoActionTypes, TodoActions } from "@/common/types/Todos/TodoActions.ts";
 import { AsyncTodosActions } from "@/common/types/Todos/TodoAsyncActions.ts";
 import { TodosService } from "@/services/todosService.ts";
 
-export function getTodosThunk({ token, filter }: GetTodosParams) {
+export function getFilteredTodosThunk({ filter }: TodosParams) {
   return async function (dispatch: Dispatch<TodoActionTypes | AsyncTodosActions>) {
     try {
       dispatch({
         type: TodoAsyncActions.TODO_PENDING,
       });
 
-      const rawResponse = await TodosService.getTodos({ token, filter });
-
-      dispatch({
-        type: TodoManagementActions.GET_TODOS,
-        payload: setFormattedDates(rawResponse.todos),
-      });
-
-      dispatch({
-        type: TodoAsyncActions.TODO_SUCCESS,
-      });
-
-      return setFormattedDates(rawResponse.todos);
-    } catch (error) {
-      dispatch({ type: TodoManagementActions.RESET_TODOS });
-    }
-  };
-}
-
-export function getFilteredTodosThunk({ token, filter }: GetTodosParams) {
-  return async function (dispatch: Dispatch<TodoActionTypes | AsyncTodosActions>) {
-    try {
-      dispatch({
-        type: TodoAsyncActions.TODO_PENDING,
-      });
-
-      const rawResponse = await TodosService.getTodos({ token, filter });
+      const rawResponse = await TodosService.getTodos({ filter });
 
       dispatch({
         type: TodoManagementActions.GET_FILTERED_TODOS,
@@ -52,6 +26,11 @@ export function getFilteredTodosThunk({ token, filter }: GetTodosParams) {
       });
 
       dispatch({
+        type: TodoFilteringActions.SET_AMOUNT_TODOS,
+        payload: rawResponse.amountTodos!,
+      });
+
+      dispatch({
         type: TodoAsyncActions.TODO_SUCCESS,
       });
 
@@ -61,18 +40,20 @@ export function getFilteredTodosThunk({ token, filter }: GetTodosParams) {
     }
   };
 }
-
-export function createTodosThunk(params: TodoParams) {
+export function createTodosThunk(params: TodoActions) {
   return async function (dispatch: Dispatch<TodoActionTypes | AsyncTodosActions>) {
     try {
       dispatch({
         type: TodoAsyncActions.TODO_PENDING,
       });
+
       const response = await TodosService.createTodo({ ...params });
+
       dispatch({
         type: TodoManagementActions.CREATE_TODO,
         payload: response,
       });
+
       dispatch({
         type: TodoAsyncActions.TODO_SUCCESS,
       });
@@ -81,8 +62,7 @@ export function createTodosThunk(params: TodoParams) {
     }
   };
 }
-
-export function editTodosThunk(params: TodoParams) {
+export function editTodosThunk(params: TodoActions) {
   return async function (dispatch: Dispatch<TodoActionTypes | AsyncTodosActions>) {
     try {
       dispatch({
@@ -99,21 +79,17 @@ export function editTodosThunk(params: TodoParams) {
     }
   };
 }
-
-export function deleteTodoThunk({ todoId, token }: TodoDeleteParams) {
+export function deleteTodoThunk(todoId: string) {
   return async function (dispatch: Dispatch<TodoActionTypes | AsyncTodosActions>) {
     try {
       dispatch({
         type: TodoAsyncActions.TODO_PENDING,
       });
-
-      const response = await TodosService.deleteTodo({ token, todoId });
-
+      const response = await TodosService.deleteTodo(todoId);
       dispatch({
         type: TodoConstants.DELETE_TODO,
         payload: response,
       });
-
       dispatch({
         type: TodoAsyncActions.TODO_SUCCESS,
       });
@@ -123,20 +99,19 @@ export function deleteTodoThunk({ todoId, token }: TodoDeleteParams) {
   };
 }
 
-export function deleteCompletedTodosThunk(token: string) {
+export function deleteAllTodosThunk() {
   return async function (dispatch: Dispatch<TodoActionTypes | AsyncTodosActions>) {
     try {
       dispatch({
         type: TodoAsyncActions.TODO_PENDING,
       });
 
-      const response = await TodosService.deleteAllTodos(token);
+      const response = await TodosService.deleteAllTodos();
 
       dispatch({
         type: TodoConstants.DELETE_TODO,
         payload: response,
       });
-
       dispatch({
         type: TodoAsyncActions.TODO_SUCCESS,
       });
@@ -146,14 +121,14 @@ export function deleteCompletedTodosThunk(token: string) {
   };
 }
 
-export function searchTodoThunk({ filter, title, token }: SearchTodoParams) {
+export function searchTodoThunk({ title, filter }: TodosParams) {
   return async function (dispatch: Dispatch<TodoActionTypes | AsyncTodosActions>) {
     try {
       dispatch({
         type: TodoAsyncActions.TODO_PENDING,
       });
 
-      const rawResponse = await TodosService.searchTodo({ title, filter, token });
+      const rawResponse = await TodosService.getTodos({ title, filter });
 
       dispatch({
         type: TodoFilteringActions.SEARCH_TODO,

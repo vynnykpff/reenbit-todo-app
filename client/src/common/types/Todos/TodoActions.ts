@@ -1,9 +1,12 @@
 import {
   TodoConstants,
+  TodoEditingActions,
   TodoEditingConstants,
+  TodoFilteringActions,
   TodoFilteringConstants,
   TodoManagementActions,
 } from "@/common/constants/TodoConstants/TodoManagementActions.ts";
+import { AmountTodos } from "@/common/types/Todos/Todo.ts";
 
 export type TodoActions = {
   title: string;
@@ -30,7 +33,7 @@ type DeleteTodoAction = {
 };
 
 export type EditTodo = {
-  todoTitle: TodoActions["title"];
+  title: TodoActions["title"];
   createdDate: TodoActions["createdDate"];
   expirationDate: TodoActions["expirationDate"];
   _id: TodoActions["_id"];
@@ -74,6 +77,16 @@ type GetFilteredTodos = {
   payload: TodoActions[];
 };
 
+type SetSearchValue = {
+  type: typeof TodoEditingActions.SET_SEARCH_VALUE;
+  payload: string;
+};
+
+type SetAmountTodos = {
+  type: typeof TodoFilteringActions.SET_AMOUNT_TODOS;
+  payload: AmountTodos;
+};
+
 export type TodoActionTypes =
   | SetTodoTitleAction
   | SetTodoCompletedAction
@@ -85,4 +98,6 @@ export type TodoActionTypes =
   | SearchTodosAction
   | SetSearchValueAction
   | GetFilteredTodos
+  | SetSearchValue
+  | SetAmountTodos
   | ResetTodosAction;

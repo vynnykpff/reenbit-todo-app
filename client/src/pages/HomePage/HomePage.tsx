@@ -1,8 +1,7 @@
 import { FC, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { TodoCurrentFilter } from "@/common/constants/TodoConstants/TodoFilters.ts";
 import { useAppSelector } from "@/hooks/useAppSelector.ts";
-import { getFilteredTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
+import { getFilteredTodosThunk } from "@/store/thunks/todosThunks.ts";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
 import { Header } from "@/components/Header/Header.tsx";
 import { TodoLayout } from "@/components/TodoLayout/TodoLayout.tsx";
@@ -15,8 +14,7 @@ const HomePage: FC = () => {
   const token = localStorage.getItem("access-token") ?? "";
 
   const handleGetTodos = async () => {
-    void dispatch(getTodosThunk({ token, filter: TodoCurrentFilter.ALL }));
-    void dispatch(getFilteredTodosThunk({ token, filter: filterValue }));
+    void dispatch(getFilteredTodosThunk({ filter: filterValue }));
   };
 
   useEffect(() => {
@@ -31,7 +29,6 @@ const HomePage: FC = () => {
   if (!token) {
     return null;
   }
-
   return (
     <>
       <Header />
@@ -39,5 +36,4 @@ const HomePage: FC = () => {
     </>
   );
 };
-
 export default HomePage;

@@ -1,5 +1,6 @@
 import {
   TodoAsyncActions,
+  TodoEditingActions,
   TodoEditingConstants,
   TodoFilteringActions,
   TodoFilteringConstants,
@@ -18,10 +19,24 @@ export const todoReducer = (state = initialTodoState, action: TodoActionTypes | 
         title: action.payload,
       };
 
+    case TodoFilteringActions.SET_AMOUNT_TODOS: {
+      return {
+        ...state,
+        amountTodos: action.payload,
+      };
+    }
+
     case TodoFilteringConstants.SET_FILTRATION_VALUE: {
       return {
         ...state,
         filterValue: action.payload,
+      };
+    }
+
+    case TodoEditingActions.SET_SEARCH_VALUE: {
+      return {
+        ...state,
+        searchValue: action.payload,
       };
     }
 
@@ -70,7 +85,7 @@ export const todoReducer = (state = initialTodoState, action: TodoActionTypes | 
 
       return {
         ...state,
-        filteredTodos: reversedTodos,
+        todos: reversedTodos,
       };
     }
 
@@ -82,9 +97,11 @@ export const todoReducer = (state = initialTodoState, action: TodoActionTypes | 
     }
 
     case TodoFilteringActions.SEARCH_TODO: {
+      const reversedTodos = getReversedTodos(action.payload);
+
       return {
         ...state,
-        filteredTodos: action.payload,
+        todos: reversedTodos,
       };
     }
 

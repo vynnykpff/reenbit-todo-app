@@ -1,4 +1,4 @@
 export * from "./Exceptions";
-export * from "./Routes";
+export * from "./Paths";
 export * from "./Validation";
 export * from "./Todos";
