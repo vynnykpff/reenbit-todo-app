@@ -53,7 +53,7 @@ export const TodoListHeader = () => {
           </p>
         </div>
         <Button
-          disabled={!total}
+          disabled={!completed}
           onClick={handleDeleteCompletedTodos}
           className={cn(filteredStyles.filteredTodoButton, styles.clearCompletedTodosButton)}
         >
