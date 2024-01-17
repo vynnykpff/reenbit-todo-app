@@ -4,17 +4,16 @@ import { Button } from "@/components/ui/Button/Button.tsx";
 import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
 import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { setFiltrationValue } from "@/store/actions/todoActionCreators.ts";
-import { getFilteredTodosThunk } from "@/store/thunks/todosThunks.ts";
+import { searchTodoThunk } from "@/store/thunks/todosThunks.ts";
 import styles from "./TodoFiltered.module.scss";
 
 export const TodoFiltered = () => {
-  const { filterValue } = useAppSelector(state => state.todoReducer);
-  const token = localStorage.getItem("access-token") ?? "";
+  const { filterValue, searchValue } = useAppSelector(state => state.todoReducer);
   const dispatch = useAppDispatch();
 
   const handleFilterValue = async (filter: string) => {
     dispatch(setFiltrationValue(filter));
-    void dispatch(getFilteredTodosThunk({ token, filter }));
+    void dispatch(searchTodoThunk({ filter, title: searchValue }));
   };
 
   return (

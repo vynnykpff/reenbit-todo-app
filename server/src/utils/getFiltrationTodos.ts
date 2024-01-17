@@ -1,26 +1,25 @@
-import { TodoModel } from "@models";
 import { TodoModelFields } from "@types";
-import { EXCEPTION_VALUE, FiltrationTodosConstants } from "@constants";
+import { FiltrationTodosConstants } from "@constants";
 
 type Params = {
   filter: FiltrationTodosConstants;
-  userId: string;
+  todos: TodoModelFields[];
 };
 
-export const getFiltrationTodos = async ({ filter = FiltrationTodosConstants.ALL, userId = "" }: Params) => {
-  let todos = [] as TodoModelFields[];
+export const getFiltrationTodos = async ({ filter = FiltrationTodosConstants.ALL, todos }: Params) => {
+  let filteredTodos = [] as TodoModelFields[];
 
   if (filter === FiltrationTodosConstants.COMPLETED) {
-    todos = await TodoModel.find({ userId, isCompleted: true }).select({ userId: EXCEPTION_VALUE });
+    filteredTodos = todos.filter(todo => todo.isCompleted);
   }
 
   if (filter === FiltrationTodosConstants.ACTIVE) {
-    todos = await TodoModel.find({ userId, isCompleted: false }).select({ userId: EXCEPTION_VALUE });
+    filteredTodos = todos.filter(todo => !todo.isCompleted);
   }
 
   if (filter === FiltrationTodosConstants.ALL) {
-    todos = await TodoModel.find({ userId }).select({ userId: EXCEPTION_VALUE });
+    filteredTodos = todos;
   }
 
-  return todos;
+  return filteredTodos;
 };

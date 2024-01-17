@@ -9,10 +9,10 @@ import { useAppDispatch } from "@/hooks/useAppDispatch.ts";
 import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
 import { setNotification } from "@/store/actions/notificationActionCreators.ts";
-import { setTodoTitle } from "@/store/actions/todoActionCreators.ts";
-import { createTodosThunk, getFilteredTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
-import { isValidField } from "@/utils/isValidField.ts";
+import { setFiltrationValue, setTodoTitle } from "@/store/actions/todoActionCreators.ts";
+import { createTodosThunk, getFilteredTodosThunk } from "@/store/thunks/todosThunks.ts";
 import { getNextDate } from "@/utils/getNextDate.ts";
+import { isValidField } from "@/utils/isValidField.ts";
 import { setExpirationDateFormat } from "@/utils/setExpirationDateFormat.ts";
 import { ChangeEvent, KeyboardEvent } from "react";
 import { BsPlusLg } from "react-icons/bs";
@@ -21,10 +21,9 @@ import styles from "./TodoCreate.module.scss";
 const SEND_KEY = "Enter";
 
 export const TodoCreate = () => {
-  const { title, filterValue } = useAppSelector(state => state.todoReducer);
+  const { title } = useAppSelector(state => state.todoReducer);
   const { user } = useAppSelector(state => state.authReducer);
   const dispatch = useAppDispatch();
-  const token = localStorage.getItem("access-token")!;
 
   const setTitleStoreValue = (value: string) => {
     dispatch(setTodoTitle(value));
@@ -53,8 +52,8 @@ export const TodoCreate = () => {
       }),
     );
 
-    void dispatch(getTodosThunk({ token, filter: TodoCurrentFilter.ALL }));
-    void dispatch(getFilteredTodosThunk({ token, filter: filterValue }));
+    void dispatch(getFilteredTodosThunk({ filter: TodoCurrentFilter.ALL }));
+    dispatch(setFiltrationValue(TodoCurrentFilter.ALL));
     setTitleStoreValue("");
   };
 

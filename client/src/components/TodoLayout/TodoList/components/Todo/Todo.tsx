@@ -11,7 +11,7 @@ import { useAppSelector } from "@/hooks/useAppSelector.ts";
 import { useModalState } from "@/hooks/useModalState.ts";
 import { setNotification } from "@/store/actions/notificationActionCreators.ts";
 import { setCurrentTodo, setFiltrationValue } from "@/store/actions/todoActionCreators.ts";
-import { deleteTodoThunk, editTodosThunk, getFilteredTodosThunk, getTodosThunk } from "@/store/thunks/todosThunks.ts";
+import { deleteTodoThunk, editTodosThunk, getFilteredTodosThunk } from "@/store/thunks/todosThunks.ts";
 import { checkOnCurrentExpirationDate } from "@/utils/checkOnCurrentExpirationDate.ts";
 import { DATE_FORMAT } from "@/utils/setDateFormat.ts";
 import { AiOutlineInfoCircle } from "react-icons/ai";
@@ -23,7 +23,6 @@ import styles from "./Todo.module.scss";
 export const Todo: FC<TodoProps> = ({ title, createdDate, expirationDate, _id = "", isCompleted }) => {
   const { filterValue } = useAppSelector(state => state.todoReducer);
   const [isShowInfo, setIsShowInfo] = useState(false);
-  const token = localStorage.getItem("access-token") ?? "";
   const setEditModalActive = useModalState("editTodoModal")[1];
   const setConfirmModalActive = useModalState("confirmModal")[1];
   const dispatch = useAppDispatch();
@@ -31,16 +30,14 @@ export const Todo: FC<TodoProps> = ({ title, createdDate, expirationDate, _id = 
   const handleChangeStatusTodo = async () => {
     const parsedDate = parse(expirationDate, DATE_FORMAT, new Date()).toISOString();
     await dispatch(editTodosThunk({ _id, title, expirationDate: parsedDate, createdDate, isCompleted: !isCompleted }));
-    void dispatch(getTodosThunk({ token, filter: TodoCurrentFilter.ALL }));
-    void dispatch(getFilteredTodosThunk({ token, filter: filterValue }));
+    void dispatch(getFilteredTodosThunk({ filter: filterValue }));
   };
 
   const handleClickDeleteTodo = () => {
     setConfirmModalActive(true, {
       confirmCallback: async () => {
         await dispatch(deleteTodoThunk(_id));
-        void dispatch(getTodosThunk({ token, filter: TodoCurrentFilter.ALL }));
-        void dispatch(getFilteredTodosThunk({ token, filter: TodoCurrentFilter.ALL }));
+        void dispatch(getFilteredTodosThunk({ filter: TodoCurrentFilter.ALL }));
         dispatch(setFiltrationValue(TodoCurrentFilter.ALL));
         dispatch(setNotification({ title: TodoNotificationMessages.DELETE_TODO, type: NotificationType.SUCCESS }));
       },

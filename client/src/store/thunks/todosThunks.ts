@@ -1,5 +1,5 @@
+import { TodosParams } from "@/common/types/Todos/Todo.ts";
 import { Dispatch } from "react";
-import { GetTodosParams, SearchTodoParams } from "@/common/types/Todos/Todo.ts";
 import { setFormattedDates } from "@/utils/setDateFormat.ts";
 import {
   TodoAsyncActions,
@@ -11,14 +11,14 @@ import { TodoActionTypes, TodoActions } from "@/common/types/Todos/TodoActions.t
 import { AsyncTodosActions } from "@/common/types/Todos/TodoAsyncActions.ts";
 import { TodosService } from "@/services/todosService.ts";
 
-export function getTodosThunk({ token, filter }: GetTodosParams) {
+export function getTodosThunk() {
   return async function (dispatch: Dispatch<TodoActionTypes | AsyncTodosActions>) {
     try {
       dispatch({
         type: TodoAsyncActions.TODO_PENDING,
       });
 
-      const rawResponse = await TodosService.getTodos({ token, filter });
+      const rawResponse = await TodosService.getTodos({});
 
       dispatch({
         type: TodoManagementActions.GET_TODOS,
@@ -36,18 +36,23 @@ export function getTodosThunk({ token, filter }: GetTodosParams) {
   };
 }
 
-export function getFilteredTodosThunk({ token, filter }: GetTodosParams) {
+export function getFilteredTodosThunk({ filter }: TodosParams) {
   return async function (dispatch: Dispatch<TodoActionTypes | AsyncTodosActions>) {
     try {
       dispatch({
         type: TodoAsyncActions.TODO_PENDING,
       });
 
-      const rawResponse = await TodosService.getTodos({ token, filter });
+      const rawResponse = await TodosService.getTodos({ filter });
 
       dispatch({
         type: TodoManagementActions.GET_FILTERED_TODOS,
         payload: setFormattedDates(rawResponse.todos),
+      });
+
+      dispatch({
+        type: TodoFilteringActions.SET_AMOUNT_TODOS,
+        payload: rawResponse.amountTodos!,
       });
 
       dispatch({
@@ -67,11 +72,14 @@ export function createTodosThunk(params: TodoActions) {
       dispatch({
         type: TodoAsyncActions.TODO_PENDING,
       });
+
       const response = await TodosService.createTodo({ ...params });
+
       dispatch({
         type: TodoManagementActions.CREATE_TODO,
         payload: response,
       });
+
       dispatch({
         type: TodoAsyncActions.TODO_SUCCESS,
       });
@@ -122,14 +130,14 @@ export function deleteTodoThunk(todoId: string) {
   };
 }
 
-export function deleteCompletedTodosThunk(token: string) {
+export function deleteAllTodosThunk() {
   return async function (dispatch: Dispatch<TodoActionTypes | AsyncTodosActions>) {
     try {
       dispatch({
         type: TodoAsyncActions.TODO_PENDING,
       });
 
-      const response = await TodosService.deleteAllTodos(token);
+      const response = await TodosService.deleteAllTodos();
 
       dispatch({
         type: TodoConstants.DELETE_TODO,
@@ -145,14 +153,14 @@ export function deleteCompletedTodosThunk(token: string) {
   };
 }
 
-export function searchTodoThunk({ filter, title }: SearchTodoParams) {
+export function searchTodoThunk({ title, filter }: TodosParams) {
   return async function (dispatch: Dispatch<TodoActionTypes | AsyncTodosActions>) {
     try {
       dispatch({
         type: TodoAsyncActions.TODO_PENDING,
       });
 
-      const rawResponse = await TodosService.searchTodo({ title, filter });
+      const rawResponse = await TodosService.getTodos({ title, filter });
 
       dispatch({
         type: TodoFilteringActions.SEARCH_TODO,

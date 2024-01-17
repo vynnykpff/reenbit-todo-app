@@ -1,9 +1,10 @@
 import express from "express";
 import { login } from "@controllers";
-import { AuthRoutes } from "@constants";
+import { AuthPaths } from "@constants";
 
 const router = express.Router();
+const { LOGIN } = AuthPaths;
 
-router.post(AuthRoutes.LOGIN, login);
+router.post(LOGIN, login);
 
 export const UserRouter = router;

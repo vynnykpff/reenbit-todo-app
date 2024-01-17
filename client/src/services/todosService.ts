@@ -1,45 +1,57 @@
+import { AmountTodos, TodosParams } from "@/common/types/Todos/Todo.ts";
 import { api } from "@/services/api.ts";
-import { GetTodosParams, SearchTodoParams } from "@/common/types/Todos/Todo.ts";
 import { TodoActions } from "@/common/types/Todos/TodoActions.ts";
-import { ApiEndpoints } from "@/services/ApiEndpoints.ts";
+import { AppPaths, TodosPaths } from "@/services/Paths.ts";
 
 type TodosResponse = {
   todos: TodoActions[];
+  amountTodos?: AmountTodos;
 };
 
+const { TODOS } = AppPaths;
+const { DELETE_COMPLETED_TODOS } = TodosPaths;
+
 export class TodosService {
-  public static async getTodos({ token, filter }: GetTodosParams): Promise<TodosResponse> {
-    const todoFilter = filter.toLowerCase();
-    const response = await api.get<TodosResponse>(`${ApiEndpoints.TODOS}?filter=${todoFilter}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+  private static buildTodosUrl({ filter, title }: TodosParams): string {
+    let url = TODOS as string;
+
+    if (filter) {
+      const todoFilter = filter.toLowerCase();
+      url += `?filter=${todoFilter}`;
+
+      if (title) {
+        url += `&search=${title}`;
+      }
+    } else if (title) {
+      url += `?search=${title}`;
+    }
+
+    return url;
+  }
+
+  public static async getTodos({ filter = "", title = "" }: TodosParams): Promise<TodosResponse> {
+    const url = this.buildTodosUrl({ filter, title });
+    const response = await api.get<TodosResponse>(url);
     return response.data;
   }
 
   public static async createTodo(params: TodoActions): Promise<TodoActions> {
-    const response = await api.post<TodoActions>(ApiEndpoints.CREATE_TODO, { ...params });
+    const response = await api.post<TodoActions>(TODOS, { ...params });
     return response.data;
   }
 
   public static async editTodo(params: TodoActions): Promise<TodoActions> {
-    const response = await api.patch<TodoActions>(ApiEndpoints.EDIT_TODO, { ...params });
+    const response = await api.patch<TodoActions>(`${TODOS}/${params._id}`, { ...params });
     return response.data;
   }
 
   public static async deleteTodo(todoId: string): Promise<string> {
-    const response = await api.delete<string>(`${ApiEndpoints.DELETE_TODO}?todoId=${todoId}`);
+    const response = await api.delete<string>(`${TODOS}/${todoId}`);
     return response.data;
   }
 
-  public static async deleteAllTodos(token: string): Promise<string> {
-    const response = await api.delete<string>(ApiEndpoints.DELETE_ALL_TODOS, { headers: { Authorization: `Bearer ${token}` } });
-    return response.data;
-  }
-
-  public static async searchTodo({ title, filter }: SearchTodoParams): Promise<TodosResponse> {
-    const todoFilter = filter.toLowerCase();
-
-    const response = await api.get<TodosResponse>(`${ApiEndpoints.SEARCH_TODO}?title=${title}&filter=${todoFilter}`);
+  public static async deleteAllTodos(): Promise<string> {
+    const response = await api.delete<string>(`${TODOS}${DELETE_COMPLETED_TODOS}`);
     return response.data;
   }
 }
