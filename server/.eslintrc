@@ -76,6 +76,7 @@
     "@typescript-eslint/no-unsafe-argument": "off",
     "@typescript-eslint/no-unsafe-assignment": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/unbound-method": "off",
     "react/prop-types": "off",
     "react-hooks/exhaustive-deps": "off",
     "react/react-in-jsx-scope": "off",
@@ -114,7 +115,8 @@
       },
       {
         "format": [
-          "camelCase"
+          "camelCase",
+          "PascalCase"
         ],
         "selector": [
           "classMethod",

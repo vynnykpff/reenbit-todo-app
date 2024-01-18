@@ -1,8 +1,8 @@
-import "module-alias/register";
 import mongoose from "mongoose";
+import "module-alias/register";
+import "dotenv/config";
 import { app } from "./app";
 import { validateEnv } from "@utils";
-import "dotenv/config";
 
 const { MONGO_URI, PORT } = validateEnv();
 

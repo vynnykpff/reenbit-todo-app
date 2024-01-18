@@ -7,12 +7,15 @@
     "paths": {
       "@/*": ["src/*"],
       "@utils": ["src/utils"],
-      "@constants": ["src/common/constants"],
-      "@types": ["src/common/types"],
+      "@constants": ["src/constants"],
+      "@types": ["src/types"],
       "@models": ["src/models"],
       "@middlewares": ["src/middlewares"],
+      "@exceptions": ["src/exceptions"],
       "@controllers": ["src/controllers"],
-      "@routes": ["src/routes"]
+      "@services": ["src/services"],
+      "@routes": ["src/routes"],
+      "@dtos": ["src/dtos"]
     },
     "sourceMap": true,
     "esModuleInterop": true,
