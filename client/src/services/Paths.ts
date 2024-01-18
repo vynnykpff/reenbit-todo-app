@@ -13,7 +13,7 @@ export enum AppPaths {
   BASE = "/api",
 }
 
-const { BASE } = AppPaths;
+const { AUTH } = AppPaths;
 const { REFRESH } = AuthPaths;
 
-export const REFRESH_PATH = `${BASE}${REFRESH}`;
+export const REFRESH_PATH = `${AUTH}${REFRESH}`;
