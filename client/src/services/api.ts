@@ -20,7 +20,7 @@ api.interceptors.response.use(
     return response;
   },
   function (error: AxiosError) {
-    if (error?.response?.status === ApiError.UNAUTHORIZED && error.response.statusText === "Unauthorized") {
+    if (error?.response?.status === ApiError.UNAUTHORIZED) {
       localStorage.removeItem("access-token");
       window.location.hash = `#${Routes.LOGIN}`;
     }
