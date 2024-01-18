@@ -136,6 +136,11 @@ export function searchTodoThunk({ title, filter }: TodosParams) {
       });
 
       dispatch({
+        type: TodoFilteringActions.SET_AMOUNT_TODOS,
+        payload: rawResponse.amountTodos!,
+      });
+
+      dispatch({
         type: TodoAsyncActions.TODO_SUCCESS,
       });
     } catch (error) {

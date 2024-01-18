@@ -15,7 +15,7 @@ export const TodoList = () => {
         <Loader />
       ) : (
         <ul className={styles.todoListContainer}>
-          {todos.length ? todos.map(todo => <Todo key={todo._id} {...todo} />) : <TodoListEmpty filterValue={filterValue} />}
+          {todos.length ? todos.map(todo => <Todo key={todo.id} {...todo} />) : <TodoListEmpty filterValue={filterValue} />}
         </ul>
       )}
     </section>

@@ -13,7 +13,7 @@ export type TodoActions = {
   createdDate: string;
   expirationDate: string;
   isCompleted: boolean;
-  _id?: string;
+  id?: string;
   userId?: string;
 };
 
@@ -24,19 +24,19 @@ type SetTodoTitleAction = {
 
 type SetTodoCompletedAction = {
   type: typeof TodoEditingConstants.SET_COMPLETED_TODO;
-  payload: TodoActions["_id"];
+  payload: TodoActions["id"];
 };
 
 type DeleteTodoAction = {
   type: typeof TodoConstants.DELETE_TODO;
-  payload: TodoActions["_id"];
+  payload: TodoActions["id"];
 };
 
 export type EditTodo = {
   title: TodoActions["title"];
   createdDate: TodoActions["createdDate"];
   expirationDate: TodoActions["expirationDate"];
-  _id: TodoActions["_id"];
+  _id: TodoActions["id"];
 };
 
 type EditTodoAction = {

@@ -5,8 +5,8 @@ import { validateEnv } from "@utils";
 
 const { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } = validateEnv();
 
-const EXPIRES_ACCESS_TOKEN = "1h";
-const EXPIRES_REFRESH_TOKEN = "2h";
+const EXPIRES_ACCESS_TOKEN = "1m";
+const EXPIRES_REFRESH_TOKEN = "2m";
 
 class TokenService {
   generateTokens(payload: UserDtoModel) {

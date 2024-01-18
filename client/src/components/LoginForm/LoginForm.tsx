@@ -23,7 +23,7 @@ export const LoginForm: FC = () => {
   const { error, isPending, user } = useAppSelector(state => state.authReducer);
 
   useEffect(() => {
-    if (user?._id && localStorage.getItem("access-token")) {
+    if (user?.id && localStorage.getItem("token")) {
       navigate(Routes.HOME);
     }
 
@@ -32,7 +32,7 @@ export const LoginForm: FC = () => {
     });
   }, [user]);
 
-  const handleSubmit = async (data: Omit<UserPayload, "_id">) => {
+  const handleSubmit = async (data: Omit<UserPayload, "id">) => {
     void dispatch(loginThunk({ ...data }));
   };
 

@@ -20,7 +20,7 @@ import { BsDashLg } from "react-icons/bs";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import styles from "./Todo.module.scss";
 
-export const Todo: FC<TodoProps> = ({ title, createdDate, expirationDate, _id = "", isCompleted }) => {
+export const Todo: FC<TodoProps> = ({ title, createdDate, expirationDate, id = "", isCompleted }) => {
   const { filterValue } = useAppSelector(state => state.todoReducer);
   const [isShowInfo, setIsShowInfo] = useState(false);
   const setEditModalActive = useModalState("editTodoModal")[1];
@@ -29,14 +29,14 @@ export const Todo: FC<TodoProps> = ({ title, createdDate, expirationDate, _id = 
 
   const handleChangeStatusTodo = async () => {
     const parsedDate = parse(expirationDate, DATE_FORMAT, new Date()).toISOString();
-    await dispatch(editTodosThunk({ _id, title, expirationDate: parsedDate, createdDate, isCompleted: !isCompleted }));
+    await dispatch(editTodosThunk({ id, title, expirationDate: parsedDate, createdDate, isCompleted: !isCompleted }));
     void dispatch(getFilteredTodosThunk({ filter: filterValue }));
   };
 
   const handleClickDeleteTodo = () => {
     setConfirmModalActive(true, {
       confirmCallback: async () => {
-        await dispatch(deleteTodoThunk(_id));
+        await dispatch(deleteTodoThunk(id));
         void dispatch(getFilteredTodosThunk({ filter: TodoCurrentFilter.ALL }));
         dispatch(setFiltrationValue(TodoCurrentFilter.ALL));
         dispatch(setNotification({ title: TodoNotificationMessages.DELETE_TODO, type: NotificationType.SUCCESS }));
@@ -47,7 +47,7 @@ export const Todo: FC<TodoProps> = ({ title, createdDate, expirationDate, _id = 
   const handleClickEditTodo = () => {
     if (!isCompleted) {
       setEditModalActive(true);
-      dispatch(setCurrentTodo({ _id, title, expirationDate, createdDate, isCompleted }));
+      dispatch(setCurrentTodo({ id, title, expirationDate, createdDate, isCompleted }));
     }
   };
   return (

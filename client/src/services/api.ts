@@ -1,34 +1,50 @@
-import { AppPaths } from "@/services/Paths.ts";
-import axios, { AxiosError } from "axios";
 import { ApiError } from "@/common/constants/ApiError.ts";
+import { AppPaths, REFRESH_PATH } from "@/services/Paths.ts";
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { Routes } from "@/common/constants/Routes.ts";
-import { DEFAULT_ERROR_MESSAGE } from "@/common/constants/ErrorMessages.ts";
 
 const { BASE } = AppPaths;
+const API_URL = `https://reenbit-todo-app.onrender.com${BASE}`;
+const { UNAUTHORIZED } = ApiError;
+
+type RefreshResponse = {
+  accessToken: string;
+  refreshToken: string;
+};
+
+type InternalAxiosRequestConfig = {
+  _isRetry?: boolean;
+} & AxiosRequestConfig;
 
 export const api = axios.create({
-  baseURL: `https://reenbit-todo-app.onrender.com${BASE}`,
+  withCredentials: true,
+  baseURL: API_URL,
 });
 
 api.interceptors.request.use(config => {
-  config.headers.Authorization = `Bearer ${localStorage.getItem("access-token")}`;
+  config.headers.Authorization = `Bearer ${localStorage.getItem("token")}`;
   return config;
 });
 
 api.interceptors.response.use(
-  function (response) {
+  (response: AxiosResponse) => {
     return response;
   },
-  function (error: AxiosError) {
-    if (error?.response?.status === ApiError.UNAUTHORIZED) {
-      localStorage.removeItem("access-token");
-      window.location.hash = `#${Routes.LOGIN}`;
-    }
+  async (error: AxiosError) => {
+    const originalRequest = error.config as InternalAxiosRequestConfig;
 
-    if (error.response) {
-      error.response.data ??= DEFAULT_ERROR_MESSAGE;
-    }
+    if (error.response?.status === UNAUTHORIZED && originalRequest && !originalRequest._isRetry) {
+      originalRequest._isRetry = true;
+      try {
+        const response = await axios.get<RefreshResponse>(`${REFRESH_PATH}`, { withCredentials: true });
+        localStorage.setItem("token", response.data.accessToken);
 
-    return Promise.resolve(error.response ?? { data: DEFAULT_ERROR_MESSAGE });
+        return api.request(originalRequest);
+      } catch (e) {
+        localStorage.removeItem("token");
+        window.location.hash = `#${Routes.LOGIN}`;
+      }
+    }
+    throw error;
   },
 );

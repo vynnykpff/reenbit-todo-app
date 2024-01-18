@@ -42,7 +42,7 @@ export const TodoCreate = () => {
         expirationDate: getNextDate(new Date()),
         title: value,
         isCompleted: false,
-        userId: user?._id!,
+        userId: user?.id!,
       }),
     );
 

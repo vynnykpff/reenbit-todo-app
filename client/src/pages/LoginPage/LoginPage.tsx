@@ -8,7 +8,7 @@ import { Routes } from "@/common/constants/Routes.ts";
 import styles from "./LoginPage.module.scss";
 
 const LoginPage: FC = () => {
-  const token = localStorage.getItem("access-token");
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useAppDispatch();

@@ -12,6 +12,6 @@ const { login, logout, refresh } = userController;
 
 router.post(LOGIN, body("email").isEmail(), body("password").isLength({ min: PASSWORD_MIN_LENGTH, max: PASSWORD_MAX_LENGTH }), login);
 router.post(LOGOUT, authMiddleware, logout);
-router.get(REFRESH, authMiddleware, refresh);
+router.get(REFRESH, refresh);
 
 export const UserRouter = router;

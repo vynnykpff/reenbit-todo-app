@@ -11,7 +11,7 @@ const HomePage: FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { filterValue } = useAppSelector(state => state.todoReducer);
-  const token = localStorage.getItem("access-token") ?? "";
+  const token = localStorage.getItem("token");
 
   const handleGetTodos = async () => {
     void dispatch(getFilteredTodosThunk({ filter: filterValue }));
