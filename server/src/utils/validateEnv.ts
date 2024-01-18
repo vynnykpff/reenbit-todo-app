@@ -6,5 +6,4 @@ export const validateEnv = () =>
     JWT_ACCESS_SECRET: str(),
     JWT_REFRESH_SECRET: str(),
     PORT: port(),
-    CLIENT_URL: str(),
   });

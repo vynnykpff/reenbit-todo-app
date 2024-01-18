@@ -7,18 +7,17 @@ import { errorMiddleware } from "@middlewares";
 import { TodosRouter, UserRouter } from "@routes";
 import { API_AUTH_PATH, API_TODOS_PATH } from "@constants";
 
-const { CLIENT_URL } = validateEnv();
-
 export const app = express();
 
 app.use(
   cors({
     credentials: true,
-    origin: CLIENT_URL,
+    origin: "https://vynnykpff.github.io",
   }),
 );
 app.use(cookieParser());
 app.use(express.json());
+app.options("*", cors());
 
 app.use(API_AUTH_PATH, UserRouter);
 app.use(API_TODOS_PATH, TodosRouter);
