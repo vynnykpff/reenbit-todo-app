@@ -1,4 +1,3 @@
-import { validateEnv } from "@utils";
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -12,12 +11,10 @@ export const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: "https://reenbit-todo-app.onrender.com",
   }),
 );
 app.use(cookieParser());
 app.use(express.json());
-app.options("*", cors());
 
 app.use(API_AUTH_PATH, UserRouter);
 app.use(API_TODOS_PATH, TodosRouter);
