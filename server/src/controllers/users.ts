@@ -12,7 +12,7 @@ import {
   UserValidationField,
 } from "@constants";
 
-const EXPIRATION_TIME = "15d";
+const EXPIRATION_TIME = "1m";
 const { JWT_ACCESS_SECRET } = validateEnv();
 
 const { PASSWORD, EMAIL } = UserValidationField;
