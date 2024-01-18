@@ -4,7 +4,7 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { Routes } from "@/common/constants/Routes.ts";
 
 const { BASE } = AppPaths;
-const API_URL = `https://reenbit-todo-app.onrender.com${BASE}`;
+const API_URL = `https://reenbit-todo-app-server.vercel.app${BASE}`;
 const { UNAUTHORIZED } = ApiError;
 
 type RefreshResponse = {
