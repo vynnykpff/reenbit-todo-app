@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
-import { TokenModel } from "@models";
-import { TokenPayload, UserDtoModel } from "@types";
+import { UserDtoModel } from "@types";
 import { validateEnv } from "@utils";
 
 const { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } = validateEnv();
@@ -30,25 +29,6 @@ class TokenService {
     } catch (e) {
       return null;
     }
-  }
-
-  async saveToken({ userId, refreshToken }: TokenPayload) {
-    const tokenData = await TokenModel.findOne({ user: userId });
-
-    if (tokenData) {
-      tokenData.refreshToken = refreshToken;
-      return tokenData.save();
-    }
-
-    return await TokenModel.create({ user: userId, refreshToken });
-  }
-
-  async removeToken(refreshToken: string) {
-    return TokenModel.deleteOne({ refreshToken });
-  }
-
-  async findToken(refreshToken: string) {
-    return TokenModel.findOne({ refreshToken });
   }
 }
 

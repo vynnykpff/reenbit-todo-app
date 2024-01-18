@@ -31,4 +31,5 @@ export type AuthActionTypes = LoginPendingAction | LoginSuccessAction | LoginErr
 export type AuthResponse = {
   user: UserPayload;
   accessToken: string;
+  refreshToken: string;
 };

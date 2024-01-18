@@ -26,12 +26,7 @@ class UserService {
     const userDto = new UserDto(user);
     const tokens = tokenService.generateTokens({ ...userDto });
 
-    await tokenService.saveToken({ userId: userDto.id, refreshToken: tokens.refreshToken });
     return { ...tokens, user: userDto };
-  }
-
-  async logout(refreshToken: string) {
-    return await tokenService.removeToken(refreshToken);
   }
 
   async refresh(refreshToken: string) {
@@ -40,9 +35,8 @@ class UserService {
     }
 
     const userData = tokenService.validateRefreshToken(refreshToken) as UserDtoModel;
-    const tokenFromDb = await tokenService.findToken(refreshToken);
 
-    if (!userData || !tokenFromDb) {
+    if (!userData) {
       throw ApiError.UnauthorizedError();
     }
 
@@ -51,7 +45,6 @@ class UserService {
     const userDto = new UserDto(user);
     const tokens = tokenService.generateTokens({ ...userDto });
 
-    await tokenService.saveToken({ userId: userDto.id, refreshToken: tokens.refreshToken });
     return { ...tokens, user: userDto };
   }
 }

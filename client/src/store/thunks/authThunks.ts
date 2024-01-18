@@ -27,5 +27,6 @@ export function loginThunk({ email, password }: UserPayload) {
     });
 
     localStorage.setItem("token", response.accessToken);
+    localStorage.setItem("refreshToken", response.refreshToken);
   };
 }
