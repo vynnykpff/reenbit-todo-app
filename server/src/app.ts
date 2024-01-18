@@ -12,7 +12,7 @@ export const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: "https://vynnykpff.github.io",
+    origin: "https://reenbit-todo-app.onrender.com",
   }),
 );
 app.use(cookieParser());
