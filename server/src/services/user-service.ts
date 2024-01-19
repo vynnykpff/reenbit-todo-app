@@ -45,7 +45,7 @@ class UserService {
     const userDto = new UserDto(user);
     const tokens = tokenService.generateTokens({ ...userDto });
 
-    return { ...tokens, user: userDto };
+    return { ...tokens };
   }
 }
 
