@@ -36,7 +36,7 @@ export const TodoEditModal = () => {
   const handleSubmit = async (data: FormData) => {
     setModalActive(false);
     const { title, expirationDate } = data;
-    const { _id, createdDate, isCompleted } = todo;
+    const { id, createdDate, isCompleted } = todo;
     const value = title.trim();
 
     const formattedExpirationDate =
@@ -47,7 +47,7 @@ export const TodoEditModal = () => {
     const createdDateFormat = setExpirationDateFormat(getDateFormat(createdDate));
 
     await dispatch(
-      editTodosThunk({ title: value, expirationDate: formattedExpirationDate, createdDate: createdDateFormat, _id, isCompleted }),
+      editTodosThunk({ title: value, expirationDate: formattedExpirationDate, createdDate: createdDateFormat, id: id, isCompleted }),
     );
 
     void dispatch(getFilteredTodosThunk({ filter: filterValue }));

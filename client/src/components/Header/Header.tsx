@@ -15,13 +15,13 @@ export const Header = () => {
   const { user } = useAppSelector(state => state.authReducer);
 
   useEffect(() => {
-    if (!user?._id) {
+    if (!user?.id) {
       handleLogout();
     }
-  }, [user?._id]);
+  }, [user?.id]);
 
   const handleLogout = () => {
-    localStorage.removeItem("access-token");
+    localStorage.removeItem("token");
     dispatch({ type: TodoManagementActions.RESET_TODOS });
     navigate(Routes.LOGIN);
   };

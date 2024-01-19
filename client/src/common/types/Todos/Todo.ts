@@ -26,7 +26,7 @@ export const initialTodoState: TodoState = {
   todos: [],
   title: "",
   amountTodos: { total: 0, completed: 0 },
-  todo: { _id: "", title: "", createdDate: "", isCompleted: false, expirationDate: "", userId: "" },
+  todo: { id: "", title: "", createdDate: "", isCompleted: false, expirationDate: "", userId: "" },
   filterValue: TodoCurrentFilter.ALL,
   searchValue: "",
   isPending: false,

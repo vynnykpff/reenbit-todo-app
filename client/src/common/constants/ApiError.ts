@@ -1,3 +1,3 @@
-export const enum ApiError {
+export enum ApiError {
   UNAUTHORIZED = 401,
 }

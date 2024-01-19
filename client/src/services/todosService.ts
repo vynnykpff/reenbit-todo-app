@@ -41,7 +41,7 @@ export class TodosService {
   }
 
   public static async editTodo(params: TodoActions): Promise<TodoActions> {
-    const response = await api.patch<TodoActions>(`${TODOS}/${params._id}`, { ...params });
+    const response = await api.patch<TodoActions>(`${TODOS}/${params.id}`, { ...params });
     return response.data;
   }
 

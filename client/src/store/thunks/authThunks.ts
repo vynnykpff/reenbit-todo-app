@@ -26,6 +26,7 @@ export function loginThunk({ email, password }: UserPayload) {
       payload: response?.user,
     });
 
-    localStorage.setItem("access-token", response.accessToken);
+    localStorage.setItem("token", response.accessToken);
+    localStorage.setItem("refreshToken", response.refreshToken);
   };
 }

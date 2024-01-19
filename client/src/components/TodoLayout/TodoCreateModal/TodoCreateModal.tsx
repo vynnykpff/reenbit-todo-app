@@ -55,7 +55,7 @@ export const TodoCreateModal = () => {
           expirationDate: setExpirationDateFormat(expirationDate),
           title: value,
           isCompleted: false,
-          userId: user?._id!,
+          userId: user?.id!,
         }),
       );
 
